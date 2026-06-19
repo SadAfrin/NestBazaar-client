@@ -58,7 +58,7 @@ export default function Navbar() {
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2.5 group">
               <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-green-400 to-emerald-600 shadow-lg shadow-green-200 group-hover:shadow-green-300 transition-all duration-300 group-hover:scale-105 flex items-center justify-center">
-                <span className="text-white font-black text-base">N</span>
+                <span className="text-white font-black text-base">NB</span>
               </div>
               <div className="flex flex-col leading-none">
                 <span className="text-lg font-black bg-gradient-to-r from-green-600 via-emerald-500 to-teal-500 bg-clip-text text-transparent tracking-tight">

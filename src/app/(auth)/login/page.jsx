@@ -71,7 +71,7 @@ export default function LoginPage() {
           <div className="text-center mb-8">
             <Link href="/" className="inline-flex items-center gap-2 mb-4">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center shadow-lg">
-                <span className="text-white font-black text-base">N</span>
+                <span className="text-white font-black text-base">NB</span>
               </div>
               <div className="flex flex-col leading-none text-left">
                 <span className="text-xl font-black bg-gradient-to-r from-green-600 to-emerald-500 bg-clip-text text-transparent">NestBazaar</span>
