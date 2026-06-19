@@ -7,10 +7,10 @@ import { useState, useEffect, useRef } from "react";
 import { FaArrowRight, FaShieldAlt, FaTruck, FaStar, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { MdVerified } from "react-icons/md";
 
-// ── Typing words ──────────────────────────────────────────────
+// ── Typing words ────────────
 const typingWords = ["Electronics", "Furniture", "Fashion", "Vehicles", "Mobile Phones"];
 
-// ── Slides ────────────────────────────────────────────────────
+// ── Slides ─────
 const slides = [
   {
     image: "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=600&q=80",
@@ -38,7 +38,7 @@ const slides = [
   },
 ];
 
-// ── Stats ─────────────────────────────────────────────────────
+// ── Stats ───────────
 const stats = [
   { value: 50000, label: "Products Listed", suffix: "K+" },
   { value: 20000, label: "Happy Buyers", suffix: "K+" },
@@ -53,7 +53,7 @@ const badges = [
   { icon: <FaStar className="text-green-500" />, text: "Top Rated" },
 ];
 
-// ── Counter Hook ──────────────────────────────────────────────
+// ── Counter Hook ────────────────
 function useCounter(target, duration = 2000, start = false) {
   const [count, setCount] = useState(0);
 
@@ -72,7 +72,7 @@ function useCounter(target, duration = 2000, start = false) {
   return count;
 }
 
-// ── Single Counter ────────────────────────────────────────────
+// ── Single Counter ───────────
 function AnimatedCounter({ value, label, suffix, start }) {
   const count = useCounter(value, 2000, start);
 
@@ -89,7 +89,7 @@ function AnimatedCounter({ value, label, suffix, start }) {
   );
 }
 
-// ── Main Component ────────────────────────────────────────────
+// ── Main Component ─────────────
 export default function HeroSection() {
   const [current, setCurrent] = useState(0);
   const [wordIndex, setWordIndex] = useState(0);
@@ -98,7 +98,7 @@ export default function HeroSection() {
   const [counterStarted, setCounterStarted] = useState(false);
   const statsRef = useRef(null);
 
-  // ── Auto slide ──────────────────────────────────────────────
+  // ── Auto slide ─────
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrent((prev) => (prev + 1) % slides.length);
@@ -106,7 +106,7 @@ export default function HeroSection() {
     return () => clearInterval(timer);
   }, []);
 
-  // ── Typing effect ───────────────────────────────────────────
+  // ── Typing effect ──────────
   useEffect(() => {
     const word = typingWords[wordIndex];
     let timeout;
@@ -129,7 +129,7 @@ export default function HeroSection() {
     return () => clearTimeout(timeout);
   }, [displayed, isDeleting, wordIndex]);
 
-  // ── Counter observer ────────────────────────────────────────
+  // ── Counter observer──────
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
