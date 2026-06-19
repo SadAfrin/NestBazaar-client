@@ -7,6 +7,7 @@ import { Button } from "@heroui/react";
 import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaArrowLeft, FaShoppingCart, FaHeart, FaStar } from "react-icons/fa";
 import { MdVerified } from "react-icons/md";
 import { toast } from "react-toastify";
+import { useSession } from "@/lib/auth-client";
 
 const conditionColors = {
   "Like New": "bg-green-100 text-green-700",
@@ -20,6 +21,7 @@ export default function ProductDetailsPage() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
+  const { data: session } = useSession();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -191,7 +193,14 @@ export default function ProductDetailsPage() {
               <Button
                 className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-2xl shadow-lg shadow-green-200 hover:shadow-green-300 transition-all"
                 startContent={<FaShoppingCart size={14} />}
-                onClick={() => toast.info("Order feature coming soon!")}
+                onClick={() => {
+                    if (!session) {
+                        toast.warn("Please login to place an order!");
+                        router.push("/login");
+                        return;
+                    }
+                    toast.info("Order feature coming soon!");
+                }}
               >
                 Place Order
               </Button>
@@ -199,7 +208,14 @@ export default function ProductDetailsPage() {
                 variant="bordered"
                 className="border-2 border-green-500 text-green-600 font-bold rounded-2xl hover:bg-green-50 transition-all"
                 startContent={<FaHeart size={14} />}
-                onClick={() => toast.success("Added to wishlist!")}
+                onClick={() => {
+                    if (!session) {
+                        toast.warn("Please login to add to wishlist!");
+                        router.push("/login");
+                        return;
+                    }
+                    toast.success("Added to wishlist!");
+                }}
               >
                 Wishlist
               </Button>
