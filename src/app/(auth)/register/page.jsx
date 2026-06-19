@@ -3,12 +3,13 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signUp, signIn, useSession } from "@/lib/auth-client";
+import { signUp, signIn, signOut, useSession } from "@/lib/auth-client";
 import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash, FaGoogle, FaShoppingBag, FaStore } from "react-icons/fa";
 import { MdLocationOn } from "react-icons/md";
 import { Button } from "@heroui/react";
 import { toast } from "react-toastify";
 import RoleSelectionModal from "@/components/shared/RoleSelectionModal";
+import { FaArrowLeft } from "react-icons/fa";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -60,7 +61,7 @@ export default function RegisterPage() {
         name: formData.name,
         email: formData.email,
         password: formData.password,
-        callbackURL: "/",
+        callbackURL: "/login",
         role: formData.role,
         location: formData.location,
       });
@@ -75,6 +76,9 @@ export default function RegisterPage() {
           location: formData.location,
         }),
       });
+
+      // Sign out after registration so user must login manually
+      await signOut();
 
       toast.success("Account created successfully! Please login.");
       router.push("/login");
@@ -104,18 +108,29 @@ export default function RegisterPage() {
 
           {/* Header */}
           <div className="text-center mb-8">
-            <Link href="/" className="inline-flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center shadow-lg">
-                <span className="text-white font-black text-base">N</span>
-              </div>
-              <div className="flex flex-col leading-none text-left">
-                <span className="text-xl font-black bg-gradient-to-r from-green-600 to-emerald-500 bg-clip-text text-transparent">NestBazaar</span>
-                <span className="text-[9px] text-gray-400 font-medium tracking-widest uppercase">Marketplace</span>
-              </div>
-            </Link>
+            <div className="flex justify-start mb-4">
+              <Link
+                href="/"
+                className="inline-flex items-center gap-2 text-gray-400 hover:text-green-600 transition-colors text-sm font-semibold"
+              >
+                <FaArrowLeft size={12} />
+                Back to Home
+              </Link>
+            </div>
+            <div className="flex justify-center mb-4">
+              <Link href="/" className="inline-flex items-center gap-2">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center shadow-lg">
+                  <span className="text-white font-black text-base">NB</span>
+                </div>
+                <div className="flex flex-col leading-none text-left">
+                  <span className="text-xl font-black bg-gradient-to-r from-green-600 to-emerald-500 bg-clip-text text-transparent">NestBazaar</span>
+                  <span className="text-[9px] text-gray-400 font-medium tracking-widest uppercase">Marketplace</span>
+                </div>
+              </Link>
+            </div>
             <h1 className="text-2xl font-black text-gray-800">Create Account</h1>
             <p className="text-sm text-gray-500 mt-1">Join thousands of buyers and sellers</p>
-          </div>
+          </div> 
 
           {/* Error */}
           {error && (

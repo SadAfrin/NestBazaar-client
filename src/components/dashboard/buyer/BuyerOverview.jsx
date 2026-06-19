@@ -8,10 +8,10 @@ export default function BuyerOverview() {
   const { data: session } = useSession();
 
   const cards = [
-    { label: "Total Orders", value: "0", icon: <FaShoppingBag size={20} />, color: "from-blue-400 to-blue-600", bg: "bg-blue-50" },
-    { label: "Wishlist Items", value: "0", icon: <FaHeart size={20} />, color: "from-pink-400 to-pink-600", bg: "bg-pink-50" },
-    { label: "Total Spent", value: "৳0", icon: <FaCreditCard size={20} />, color: "from-green-400 to-green-600", bg: "bg-green-50" },
-    { label: "Recent Purchases", value: "0", icon: <FaBoxOpen size={20} />, color: "from-purple-400 to-purple-600", bg: "bg-purple-50" },
+    { label: "Total Orders", value: "0", icon: <FaShoppingBag size={20} />, color: "from-blue-400 to-blue-600" },
+    { label: "Wishlist Items", value: "0", icon: <FaHeart size={20} />, color: "from-pink-400 to-pink-600" },
+    { label: "Total Spent", value: "৳0", icon: <FaCreditCard size={20} />, color: "from-green-400 to-green-600" },
+    { label: "Recent Purchases", value: "0", icon: <FaBoxOpen size={20} />, color: "from-purple-400 to-purple-600" },
   ];
 
   return (
@@ -41,13 +41,17 @@ export default function BuyerOverview() {
         ))}
       </div>
 
-      {/* Recent Orders placeholder */}
+      {/* Recent Orders */}
       <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
         <h3 className="font-black text-gray-800 mb-4">Recent Orders</h3>
-        <div className="text-center py-10">
-          <p className="text-4xl mb-3">🛍️</p>
-          <p className="text-gray-400 font-medium">No orders yet</p>
-          <p className="text-gray-300 text-sm mt-1">Start shopping to see your orders here</p>
+        <div className="flex flex-col items-center justify-center py-12 gap-4">
+          <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center shadow-inner">
+            <FaShoppingBag size={40} className="text-blue-400" />
+          </div>
+          <div className="text-center">
+            <p className="text-gray-700 font-black text-lg">No Orders Yet</p>
+            <p className="text-gray-400 text-sm mt-1">Start shopping to see your orders here</p>
+          </div>
         </div>
       </div>
     </div>

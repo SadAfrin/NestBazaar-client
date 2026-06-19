@@ -93,7 +93,7 @@ export default function Sidebar({ onClose }) {
       <div className="p-6 border-b border-gray-100 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center shadow-lg">
-            <span className="text-white font-black text-base">N</span>
+            <span className="text-white font-black text-base">NB</span>
           </div>
           <div className="flex flex-col leading-none">
             <span className="text-base font-black bg-gradient-to-r from-green-600 to-emerald-500 bg-clip-text text-transparent">
@@ -156,8 +156,15 @@ export default function Sidebar({ onClose }) {
         ))}
       </nav>
 
-      {/* Logout */}
-      <div className="p-4 border-t border-gray-100">
+      {/* Bottom Actions */}
+      <div className="p-4 border-t border-gray-100 space-y-2">
+        <Link
+          href="/"
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-gray-600 hover:bg-green-50 hover:text-green-600 transition-all"
+        >
+          <FaHome size={16} />
+          Go to Website
+        </Link>
         <button
           onClick={handleLogout}
           className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-red-500 hover:bg-red-50 transition-all"

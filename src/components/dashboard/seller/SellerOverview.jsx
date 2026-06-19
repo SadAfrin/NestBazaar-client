@@ -2,7 +2,7 @@
 
 import { useSession } from "@/lib/auth-client";
 import { motion } from "framer-motion";
-import { FaBoxOpen, FaCheckCircle, FaDollarSign, FaClock } from "react-icons/fa";
+import { FaBoxOpen, FaCheckCircle, FaDollarSign, FaClock, FaClipboardList } from "react-icons/fa";
 
 export default function SellerOverview() {
   const { data: session } = useSession();
@@ -41,13 +41,17 @@ export default function SellerOverview() {
         ))}
       </div>
 
-      {/* Recent Orders placeholder */}
+      {/* Recent Orders */}
       <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
         <h3 className="font-black text-gray-800 mb-4">Recent Orders</h3>
-        <div className="text-center py-10">
-          <p className="text-4xl mb-3">📦</p>
-          <p className="text-gray-400 font-medium">No orders yet</p>
-          <p className="text-gray-300 text-sm mt-1">Start listing products to receive orders</p>
+        <div className="flex flex-col items-center justify-center py-12 gap-4">
+          <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center shadow-inner">
+            <FaClipboardList size={40} className="text-green-400" />
+          </div>
+          <div className="text-center">
+            <p className="text-gray-700 font-black text-lg">No Orders Yet</p>
+            <p className="text-gray-400 text-sm mt-1">Start listing products to receive orders</p>
+          </div>
         </div>
       </div>
     </div>

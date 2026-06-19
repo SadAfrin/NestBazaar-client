@@ -51,7 +51,7 @@ export default function RoleSelectionModal({ session, onComplete }) {
       >
         <div className="text-center mb-8">
           <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center mx-auto mb-4 shadow-lg">
-            <span className="text-white font-black text-2xl">N</span>
+            <span className="text-white font-black text-2xl">NB</span>
           </div>
           <h2 className="text-2xl font-black text-gray-800">One Last Step!</h2>
           <p className="text-gray-400 text-sm mt-2">

@@ -3,7 +3,7 @@
 import { useSession } from "@/lib/auth-client";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { FaUsers, FaBoxOpen, FaShoppingBag, FaDollarSign } from "react-icons/fa";
+import { FaUsers, FaBoxOpen, FaShoppingBag, FaDollarSign, FaChartLine } from "react-icons/fa";
 
 export default function AdminOverview() {
   const { data: session } = useSession();
@@ -64,9 +64,15 @@ export default function AdminOverview() {
       {/* Recent Activity */}
       <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
         <h3 className="font-black text-gray-800 mb-4">Recent Activity</h3>
-        <div className="text-center py-10">
-          <p className="text-4xl mb-3">📊</p>
-          <p className="text-gray-400 font-medium">No recent activity</p>
+        <div className="flex flex-col items-center justify-center py-12 gap-4">
+          {/* Clean SVG illustration */}
+          <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center shadow-inner">
+            <FaChartLine size={40} className="text-green-400" />
+          </div>
+          <div className="text-center">
+            <p className="text-gray-700 font-black text-lg">No Activity Yet</p>
+            <p className="text-gray-400 text-sm mt-1">Platform activity will appear here</p>
+          </div>
         </div>
       </div>
     </div>

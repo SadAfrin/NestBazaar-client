@@ -45,7 +45,7 @@ export default function Footer() {
           <div className="space-y-4">
             <div className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center shadow-lg">
-                <span className="text-white font-black text-base">N</span>
+                <span className="text-white font-black text-base">NB</span>
               </div>
               <div className="flex flex-col leading-none">
                 <span className="text-lg font-black text-white tracking-tight">NestBazaar</span>
