@@ -1,23 +1,47 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signIn } from "@/lib/auth-client";
+import { signIn, useSession } from "@/lib/auth-client";
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash, FaGoogle } from "react-icons/fa";
 import { Button } from "@heroui/react";
 import { toast } from "react-toastify";
+import RoleSelectionModal from "@/components/shared/RoleSelectionModal";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { data: session } = useSession();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showRoleModal, setShowRoleModal] = useState(false);
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
+  // Check if user exists in our collection after login
+  useEffect(() => {
+    if (!session?.user) return;
+    const checkUser = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/check?email=${session.user.email}`
+        );
+        const data = await res.json();
+        if (!data.exists) {
+          setShowRoleModal(true);
+        } else {
+          router.push("/");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    checkUser();
+  }, [session]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -28,37 +52,36 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
     try {
-        const { data, error } = await signIn.email({
+      const { data, error } = await signIn.email({
         email: formData.email,
         password: formData.password,
         callbackURL: "/",
-        });
+      });
 
-        if (error) {
+      if (error) {
         toast.error(error.message || "Login failed. Please try again.");
         setError(error.message || "Login failed. Please try again.");
         return;
-        }
+      }
 
-        toast.success("Welcome back to NestBazaar!");
-        router.push("/");
-        router.refresh();
+      toast.success("Welcome back to NestBazaar!");
+      router.refresh();
     } catch (err) {
-        toast.error(err.message || "Login failed. Please try again.");
-        setError(err.message || "Login failed. Please try again.");
+      toast.error(err.message || "Login failed. Please try again.");
+      setError(err.message || "Login failed. Please try again.");
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
 
   const handleGoogleLogin = async () => {
     try {
-        await signIn.social({
+      await signIn.social({
         provider: "google",
-        callbackURL: "/",
-        });
+        callbackURL: "/login",
+      });
     } catch (err) {
-        toast.error("Google login failed. Please try again.");
+      toast.error("Google login failed. Please try again.");
     }
   };
 
@@ -71,7 +94,7 @@ export default function LoginPage() {
           <div className="text-center mb-8">
             <Link href="/" className="inline-flex items-center gap-2 mb-4">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center shadow-lg">
-                <span className="text-white font-black text-base">NB</span>
+                <span className="text-white font-black text-base">N</span>
               </div>
               <div className="flex flex-col leading-none text-left">
                 <span className="text-xl font-black bg-gradient-to-r from-green-600 to-emerald-500 bg-clip-text text-transparent">NestBazaar</span>
@@ -91,8 +114,6 @@ export default function LoginPage() {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
-
-            {/* Email */}
             <div className="relative">
               <FaEnvelope className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
               <input
@@ -106,7 +127,6 @@ export default function LoginPage() {
               />
             </div>
 
-            {/* Password */}
             <div className="relative">
               <FaLock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
               <input
@@ -127,7 +147,6 @@ export default function LoginPage() {
               </button>
             </div>
 
-            {/* Submit */}
             <Button
               type="submit"
               isLoading={loading}
@@ -135,7 +154,6 @@ export default function LoginPage() {
             >
               {loading ? "Logging in..." : "Login"}
             </Button>
-
           </form>
 
           {/* Divider */}
@@ -164,6 +182,18 @@ export default function LoginPage() {
 
         </div>
       </div>
+
+      {/* Role Selection Modal */}
+      {showRoleModal && (
+        <RoleSelectionModal
+          session={session}
+          onComplete={() => {
+            setShowRoleModal(false);
+            router.push("/");
+          }}
+        />
+      )}
+
     </div>
   );
 }

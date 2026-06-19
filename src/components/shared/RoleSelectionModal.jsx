@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Button } from "@heroui/react";
 import { FaShoppingBag, FaStore } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { authClient } from "@/lib/auth-client";
 
 export default function RoleSelectionModal({ session, onComplete }) {
   const [role, setRole] = useState("buyer");
@@ -13,33 +14,31 @@ export default function RoleSelectionModal({ session, onComplete }) {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users`, {
+        // Save to our users collection
+        await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: session.user.name,
-          email: session.user.email,
-          role: role,
-          photo: session.user.image || "",
-          location: "",
+            name: session.user.name,
+            email: session.user.email,
+            role: role,
+            photo: session.user.image || "",
+            location: "",
         }),
-      });
+        });
 
-      await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/update-role`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: session.user.email,
-          role: role,
-        }),
-      });
+        // Update role in BetterAuth user collection
+        await authClient.updateUser({
+        role: role,
+        });
 
-      toast.success(`Welcome to NestBazaar as a ${role}!`);
-      onComplete();
+        toast.success(`Welcome to NestBazaar as a ${role}!`);
+        onComplete();
+        window.location.reload();
     } catch (error) {
-      toast.error("Something went wrong. Please try again.");
+        toast.error("Something went wrong. Please try again.");
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
   };
 

@@ -1,19 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signUp, signIn } from "@/lib/auth-client";
+import { signUp, signIn, useSession } from "@/lib/auth-client";
 import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash, FaGoogle, FaShoppingBag, FaStore } from "react-icons/fa";
 import { MdLocationOn } from "react-icons/md";
 import { Button } from "@heroui/react";
 import { toast } from "react-toastify";
+import RoleSelectionModal from "@/components/shared/RoleSelectionModal";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { data: session } = useSession();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showRoleModal, setShowRoleModal] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -22,6 +25,27 @@ export default function RegisterPage() {
     location: "",
     role: "buyer",
   });
+
+  // Check if Google user exists after redirect back to register page
+  useEffect(() => {
+    if (!session?.user) return;
+    const checkUser = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/check?email=${session.user.email}`
+        );
+        const data = await res.json();
+        if (!data.exists) {
+          setShowRoleModal(true);
+        } else {
+          router.push("/");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    checkUser();
+  }, [session]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -32,44 +56,44 @@ export default function RegisterPage() {
     setLoading(true);
     setError("");
     try {
-        await signUp.email({
+      await signUp.email({
         name: formData.name,
         email: formData.email,
         password: formData.password,
         callbackURL: "/",
         role: formData.role,
         location: formData.location,
-        });
+      });
 
-        await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users`, {
+      await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            name: formData.name,
-            email: formData.email,
-            role: formData.role,
-            location: formData.location,
+          name: formData.name,
+          email: formData.email,
+          role: formData.role,
+          location: formData.location,
         }),
-        });
+      });
 
-        toast.success("Account created successfully! Please login.");
-        router.push("/login");
+      toast.success("Account created successfully! Please login.");
+      router.push("/login");
     } catch (err) {
-        toast.error(err.message || "Registration failed. Please try again.");
-        setError(err.message || "Registration failed. Please try again.");
+      toast.error(err.message || "Registration failed. Please try again.");
+      setError(err.message || "Registration failed. Please try again.");
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
 
   const handleGoogleSignUp = async () => {
     try {
-        await signIn.social({
+      await signIn.social({
         provider: "google",
-        callbackURL: "/",
-        });
+        callbackURL: "/register",
+      });
     } catch (err) {
-        toast.error("Google signup failed. Please try again.");
+      toast.error("Google signup failed. Please try again.");
     }
   };
 
@@ -82,7 +106,7 @@ export default function RegisterPage() {
           <div className="text-center mb-8">
             <Link href="/" className="inline-flex items-center gap-2 mb-4">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center shadow-lg">
-                <span className="text-white font-black text-base">NB</span>
+                <span className="text-white font-black text-base">N</span>
               </div>
               <div className="flex flex-col leading-none text-left">
                 <span className="text-xl font-black bg-gradient-to-r from-green-600 to-emerald-500 bg-clip-text text-transparent">NestBazaar</span>
@@ -130,8 +154,6 @@ export default function RegisterPage() {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
-
-            {/* Name */}
             <div className="relative">
               <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
               <input
@@ -145,7 +167,6 @@ export default function RegisterPage() {
               />
             </div>
 
-            {/* Email */}
             <div className="relative">
               <FaEnvelope className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
               <input
@@ -159,7 +180,6 @@ export default function RegisterPage() {
               />
             </div>
 
-            {/* Location */}
             <div className="relative">
               <MdLocationOn className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
               <select
@@ -181,7 +201,6 @@ export default function RegisterPage() {
               </select>
             </div>
 
-            {/* Password */}
             <div className="relative">
               <FaLock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
               <input
@@ -202,7 +221,6 @@ export default function RegisterPage() {
               </button>
             </div>
 
-            {/* Submit */}
             <Button
               type="submit"
               isLoading={loading}
@@ -210,7 +228,6 @@ export default function RegisterPage() {
             >
               {loading ? "Creating Account..." : "Create Account"}
             </Button>
-
           </form>
 
           {/* Divider */}
@@ -239,6 +256,18 @@ export default function RegisterPage() {
 
         </div>
       </div>
+
+      {/* Role Selection Modal */}
+      {showRoleModal && (
+        <RoleSelectionModal
+          session={session}
+          onComplete={() => {
+            setShowRoleModal(false);
+            router.push("/");
+          }}
+        />
+      )}
+
     </div>
   );
 }
