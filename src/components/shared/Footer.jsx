@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn } from "react-icons/fa";
+import { FaFacebookF, FaInstagram, FaLinkedinIn } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import { MdEmail, MdPhone, MdLocationOn } from "react-icons/md";
 
 const footerLinks = {
@@ -21,7 +22,7 @@ const footerLinks = {
 
 const socialLinks = [
   { icon: <FaFacebookF size={14} />, href: "#", label: "Facebook" },
-  { icon: <FaTwitter size={14} />, href: "#", label: "Twitter" },
+  { icon: <FaXTwitter size={14} />, href: "#", label: "Twitter" },
   { icon: <FaInstagram size={14} />, href: "#", label: "Instagram" },
   { icon: <FaLinkedinIn size={14} />, href: "#", label: "LinkedIn" },
 ];
@@ -60,7 +61,7 @@ export default function Footer() {
                   key={s.label}
                   href={s.href}
                   aria-label={s.label}
-                  className="w-8 h-8 rounded-lg bg-white/10 hover:bg-green-500 flex items-center justify-center text-gray-400 hover:text-white transition-all duration-200 hover:scale-110"
+                  className="w-8 h-8 rounded-lg bg-green-500/20 hover:bg-green-500 flex items-center justify-center text-green-400 hover:text-white transition-all duration-200 hover:scale-110"
                 >
                   {s.icon}
                 </a>
