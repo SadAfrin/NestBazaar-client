@@ -1,0 +1,55 @@
+"use client";
+
+import { useSession } from "@/lib/auth-client";
+import { motion } from "framer-motion";
+import { FaBoxOpen, FaCheckCircle, FaDollarSign, FaClock } from "react-icons/fa";
+
+export default function SellerOverview() {
+  const { data: session } = useSession();
+
+  const cards = [
+    { label: "Total Products", value: "0", icon: <FaBoxOpen size={20} />, color: "from-blue-400 to-blue-600" },
+    { label: "Total Sales", value: "0", icon: <FaCheckCircle size={20} />, color: "from-green-400 to-green-600" },
+    { label: "Total Revenue", value: "৳0", icon: <FaDollarSign size={20} />, color: "from-emerald-400 to-emerald-600" },
+    { label: "Pending Orders", value: "0", icon: <FaClock size={20} />, color: "from-orange-400 to-orange-600" },
+  ];
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-black text-gray-800">
+          Welcome back, {session?.user?.name?.split(" ")[0]}! 👋
+        </h1>
+        <p className="text-gray-400 text-sm mt-1">Here's your seller activity summary</p>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {cards.map((card, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all"
+          >
+            <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${card.color} flex items-center justify-center text-white mb-4 shadow-md`}>
+              {card.icon}
+            </div>
+            <p className="text-2xl font-black text-gray-800">{card.value}</p>
+            <p className="text-sm text-gray-400 mt-1">{card.label}</p>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Recent Orders placeholder */}
+      <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+        <h3 className="font-black text-gray-800 mb-4">Recent Orders</h3>
+        <div className="text-center py-10">
+          <p className="text-4xl mb-3">📦</p>
+          <p className="text-gray-400 font-medium">No orders yet</p>
+          <p className="text-gray-300 text-sm mt-1">Start listing products to receive orders</p>
+        </div>
+      </div>
+    </div>
+  );
+}
