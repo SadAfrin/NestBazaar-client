@@ -46,10 +46,10 @@ export default function BuyerOverview() {
   }, [session]);
 
   const cards = [
-    { label: "Total Orders", value: stats.totalOrders, icon: <FaShoppingBag size={20} />, color: "from-blue-400 to-blue-600", href: "/dashboard/orders" },
-    { label: "Wishlist Items", value: stats.wishlistCount, icon: <FaHeart size={20} />, color: "from-pink-400 to-pink-600", href: "/dashboard/wishlist" },
-    { label: "Total Spent", value: `৳${stats.totalSpent}`, icon: <FaCreditCard size={20} />, color: "from-green-400 to-green-600", href: "/dashboard/payments" },
-    { label: "Recent Purchases", value: stats.recentPurchases, icon: <FaBoxOpen size={20} />, color: "from-purple-400 to-purple-600", href: "/dashboard/orders" },
+    { label: "Total Orders", value: stats.totalOrders, icon: <FaShoppingBag size={20} />, color: "from-blue-400 to-blue-600", href: "/dashboard/buyer/orders" },
+    { label: "Wishlist Items", value: stats.wishlistCount, icon: <FaHeart size={20} />, color: "from-pink-400 to-pink-600", href: "/dashboard/buyer/wishlist" },
+    { label: "Total Spent", value: `৳${stats.totalSpent}`, icon: <FaCreditCard size={20} />, color: "from-green-400 to-green-600", href: "/dashboard/buyer/payments" },
+    { label: "Recent Purchases", value: stats.recentPurchases, icon: <FaBoxOpen size={20} />, color: "from-purple-400 to-purple-600", href: "/dashboard/buyer/orders" },
   ];
 
   return (

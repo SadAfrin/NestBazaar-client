@@ -27,25 +27,25 @@ import {
 
 const buyerLinks = [
   { name: "Overview", href: "/dashboard", icon: <FaHome size={16} /> },
-  { name: "My Orders", href: "/dashboard/orders", icon: <FaShoppingBag size={16} /> },
-  { name: "Wishlist", href: "/dashboard/wishlist", icon: <FaHeart size={16} /> },
-  { name: "Payment History", href: "/dashboard/payments", icon: <FaCreditCard size={16} /> },
+  { name: "My Orders", href: "/dashboard/buyer/orders", icon: <FaShoppingBag size={16} /> },
+  { name: "Wishlist", href: "/dashboard/buyer/wishlist", icon: <FaHeart size={16} /> },
+  { name: "Payment History", href: "/dashboard/buyer/payments", icon: <FaCreditCard size={16} /> },
 ];
 
 const sellerLinks = [
   { name: "Overview", href: "/dashboard", icon: <FaHome size={16} /> },
-  { name: "Add Product", href: "/dashboard/add-product", icon: <FaPlus size={16} /> },
-  { name: "My Products", href: "/dashboard/my-products", icon: <FaBoxOpen size={16} /> },
-  { name: "Manage Orders", href: "/dashboard/manage-orders", icon: <FaClipboardList size={16} /> },
-  { name: "Sales Analytics", href: "/dashboard/analytics", icon: <FaChartBar size={16} /> },
+  { name: "Add Product", href: "/dashboard/seller/add-product", icon: <FaPlus size={16} /> },
+  { name: "My Products", href: "/dashboard/seller/my-products", icon: <FaBoxOpen size={16} /> },
+  { name: "Manage Orders", href: "/dashboard/seller/manage-orders", icon: <FaClipboardList size={16} /> },
+  { name: "Sales Analytics", href: "/dashboard/seller/analytics", icon: <FaChartBar size={16} /> },
 ];
 
 const adminLinks = [
   { name: "Overview", href: "/dashboard", icon: <FaTachometerAlt size={16} /> },
-  { name: "Manage Users", href: "/dashboard/manage-users", icon: <FaUsers size={16} /> },
-  { name: "Manage Products", href: "/dashboard/manage-products", icon: <FaBoxOpen size={16} /> },
-  { name: "Manage Orders", href: "/dashboard/manage-orders", icon: <FaClipboardList size={16} /> },
-  { name: "Platform Analytics", href: "/dashboard/analytics", icon: <FaChartBar size={16} /> },
+  { name: "Manage Users", href: "/dashboard/admin/manage-users", icon: <FaUsers size={16} /> },
+  { name: "Manage Products", href: "/dashboard/admin/manage-products", icon: <FaBoxOpen size={16} /> },
+  { name: "Manage Orders", href: "/dashboard/admin/manage-orders", icon: <FaClipboardList size={16} /> },
+  { name: "Platform Analytics", href: "/dashboard/admin/analytics", icon: <FaChartBar size={16} /> },
 ];
 
 export default function Sidebar({ onClose }) {
