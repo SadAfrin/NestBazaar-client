@@ -1,17 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { useSession, signOut } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
+import { useSession } from "@/lib/auth-client";
 import { Button } from "@heroui/react";
-import { FaLock, FaEye, FaEyeSlash, FaTrash, FaSignOutAlt } from "react-icons/fa";
+import { FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 
 export default function SettingsPage() {
   const { data: session } = useSession();
-  const router = useRouter();
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [passwordData, setPasswordData] = useState({
     oldPassword: "",
@@ -44,26 +43,16 @@ export default function SettingsPage() {
     }
   };
 
-  const handleLogout = async () => {
-    await signOut({
-      fetchOptions: {
-        onSuccess: () => {
-          toast.success("Logged out successfully!");
-          router.push("/login");
-        },
-      },
-    });
-  };
-
   return (
     <div className="space-y-6 max-w-2xl">
 
+      {/* Header */}
       <div>
         <h1 className="text-2xl font-black text-gray-800">Settings</h1>
         <p className="text-gray-400 text-sm mt-1">Manage your account settings</p>
       </div>
 
-      {/* Account Info */}
+      {/* Account Information */}
       <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
         <h3 className="font-black text-gray-800 mb-4">Account Information</h3>
         <div className="space-y-3">
@@ -102,6 +91,7 @@ export default function SettingsPage() {
         <h3 className="font-black text-gray-800 mb-6">Change Password</h3>
         <form onSubmit={handleChangePassword} className="space-y-4">
 
+          {/* Current Password */}
           <div className="space-y-1.5">
             <label className="text-sm font-bold text-gray-600">Current Password</label>
             <div className="relative">
@@ -125,6 +115,7 @@ export default function SettingsPage() {
             </div>
           </div>
 
+          {/* New Password */}
           <div className="space-y-1.5">
             <label className="text-sm font-bold text-gray-600">New Password</label>
             <div className="relative">
@@ -148,51 +139,39 @@ export default function SettingsPage() {
             </div>
           </div>
 
+          {/* Confirm Password */}
           <div className="space-y-1.5">
             <label className="text-sm font-bold text-gray-600">Confirm New Password</label>
             <div className="relative">
               <FaLock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
               <input
-                type="password"
+                type={showConfirmPassword ? "text" : "password"}
                 name="confirmPassword"
                 value={passwordData.confirmPassword}
                 onChange={handlePasswordChange}
                 placeholder="Confirm new password"
                 required
-                className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-white transition-all"
+                className="w-full pl-11 pr-11 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-white transition-all"
               />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-green-500"
+              >
+                {showConfirmPassword ? <FaEyeSlash size={14} /> : <FaEye size={14} />}
+              </button>
             </div>
           </div>
 
           <Button
             type="submit"
             isLoading={loading}
-            className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-3 rounded-xl shadow-lg shadow-green-200 transition-all"
+            className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-3 rounded-xl shadow-lg shadow-green-200 transition-all mt-2"
           >
             {loading ? "Changing..." : "Change Password"}
           </Button>
 
         </form>
-      </div>
-
-      {/* Danger Zone */}
-      <div className="bg-white border border-red-100 rounded-2xl p-6 shadow-sm">
-        <h3 className="font-black text-red-600 mb-4">Danger Zone</h3>
-        <div className="space-y-3">
-          <div className="flex items-center justify-between p-4 bg-red-50 rounded-xl border border-red-100">
-            <div>
-              <p className="text-sm font-bold text-gray-700">Sign Out</p>
-              <p className="text-xs text-gray-400">Sign out from your account</p>
-            </div>
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-bold rounded-xl transition-all"
-            >
-              <FaSignOutAlt size={12} />
-              Sign Out
-            </button>
-          </div>
-        </div>
       </div>
 
     </div>
