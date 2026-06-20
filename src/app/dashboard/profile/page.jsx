@@ -6,6 +6,7 @@ import { Button } from "@heroui/react";
 import { FaUser, FaEnvelope, FaPhone, FaCamera } from "react-icons/fa";
 import { MdLocationOn } from "react-icons/md";
 import { toast } from "react-toastify";
+import { authClient } from "@/lib/auth-client";
 
 export default function ProfilePage() {
   const { data: session } = useSession();
@@ -54,21 +55,28 @@ export default function ProfilePage() {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/profile`, {
+        // Update our users collection
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/profile`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
-      });
-      const data = await res.json();
-      if (data.success) {
+        });
+        const data = await res.json();
+
+        if (data.success) {
+        // Also update BetterAuth user collection
+        await authClient.updateUser({
+            name: formData.name,
+            image: formData.photo,
+        });
         toast.success("Profile updated successfully!");
-      } else {
+        } else {
         toast.error("Failed to update profile!");
-      }
+        }
     } catch (error) {
-      toast.error("Something went wrong!");
+        toast.error("Something went wrong!");
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
   };
 
