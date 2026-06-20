@@ -92,7 +92,7 @@ export default function AddProductPage() {
       const data = await res.json();
       if (data.success) {
         toast.success("Product listed successfully!");
-        router.push("/dashboard/my-products");
+        router.push("/dashboard/seller/my-products");
       } else {
         toast.error("Failed to add product!");
       }
