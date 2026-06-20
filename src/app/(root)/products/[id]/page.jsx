@@ -208,15 +208,27 @@ export default function ProductDetailsPage() {
                 variant="bordered"
                 className="border-2 border-green-500 text-green-600 font-bold rounded-2xl hover:bg-green-50 transition-all"
                 startContent={<FaHeart size={14} />}
-                onClick={() => {
+                onClick={async () => {
                     if (!session) {
-                        toast.warn("Please login to add to wishlist!");
-                        router.push("/login");
-                        return;
+                    toast.warn("Please login to add to wishlist!");
+                    router.push("/login");
+                    return;
                     }
+                    try {
+                    await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/wishlist`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                        email: session.user.email,
+                        productId: product._id,
+                        }),
+                    });
                     toast.success("Added to wishlist!");
+                    } catch (error) {
+                    toast.error("Failed to add to wishlist!");
+                    }
                 }}
-              >
+                >
                 Wishlist
               </Button>
             </div>
