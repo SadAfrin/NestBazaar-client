@@ -4,8 +4,9 @@ import { useSession } from "@/lib/auth-client";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@heroui/react";
-import { FaHeart, FaTrash, FaEye, FaMapMarkerAlt, FaTag } from "react-icons/fa";
+import { FaHeart, FaTrash, FaEye, FaShoppingBag, FaMapMarkerAlt } from "react-icons/fa";
 import { MdVerified } from "react-icons/md";
 import { toast } from "react-toastify";
 
@@ -17,6 +18,7 @@ const conditionColors = {
 
 export default function WishlistPage() {
   const { data: session } = useSession();
+  const router = useRouter();
   const [wishlist, setWishlist] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -57,21 +59,37 @@ export default function WishlistPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-black text-gray-800">My Wishlist</h1>
-        <p className="text-gray-400 text-sm mt-1">
-          {wishlist.length} saved {wishlist.length === 1 ? "product" : "products"}
-        </p>
+
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-black text-gray-800">My Wishlist</h1>
+          <p className="text-gray-400 text-sm mt-1">
+            {wishlist.length} saved {wishlist.length === 1 ? "product" : "products"}
+          </p>
+        </div>
+        {wishlist.length > 0 && (
+          <Link href="/products">
+            <Button
+              size="sm"
+              variant="bordered"
+              className="border-2 border-green-500 text-green-600 font-bold rounded-xl hover:bg-green-50"
+            >
+              Browse More
+            </Button>
+          </Link>
+        )}
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className="bg-white rounded-2xl overflow-hidden animate-pulse">
-              <div className="h-48 bg-gray-200" />
-              <div className="p-4 space-y-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="bg-white rounded-2xl p-4 animate-pulse flex gap-4">
+              <div className="w-16 h-16 bg-gray-200 rounded-xl shrink-0" />
+              <div className="flex-1 space-y-2">
                 <div className="h-4 bg-gray-200 rounded w-3/4" />
                 <div className="h-4 bg-gray-200 rounded w-1/2" />
+                <div className="h-4 bg-gray-200 rounded w-1/4" />
               </div>
             </div>
           ))}
@@ -94,61 +112,81 @@ export default function WishlistPage() {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {wishlist.map((product, index) => (
             <motion.div
               key={product._id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className="group bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all"
+              transition={{ delay: index * 0.08 }}
+              className="bg-white border border-gray-100 rounded-2xl p-4 hover:shadow-md transition-all flex items-center gap-3"
             >
-              {/* Image */}
-              <div className="relative h-48 overflow-hidden">
+              {/* Product Image */}
+              <div className="w-16 h-16 rounded-xl overflow-hidden shrink-0 border border-gray-100">
                 <img
                   src={product.images?.[0]}
                   alt={product.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover"
                 />
-                <span className={`absolute top-3 left-3 text-xs font-bold px-2 py-1 rounded-lg ${conditionColors[product.condition] || "bg-gray-100 text-gray-700"}`}>
-                  {product.condition}
-                </span>
-                <button
-                  onClick={() => handleRemove(product._id)}
-                  className="absolute top-3 right-3 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white hover:bg-red-600 transition-all shadow-md"
-                >
-                  <FaTrash size={12} />
-                </button>
               </div>
 
-              {/* Content */}
-              <div className="p-4 space-y-3">
-                <h3 className="font-bold text-gray-800 text-sm line-clamp-2">
-                  {product.title}
-                </h3>
-                <p className="text-xl font-black text-green-600">
+              {/* Product Info */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-0.5 flex-wrap">
+                  <h3 className="font-bold text-gray-800 text-sm line-clamp-1">
+                    {product.title}
+                  </h3>
+                  <span className={`text-xs font-bold px-2 py-0.5 rounded-lg shrink-0 ${conditionColors[product.condition] || "bg-gray-100 text-gray-700"}`}>
+                    {product.condition}
+                  </span>
+                </div>
+                <p className="text-base font-black text-green-600">
                   ৳{product.price?.toLocaleString()}
                 </p>
-                <div className="flex items-center justify-between text-xs text-gray-400">
-                  <div className="flex items-center gap-1">
+                <div className="flex items-center gap-3 mt-0.5">
+                  <div className="flex items-center gap-1 text-xs text-gray-400">
                     <MdVerified className="text-green-500" size={12} />
                     <span>{product.sellerInfo?.name}</span>
                   </div>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1 text-xs text-gray-400">
                     <FaMapMarkerAlt className="text-green-500" size={10} />
                     <span>{product.sellerInfo?.location || "Bangladesh"}</span>
                   </div>
                 </div>
-                <Link href={`/products/${product._id}`}>
-                  <Button
-                    size="sm"
-                    className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-xl"
-                    startContent={<FaEye size={12} />}
-                  >
-                    View Details
-                  </Button>
-                </Link>
               </div>
+
+              {/* Vertical Divider + Actions */}
+              <div className="flex items-center gap-12 shrink-0">
+                <div className="w-px h-14 bg-gray-200"></div>
+                <div className="flex items-center gap-6">
+                  <Link href={`/products/${product._id}`}>
+                    <button
+                      className="w-8 h-8 rounded-lg bg-green-50 hover:bg-green-100 flex items-center justify-center text-green-600 transition-all"
+                      title="View Details"
+                    >
+                      <FaEye size={13} />
+                    </button>
+                  </Link>
+                  <button
+                    onClick={() => {
+                      toast.info("Redirecting to product!");
+                      router.push(`/products/${product._id}`);
+                    }}
+                    className="w-8 h-8 rounded-lg bg-blue-50 hover:bg-blue-100 flex items-center justify-center text-blue-600 transition-all"
+                    title="Place Order"
+                  >
+                    <FaShoppingBag size={13} />
+                  </button>
+                  <button
+                    onClick={() => handleRemove(product._id)}
+                    className="w-8 h-8 rounded-lg bg-red-50 hover:bg-red-100 flex items-center justify-center text-red-500 transition-all"
+                    title="Remove"
+                  >
+                    <FaTrash size={13} />
+                  </button>
+                </div>
+              </div>
+
             </motion.div>
           ))}
         </div>
