@@ -192,7 +192,7 @@ export default function MyProductsPage() {
 
               {/* Actions */}
               <div className="col-span-2 flex items-center justify-end gap-2">
-                <Link href={`/dashboard/seller/edit-product/${product._id}`}>
+                <Link href={`/dashboard/seller/edit-product/${product._id.toString()}`}>
                   <button className="w-8 h-8 rounded-lg bg-blue-50 hover:bg-blue-100 flex items-center justify-center text-blue-600 transition-all">
                     <FaEdit size={13} />
                   </button>
