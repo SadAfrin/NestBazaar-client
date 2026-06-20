@@ -68,6 +68,8 @@ export default function ProfilePage() {
         await authClient.updateUser({
             name: formData.name,
             image: formData.photo,
+            // custom fields
+            location: formData.location,
         });
         toast.success("Profile updated successfully!");
         } else {

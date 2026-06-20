@@ -1,13 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useSession } from "@/lib/auth-client";
 import { Button } from "@heroui/react";
 import { FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { authClient } from "@/lib/auth-client";
 
 export default function SettingsPage() {
-  const { data: session } = useSession();
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -24,18 +23,39 @@ export default function SettingsPage() {
 
   const handleChangePassword = async (e) => {
     e.preventDefault();
+
+    // Check if new passwords match
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       toast.error("Passwords do not match!");
       return;
     }
+
+    // Check minimum length
     if (passwordData.newPassword.length < 6) {
       toast.error("Password must be at least 6 characters!");
       return;
     }
+
     setLoading(true);
     try {
+      // BetterAuth changePassword function
+      // currentPassword = old password to verify identity
+      // newPassword = the new password to set
+      // revokeOtherSessions = logout from all other devices
+      const { data, error } = await authClient.changePassword({
+        currentPassword: passwordData.oldPassword,
+        newPassword: passwordData.newPassword,
+        revokeOtherSessions: true,
+      });
+
+      if (error) {
+        toast.error(error.message || "Failed to change password!");
+        return;
+      }
+
       toast.success("Password changed successfully!");
       setPasswordData({ oldPassword: "", newPassword: "", confirmPassword: "" });
+
     } catch (error) {
       toast.error("Failed to change password!");
     } finally {
@@ -46,49 +66,12 @@ export default function SettingsPage() {
   return (
     <div className="space-y-6 max-w-2xl">
 
-      {/* Header */}
       <div>
-        <h1 className="text-2xl font-black text-gray-800">Settings</h1>
-        <p className="text-gray-400 text-sm mt-1">Manage your account settings</p>
+        <h1 className="text-2xl font-black text-gray-800">Change Password</h1>
+        <p className="text-gray-400 text-sm mt-1">Update your account password securely</p>
       </div>
 
-      {/* Account Information */}
       <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
-        <h3 className="font-black text-gray-800 mb-4">Account Information</h3>
-        <div className="space-y-3">
-          <div className="flex items-center justify-between py-3 border-b border-gray-100">
-            <div>
-              <p className="text-sm font-bold text-gray-700">Email Address</p>
-              <p className="text-sm text-gray-400">{session?.user?.email}</p>
-            </div>
-            <span className="text-xs font-bold text-green-600 bg-green-100 px-3 py-1 rounded-full">
-              Verified
-            </span>
-          </div>
-          <div className="flex items-center justify-between py-3 border-b border-gray-100">
-            <div>
-              <p className="text-sm font-bold text-gray-700">Account Role</p>
-              <p className="text-sm text-gray-400 capitalize">{session?.user?.role || "buyer"}</p>
-            </div>
-            <span className="text-xs font-bold text-blue-600 bg-blue-100 px-3 py-1 rounded-full capitalize">
-              {session?.user?.role || "buyer"}
-            </span>
-          </div>
-          <div className="flex items-center justify-between py-3">
-            <div>
-              <p className="text-sm font-bold text-gray-700">Account Status</p>
-              <p className="text-sm text-gray-400">Your account is active</p>
-            </div>
-            <span className="text-xs font-bold text-green-600 bg-green-100 px-3 py-1 rounded-full">
-              Active
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* Change Password */}
-      <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
-        <h3 className="font-black text-gray-800 mb-6">Change Password</h3>
         <form onSubmit={handleChangePassword} className="space-y-4">
 
           {/* Current Password */}

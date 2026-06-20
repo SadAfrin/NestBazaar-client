@@ -2,11 +2,9 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
 import { useSession, signOut } from "@/lib/auth-client";
 import { toast } from "react-toastify";
-import { FaTimes } from "react-icons/fa";
-
-// Buyer links
 import {
   FaHome,
   FaShoppingBag,
@@ -15,21 +13,16 @@ import {
   FaUser,
   FaCog,
   FaSignOutAlt,
-} from "react-icons/fa";
-
-// Seller links
-import {
   FaPlus,
   FaBoxOpen,
   FaClipboardList,
   FaChartBar,
-} from "react-icons/fa";
-
-// Admin links
-import {
   FaUsers,
   FaShieldAlt,
   FaTachometerAlt,
+  FaTimes,
+  FaChevronDown,
+  FaLock,
 } from "react-icons/fa";
 
 const buyerLinks = [
@@ -37,8 +30,6 @@ const buyerLinks = [
   { name: "My Orders", href: "/dashboard/orders", icon: <FaShoppingBag size={16} /> },
   { name: "Wishlist", href: "/dashboard/wishlist", icon: <FaHeart size={16} /> },
   { name: "Payment History", href: "/dashboard/payments", icon: <FaCreditCard size={16} /> },
-  { name: "My Profile", href: "/dashboard/profile", icon: <FaUser size={16} /> },
-  { name: "Settings", href: "/dashboard/settings", icon: <FaCog size={16} /> },
 ];
 
 const sellerLinks = [
@@ -47,8 +38,6 @@ const sellerLinks = [
   { name: "My Products", href: "/dashboard/my-products", icon: <FaBoxOpen size={16} /> },
   { name: "Manage Orders", href: "/dashboard/manage-orders", icon: <FaClipboardList size={16} /> },
   { name: "Sales Analytics", href: "/dashboard/analytics", icon: <FaChartBar size={16} /> },
-  { name: "My Profile", href: "/dashboard/profile", icon: <FaUser size={16} /> },
-  { name: "Settings", href: "/dashboard/settings", icon: <FaCog size={16} /> },
 ];
 
 const adminLinks = [
@@ -57,13 +46,13 @@ const adminLinks = [
   { name: "Manage Products", href: "/dashboard/manage-products", icon: <FaBoxOpen size={16} /> },
   { name: "Manage Orders", href: "/dashboard/manage-orders", icon: <FaClipboardList size={16} /> },
   { name: "Platform Analytics", href: "/dashboard/analytics", icon: <FaChartBar size={16} /> },
-  { name: "Settings", href: "/dashboard/settings", icon: <FaShieldAlt size={16} /> },
 ];
 
 export default function Sidebar({ onClose }) {
   const pathname = usePathname();
   const router = useRouter();
   const { data: session } = useSession();
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const role = session?.user?.role || "buyer";
 
@@ -93,7 +82,7 @@ export default function Sidebar({ onClose }) {
       <div className="p-6 border-b border-gray-100 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center shadow-lg">
-            <span className="text-white font-black text-base">NB</span>
+            <span className="text-white font-black text-xs">NB</span>
           </div>
           <div className="flex flex-col leading-none">
             <span className="text-base font-black bg-gradient-to-r from-green-600 to-emerald-500 bg-clip-text text-transparent">
@@ -139,6 +128,8 @@ export default function Sidebar({ onClose }) {
         <p className="text-xs font-bold text-gray-400 uppercase tracking-widest px-3 mb-3">
           Navigation
         </p>
+
+        {/* Main Links */}
         {links.map((link) => (
           <Link
             key={link.name}
@@ -154,6 +145,58 @@ export default function Sidebar({ onClose }) {
             {link.name}
           </Link>
         ))}
+
+        {/* Settings Expandable */}
+        <div>
+          <button
+            onClick={() => setSettingsOpen(!settingsOpen)}
+            className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
+              pathname.startsWith("/dashboard/profile") || pathname.startsWith("/dashboard/settings")
+                ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-md shadow-green-200"
+                : "text-gray-600 hover:bg-green-50 hover:text-green-600"
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <FaCog size={16} />
+              Settings
+            </div>
+            <FaChevronDown
+              size={12}
+              className={`transition-transform duration-200 ${settingsOpen ? "rotate-180" : ""}`}
+            />
+          </button>
+
+          {/* Sub Links */}
+          {settingsOpen && (
+            <div className="ml-4 mt-1 space-y-1 border-l-2 border-green-100 pl-3">
+              <Link
+                href="/dashboard/profile"
+                onClick={onClose}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
+                  pathname === "/dashboard/profile"
+                    ? "text-green-600 bg-green-50"
+                    : "text-gray-500 hover:bg-green-50 hover:text-green-600"
+                }`}
+              >
+                <FaUser size={14} />
+                My Profile
+              </Link>
+              <Link
+                href="/dashboard/settings"
+                onClick={onClose}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
+                  pathname === "/dashboard/settings"
+                    ? "text-green-600 bg-green-50"
+                    : "text-gray-500 hover:bg-green-50 hover:text-green-600"
+                }`}
+              >
+                <FaLock size={14} />
+                Change Password
+              </Link>
+            </div>
+          )}
+        </div>
+
       </nav>
 
       {/* Bottom Actions */}

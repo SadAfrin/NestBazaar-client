@@ -11,32 +11,32 @@ export default function RoleSelectionModal({ session, onComplete }) {
   const [role, setRole] = useState("buyer");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setLoading(true);
     try {
-        // Save to our users collection
-        await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users`, {
-        method: "POST",
+        // Update our users collection
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/profile`, {
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            name: session.user.name,
-            email: session.user.email,
-            role: role,
-            photo: session.user.image || "",
-            location: "",
-        }),
+        body: JSON.stringify(formData),
         });
+        const data = await res.json();
 
-        // Update role in BetterAuth user collection
+        if (data.success) {
+        // Also update BetterAuth user collection
         await authClient.updateUser({
-        role: role,
+            name: formData.name,
+            image: formData.photo,
+            // custom fields
+            location: formData.location,
         });
-
-        toast.success(`Welcome to NestBazaar as a ${role}!`);
-        onComplete();
-        window.location.reload();
+        toast.success("Profile updated successfully!");
+        } else {
+        toast.error("Failed to update profile!");
+        }
     } catch (error) {
-        toast.error("Something went wrong. Please try again.");
+        toast.error("Something went wrong!");
     } finally {
         setLoading(false);
     }
