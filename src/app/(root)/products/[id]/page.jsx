@@ -8,6 +8,7 @@ import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaArrowLeft, FaShoppingCart, FaHea
 import { MdVerified } from "react-icons/md";
 import { toast } from "react-toastify";
 import { useSession } from "@/lib/auth-client";
+import { loadStripe } from "@stripe/stripe-js";
 
 const conditionColors = {
   "Like New": "bg-green-100 text-green-700",
@@ -22,6 +23,7 @@ export default function ProductDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
   const { data: session } = useSession();
+  const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -193,13 +195,34 @@ export default function ProductDetailsPage() {
               <Button
                 className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-2xl shadow-lg shadow-green-200 hover:shadow-green-300 transition-all"
                 startContent={<FaShoppingCart size={14} />}
-                onClick={() => {
+                onClick={async () => {
                     if (!session) {
                         toast.warn("Please login to place an order!");
                         router.push("/login");
                         return;
                     }
-                    toast.info("Order feature coming soon!");
+                    try {
+                        toast.info("Redirecting to payment...");
+                        const res = await fetch("/api/checkout", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            product,
+                            buyerEmail: session.user.email,
+                            buyerName: session.user.name,
+                            sellerEmail: product.sellerInfo?.email,
+                            sellerName: product.sellerInfo?.name,
+                        }),
+                        });
+                        const data = await res.json();
+                        if (data.url) {
+                        window.location.href = data.url;
+                        } else {
+                        toast.error("Failed to initiate payment!");
+                        }
+                    } catch (error) {
+                        toast.error("Something went wrong!");
+                    }
                 }}
               >
                 Place Order
