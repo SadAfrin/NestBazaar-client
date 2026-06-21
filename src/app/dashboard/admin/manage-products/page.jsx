@@ -196,7 +196,7 @@ export default function ManageProductsPage() {
               </div>
 
               {/* Actions */}
-              <div className="col-span-2 flex items-center justify-end gap-2">
+              <div className="col-span-2 flex items-center justify-end gap-6">
                 {product.status !== "available" && (
                   <button
                     onClick={() => handleUpdateStatus(product._id, "available")}
