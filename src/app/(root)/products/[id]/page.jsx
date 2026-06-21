@@ -8,7 +8,6 @@ import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaArrowLeft, FaShoppingCart, FaHea
 import { MdVerified } from "react-icons/md";
 import { toast } from "react-toastify";
 import { useSession } from "@/lib/auth-client";
-import { loadStripe } from "@stripe/stripe-js";
 
 const conditionColors = {
   "Like New": "bg-green-100 text-green-700",
@@ -23,7 +22,6 @@ export default function ProductDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
   const { data: session } = useSession();
-  const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -87,7 +85,6 @@ export default function ProductDetailsPage() {
             transition={{ duration: 0.6 }}
             className="space-y-4"
           >
-            {/* Main Image */}
             <div className="relative h-96 rounded-3xl overflow-hidden bg-white border border-gray-100 shadow-sm">
               <img
                 src={product.images?.[selectedImage]}
@@ -99,7 +96,6 @@ export default function ProductDetailsPage() {
               </span>
             </div>
 
-            {/* Thumbnail Images */}
             {product.images?.length > 1 && (
               <div className="flex gap-3">
                 {product.images.map((img, index) => (
@@ -126,17 +122,14 @@ export default function ProductDetailsPage() {
             transition={{ duration: 0.6 }}
             className="space-y-6"
           >
-            {/* Category */}
             <span className="text-xs font-bold text-green-600 uppercase tracking-widest">
               {product.category}
             </span>
 
-            {/* Title */}
             <h1 className="text-3xl font-black text-gray-900 leading-tight">
               {product.title}
             </h1>
 
-            {/* Price */}
             <div className="flex items-center gap-4">
               <p className="text-4xl font-black text-green-600">
                 ৳{product.price?.toLocaleString()}
@@ -146,13 +139,11 @@ export default function ProductDetailsPage() {
               </span>
             </div>
 
-            {/* Description */}
             <div className="bg-white border border-gray-100 rounded-2xl p-5">
               <h3 className="font-black text-gray-800 mb-3">Description</h3>
               <p className="text-gray-500 text-sm leading-relaxed">{product.description}</p>
             </div>
 
-            {/* Seller Info */}
             <div className="bg-white border border-gray-100 rounded-2xl p-5 space-y-4">
               <h3 className="font-black text-gray-800">Seller Information</h3>
               <div className="flex items-center gap-4">
@@ -173,7 +164,6 @@ export default function ProductDetailsPage() {
                 </div>
               </div>
 
-              {/* Contact Info */}
               <div className="space-y-2">
                 <div className="flex items-center gap-3 text-sm text-gray-500">
                   <FaEnvelope className="text-green-500" size={14} />
@@ -192,68 +182,97 @@ export default function ProductDetailsPage() {
 
             {/* Action Buttons */}
             <div className="flex gap-3">
+
+              {/* Place Order Button */}
               <Button
                 className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-2xl shadow-lg shadow-green-200 hover:shadow-green-300 transition-all"
                 startContent={<FaShoppingCart size={14} />}
                 onClick={async () => {
-                    if (!session) {
-                        toast.warn("Please login to place an order!");
-                        router.push("/login");
-                        return;
+                  if (!session) {
+                    toast.warn("Please login to place an order!");
+                    router.push("/login");
+                    return;
+                  }
+                  try {
+                    // Fetch role from our users collection
+                    const roleRes = await fetch(
+                      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/role?email=${session.user.email}`
+                    );
+                    const roleData = await roleRes.json();
+                    const userRole = roleData.role;
+
+                    if (userRole === "admin" || userRole === "seller") {
+                      toast.warn("Only buyers can place orders!");
+                      return;
                     }
-                    try {
-                        toast.info("Redirecting to payment...");
-                        const res = await fetch("/api/checkout", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                            product,
-                            buyerEmail: session.user.email,
-                            buyerName: session.user.name,
-                            sellerEmail: product.sellerInfo?.email,
-                            sellerName: product.sellerInfo?.name,
-                        }),
-                        });
-                        const data = await res.json();
-                        if (data.url) {
-                        window.location.href = data.url;
-                        } else {
-                        toast.error("Failed to initiate payment!");
-                        }
-                    } catch (error) {
-                        toast.error("Something went wrong!");
+
+                    toast.info("Redirecting to payment...");
+                    const res = await fetch("/api/checkout", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        product,
+                        buyerEmail: session.user.email,
+                        buyerName: session.user.name,
+                        sellerEmail: product.sellerInfo?.email,
+                        sellerName: product.sellerInfo?.name,
+                      }),
+                    });
+                    const data = await res.json();
+                    if (data.url) {
+                      window.location.href = data.url;
+                    } else {
+                      toast.error("Failed to initiate payment!");
                     }
+                  } catch (error) {
+                    toast.error("Something went wrong!");
+                  }
                 }}
               >
                 Place Order
               </Button>
+
+              {/* Wishlist Button */}
               <Button
                 variant="bordered"
                 className="border-2 border-green-500 text-green-600 font-bold rounded-2xl hover:bg-green-50 transition-all"
                 startContent={<FaHeart size={14} />}
                 onClick={async () => {
                     if (!session) {
-                    toast.warn("Please login to add to wishlist!");
-                    router.push("/login");
-                    return;
+                        toast.warn("Please login to add to wishlist!");
+                        router.push("/login");
+                        return;
                     }
                     try {
-                    await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/wishlist`, {
+                        // Fetch role from our users collection
+                        const roleRes = await fetch(
+                        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/role?email=${session.user.email}`
+                        );
+                        const roleData = await roleRes.json();
+                        const userRole = roleData.role;
+
+                        if (userRole === "admin" || userRole === "seller") {
+                        toast.warn("Only buyers can add to wishlist!");
+                        return;
+                        }
+
+                        await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/wishlist`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
-                        email: session.user.email,
-                        productId: product._id,
+                            email: session.user.email,
+                            productId: product._id,
                         }),
-                    });
-                    toast.success("Added to wishlist!");
+                        });
+                        toast.success("Added to wishlist!");
                     } catch (error) {
-                    toast.error("Failed to add to wishlist!");
+                        toast.error("Failed to add to wishlist!");
                     }
                 }}
-                >
+              >
                 Wishlist
               </Button>
+
             </div>
 
           </motion.div>

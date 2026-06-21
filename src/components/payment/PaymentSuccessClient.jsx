@@ -16,36 +16,47 @@ export default function PaymentSuccessClient({ session, productId, sellerEmail, 
 
   useEffect(() => {
     const saveOrder = async () => {
-      if (orderSaved || !userSession?.user) return;
+        if (orderSaved || !userSession?.user) return;
 
-      try {
+        try {
+        // Check if order already exists with this transaction ID
+        const checkRes = await fetch(
+            `${process.env.NEXT_PUBLIC_SERVER_URL}/api/orders/check?transactionId=${session.payment_intent?.id}`
+        );
+        const checkData = await checkRes.json();
+        
+        if (checkData.exists) {
+            setOrderSaved(true);
+            return; // Order already saved, don't save again
+        }
+
         // Save order to DB
         await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/orders`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
             buyerInfo: {
-              userId: userSession.user.id,
-              name: userSession.user.name,
-              email: userSession.user.email,
+                userId: userSession.user.id,
+                name: userSession.user.name,
+                email: userSession.user.email,
             },
             sellerInfo: {
-              email: sellerEmail,
-              name: sellerName,
+                email: sellerEmail,
+                name: sellerName,
             },
             productId,
             amount: session.amount_total / 100,
             paymentStatus: "paid",
             orderStatus: "pending",
             transactionId: session.payment_intent?.id,
-          }),
+            }),
         });
 
         // Save payment to DB
         await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/payments`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
             orderId: session.id,
             transactionId: session.payment_intent?.id,
             buyerEmail: userSession.user.email,
@@ -53,14 +64,14 @@ export default function PaymentSuccessClient({ session, productId, sellerEmail, 
             paymentStatus: "success",
             paymentMethod: "stripe",
             paymentDate: new Date(),
-          }),
+            }),
         });
 
         setOrderSaved(true);
         toast.success("Order placed successfully!");
-      } catch (error) {
+        } catch (error) {
         console.error("Failed to save order:", error);
-      }
+        }
     };
 
     saveOrder();
