@@ -5,40 +5,45 @@ import { motion } from "framer-motion";
 import { Button } from "@heroui/react";
 import { FaShoppingBag, FaStore } from "react-icons/fa";
 import { toast } from "react-toastify";
-import { authClient } from "@/lib/auth-client";
 
 export default function RoleSelectionModal({ session, onComplete }) {
   const [role, setRole] = useState("buyer");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setLoading(true);
     try {
-        // Update our users collection
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/profile`, {
+      // Save to our users collection
+      await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: session.user.name,
+          email: session.user.email,
+          role: role,
+          photo: session.user.image || "",
+          location: "",
+        }),
+      });
+
+      // Update role in users collection
+      await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/update-role`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-        });
-        const data = await res.json();
+        body: JSON.stringify({
+          email: session.user.email,
+          role: role,
+        }),
+      });
 
-        if (data.success) {
-        // Also update BetterAuth user collection
-        await authClient.updateUser({
-            name: formData.name,
-            image: formData.photo,
-            // custom fields
-            location: formData.location,
-        });
-        toast.success("Profile updated successfully!");
-        } else {
-        toast.error("Failed to update profile!");
-        }
+      toast.success(`Welcome to NestBazaar as a ${role}!`);
+      onComplete();
+      window.location.reload();
     } catch (error) {
-        toast.error("Something went wrong!");
+      console.error("Modal error:", error);
+      toast.error("Something went wrong. Please try again.");
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
 
@@ -51,7 +56,7 @@ export default function RoleSelectionModal({ session, onComplete }) {
       >
         <div className="text-center mb-8">
           <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center mx-auto mb-4 shadow-lg">
-            <span className="text-white font-black text-2xl">NB</span>
+            <span className="text-white font-black text-sm">NB</span>
           </div>
           <h2 className="text-2xl font-black text-gray-800">One Last Step!</h2>
           <p className="text-gray-400 text-sm mt-2">
