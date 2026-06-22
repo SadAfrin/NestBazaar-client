@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession, signOut } from "@/lib/auth-client";
 import { toast } from "react-toastify";
 import {
@@ -53,8 +53,23 @@ export default function Sidebar({ onClose }) {
   const router = useRouter();
   const { data: session } = useSession();
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [role, setRole] = useState("buyer");
 
-  const role = session?.user?.role || "buyer";
+  useEffect(() => {
+    const fetchRole = async () => {
+      if (!session?.user?.email) return;
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/role?email=${session.user.email}`
+        );
+        const data = await res.json();
+        if (data.success) setRole(data.role);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchRole();
+  }, [session]);
 
   const links =
     role === "admin"
@@ -129,7 +144,6 @@ export default function Sidebar({ onClose }) {
           Navigation
         </p>
 
-        {/* Main Links */}
         {links.map((link) => (
           <Link
             key={link.name}
@@ -166,7 +180,6 @@ export default function Sidebar({ onClose }) {
             />
           </button>
 
-          {/* Sub Links */}
           {settingsOpen && (
             <div className="ml-4 mt-1 space-y-1 border-l-2 border-green-100 pl-3">
               <Link

@@ -11,39 +11,49 @@ export default function RoleSelectionModal({ session, onComplete }) {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
-    setLoading(true);
+  setLoading(true);
     try {
-      // Save to our users collection
-      await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users`, {
+        // Save to our users collection
+        await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: session.user.name,
-          email: session.user.email,
-          role: role,
-          photo: session.user.image || "",
-          location: "",
+            name: session.user.name,
+            email: session.user.email,
+            role: role,
+            photo: session.user.image || "",
+            location: "",
         }),
-      });
+        });
 
-      // Update role in users collection
-      await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/update-role`, {
+        // Update role in users collection
+        await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/update-role`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: session.user.email,
-          role: role,
+            email: session.user.email,
+            role: role,
         }),
-      });
+        });
 
-      toast.success(`Welcome to NestBazaar as a ${role}!`);
-      onComplete();
-      window.location.reload();
+        // Update role in BetterAuth user collection
+        await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/users/update-betterauth-role`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            email: session.user.email,
+            role: role,
+        }),
+        });
+
+        toast.success(`Welcome to NestBazaar as a ${role}!`);
+        onComplete();
+        window.location.reload();
     } catch (error) {
-      console.error("Modal error:", error);
-      toast.error("Something went wrong. Please try again.");
+        console.error("Modal error:", error);
+        toast.error("Something went wrong. Please try again.");
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
   };
 
