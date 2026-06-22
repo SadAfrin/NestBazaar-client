@@ -1,17 +1,54 @@
 "use client";
 
 import { useSession } from "@/lib/auth-client";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FaBoxOpen, FaCheckCircle, FaDollarSign, FaClock, FaClipboardList } from "react-icons/fa";
 
 export default function SellerOverview() {
   const { data: session } = useSession();
+  const [stats, setStats] = useState({
+    totalProducts: 0,
+    totalSales: 0,
+    totalRevenue: 0,
+    pendingOrders: 0,
+  });
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        // Fetch seller products
+        const productsRes = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/products/seller?email=${session?.user?.email}`
+        );
+        const productsData = await productsRes.json();
+        const totalProducts = productsData.success ? productsData.data.length : 0;
+
+        // Fetch seller orders
+        const ordersRes = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/orders/seller?email=${session?.user?.email}`
+        );
+        const ordersData = await ordersRes.json();
+        const orders = ordersData.success ? ordersData.data : [];
+        const totalSales = orders.filter(o => o.orderStatus === "delivered").length;
+        const pendingOrders = orders.filter(o => o.orderStatus === "pending").length;
+        const totalRevenue = orders
+          .filter(o => o.orderStatus === "delivered")
+          .reduce((acc, o) => acc + (o.amount || 0), 0);
+
+        setStats({ totalProducts, totalSales, totalRevenue, pendingOrders });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    if (session?.user?.email) fetchStats();
+  }, [session]);
 
   const cards = [
-    { label: "Total Products", value: "0", icon: <FaBoxOpen size={20} />, color: "from-blue-400 to-blue-600" },
-    { label: "Total Sales", value: "0", icon: <FaCheckCircle size={20} />, color: "from-green-400 to-green-600" },
-    { label: "Total Revenue", value: "৳0", icon: <FaDollarSign size={20} />, color: "from-emerald-400 to-emerald-600" },
-    { label: "Pending Orders", value: "0", icon: <FaClock size={20} />, color: "from-orange-400 to-orange-600" },
+    { label: "Total Products", value: stats.totalProducts, icon: <FaBoxOpen size={20} />, color: "from-blue-400 to-blue-600" },
+    { label: "Total Sales", value: stats.totalSales, icon: <FaCheckCircle size={20} />, color: "from-green-400 to-green-600" },
+    { label: "Total Revenue", value: `৳${stats.totalRevenue.toLocaleString()}`, icon: <FaDollarSign size={20} />, color: "from-emerald-400 to-emerald-600" },
+    { label: "Pending Orders", value: stats.pendingOrders, icon: <FaClock size={20} />, color: "from-orange-400 to-orange-600" },
   ];
 
   return (
