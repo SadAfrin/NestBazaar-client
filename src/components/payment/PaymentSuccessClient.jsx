@@ -70,10 +70,27 @@ export default function PaymentSuccessClient({ session, productId, sellerEmail, 
           }
         );
 
+        // Remove from wishlist after ordering
+        try {
+          await fetchWithAuth(
+            `${process.env.NEXT_PUBLIC_SERVER_URL}/api/wishlist`,
+            {
+              method: "DELETE",
+              body: JSON.stringify({
+                email: userSession.user.email,
+                productId: productId,
+              }),
+            }
+          );
+        } catch (err) {
+          console.error("Failed to remove from wishlist:", err);
+        }
+
         setOrderSaved(true);
         toast.success("Order placed successfully!");
       } catch (error) {
         console.error("Failed to save order:", error);
+        toast.error("Failed to save order: " + error.message);
       }
     };
 
