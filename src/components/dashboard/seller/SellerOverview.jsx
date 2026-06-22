@@ -4,6 +4,7 @@ import { useSession } from "@/lib/auth-client";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FaBoxOpen, FaCheckCircle, FaDollarSign, FaClock, FaClipboardList } from "react-icons/fa";
+import { fetchWithAuth } from "@/lib/fetchWithAuth";
 
 export default function SellerOverview() {
   const { data: session } = useSession();
@@ -17,15 +18,13 @@ export default function SellerOverview() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        // Fetch seller products
-        const productsRes = await fetch(
+        const productsRes = await fetchWithAuth(
           `${process.env.NEXT_PUBLIC_SERVER_URL}/api/products/seller?email=${session?.user?.email}`
         );
         const productsData = await productsRes.json();
         const totalProducts = productsData.success ? productsData.data.length : 0;
 
-        // Fetch seller orders
-        const ordersRes = await fetch(
+        const ordersRes = await fetchWithAuth(
           `${process.env.NEXT_PUBLIC_SERVER_URL}/api/orders/seller?email=${session?.user?.email}`
         );
         const ordersData = await ordersRes.json();
@@ -78,7 +77,6 @@ export default function SellerOverview() {
         ))}
       </div>
 
-      {/* Recent Orders */}
       <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
         <h3 className="font-black text-gray-800 mb-4">Recent Orders</h3>
         <div className="flex flex-col items-center justify-center py-12 gap-4">

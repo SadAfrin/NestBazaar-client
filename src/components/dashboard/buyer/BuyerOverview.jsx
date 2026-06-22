@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FaShoppingBag, FaHeart, FaCreditCard, FaBoxOpen } from "react-icons/fa";
 import Link from "next/link";
+import { fetchWithAuth } from "@/lib/fetchWithAuth";
 
 export default function BuyerOverview() {
   const { data: session } = useSession();
@@ -18,23 +19,20 @@ export default function BuyerOverview() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        // Fetch wishlist count
-        const wishlistRes = await fetch(
+        const wishlistRes = await fetchWithAuth(
           `${process.env.NEXT_PUBLIC_SERVER_URL}/api/wishlist?email=${session?.user?.email}`
         );
         const wishlistData = await wishlistRes.json();
         const wishlistCount = wishlistData.success ? wishlistData.data.length : 0;
 
-        // Fetch orders
-        const ordersRes = await fetch(
+        const ordersRes = await fetchWithAuth(
           `${process.env.NEXT_PUBLIC_SERVER_URL}/api/orders?email=${session?.user?.email}`
         );
         const ordersData = await ordersRes.json();
         const orders = ordersData.success ? ordersData.data : [];
         const totalOrders = orders.length;
 
-        // Fetch payments to calculate total spent
-        const paymentsRes = await fetch(
+        const paymentsRes = await fetchWithAuth(
           `${process.env.NEXT_PUBLIC_SERVER_URL}/api/payments?email=${session?.user?.email}`
         );
         const paymentsData = await paymentsRes.json();
@@ -91,7 +89,6 @@ export default function BuyerOverview() {
         ))}
       </div>
 
-      {/* Recent Orders */}
       <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
         <h3 className="font-black text-gray-800 mb-4">Recent Orders</h3>
         <div className="flex flex-col items-center justify-center py-12 gap-4">
