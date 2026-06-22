@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { FaBoxOpen, FaSearch, FaTrash, FaCheck, FaTimes, FaTag } from "react-icons/fa";
 import { MdVerified } from "react-icons/md";
 import { toast } from "react-toastify";
+import { fetchWithAuth } from "@/lib/fetchWithAuth";
 
 const conditionColors = {
   "Like New": "bg-green-100 text-green-700",
@@ -25,7 +26,7 @@ export default function ManageProductsPage() {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch(
+      const res = await fetchWithAuth(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/products`
       );
       const data = await res.json();
@@ -43,11 +44,10 @@ export default function ManageProductsPage() {
 
   const handleUpdateStatus = async (id, status) => {
     try {
-      const res = await fetch(
+      const res = await fetchWithAuth(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/products/status`,
         {
           method: "PATCH",
-          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ id, status }),
         }
       );
@@ -66,7 +66,7 @@ export default function ManageProductsPage() {
   const handleDelete = async (id) => {
     if (!confirm("Are you sure you want to delete this product?")) return;
     try {
-      const res = await fetch(
+      const res = await fetchWithAuth(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/products/${id}`,
         { method: "DELETE" }
       );
@@ -91,13 +91,11 @@ export default function ManageProductsPage() {
   return (
     <div className="space-y-6">
 
-      {/* Header */}
       <div>
         <h1 className="text-2xl font-black text-gray-800">Manage Products</h1>
         <p className="text-gray-400 text-sm mt-1">{products.length} total products</p>
       </div>
 
-      {/* Search */}
       <div className="relative">
         <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
         <input
@@ -132,8 +130,6 @@ export default function ManageProductsPage() {
         </div>
       ) : (
         <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
-
-          {/* Table Header */}
           <div className="grid grid-cols-12 gap-4 px-4 py-3 bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
             <div className="col-span-4">Product</div>
             <div className="col-span-2">Category</div>
@@ -152,7 +148,6 @@ export default function ManageProductsPage() {
                 index !== filteredProducts.length - 1 ? "border-b border-gray-100" : ""
               }`}
             >
-              {/* Product */}
               <div className="col-span-4 flex items-center gap-3">
                 <div className="w-12 h-12 rounded-xl overflow-hidden border border-gray-100 shrink-0">
                   <img
@@ -170,7 +165,6 @@ export default function ManageProductsPage() {
                 </div>
               </div>
 
-              {/* Category */}
               <div className="col-span-2">
                 <div className="flex items-center gap-1 text-xs text-gray-500">
                   <FaTag size={10} className="text-green-500" />
@@ -178,7 +172,6 @@ export default function ManageProductsPage() {
                 </div>
               </div>
 
-              {/* Price */}
               <div className="col-span-2">
                 <p className="font-black text-green-600 text-sm">
                   ৳{product.price?.toLocaleString()}
@@ -188,15 +181,13 @@ export default function ManageProductsPage() {
                 </span>
               </div>
 
-              {/* Status */}
               <div className="col-span-2">
                 <span className={`text-xs font-bold px-2 py-1 rounded-lg capitalize ${statusColors[product.status] || "bg-gray-100 text-gray-700"}`}>
                   {product.status}
                 </span>
               </div>
 
-              {/* Actions */}
-              <div className="col-span-2 flex items-center justify-end gap-6">
+              <div className="col-span-2 flex items-center justify-end gap-2">
                 {product.status !== "available" && (
                   <button
                     onClick={() => handleUpdateStatus(product._id, "available")}

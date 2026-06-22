@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { FaUsers, FaSearch, FaTrash, FaBan, FaCheck } from "react-icons/fa";
 import { MdVerified } from "react-icons/md";
 import { toast } from "react-toastify";
+import { fetchWithAuth } from "@/lib/fetchWithAuth";
 
 const roleColors = {
   "buyer": "bg-blue-100 text-blue-700",
@@ -24,7 +25,9 @@ export default function ManageUsersPage() {
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/users`);
+      const res = await fetchWithAuth(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/users`
+      );
       const data = await res.json();
       if (data.success) setUsers(data.data);
     } catch (error) {
@@ -40,11 +43,13 @@ export default function ManageUsersPage() {
 
   const handleUpdateStatus = async (email, status) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/users/status`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, status }),
-      });
+      const res = await fetchWithAuth(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/users/status`,
+        {
+          method: "PATCH",
+          body: JSON.stringify({ email, status }),
+        }
+      );
       const data = await res.json();
       if (data.success) {
         toast.success(`User ${status} successfully!`);
@@ -59,24 +64,20 @@ export default function ManageUsersPage() {
 
   const handleUpdateRole = async (email, role) => {
     try {
-      // Update users collection
-      const res = await fetch(
+      const res = await fetchWithAuth(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/update-role`,
         {
           method: "PATCH",
-          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, role }),
         }
       );
       const data = await res.json();
 
       if (data.success) {
-        // Also update BetterAuth user collection
-        await fetch(
+        await fetchWithAuth(
           `${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/users/update-betterauth-role`,
           {
             method: "PATCH",
-            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, role }),
           }
         );
@@ -93,7 +94,7 @@ export default function ManageUsersPage() {
   const handleDelete = async (email) => {
     if (!confirm("Are you sure you want to delete this user?")) return;
     try {
-      const res = await fetch(
+      const res = await fetchWithAuth(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/users?email=${email}`,
         { method: "DELETE" }
       );
@@ -118,13 +119,11 @@ export default function ManageUsersPage() {
   return (
     <div className="space-y-6">
 
-      {/* Header */}
       <div>
         <h1 className="text-2xl font-black text-gray-800">Manage Users</h1>
         <p className="text-gray-400 text-sm mt-1">{users.length} total users</p>
       </div>
 
-      {/* Search */}
       <div className="relative">
         <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
         <input
@@ -159,8 +158,6 @@ export default function ManageUsersPage() {
         </div>
       ) : (
         <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
-
-          {/* Table Header */}
           <div className="grid grid-cols-12 gap-4 px-4 py-3 bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
             <div className="col-span-3">User</div>
             <div className="col-span-2">Role</div>
@@ -179,7 +176,6 @@ export default function ManageUsersPage() {
                 index !== filteredUsers.length - 1 ? "border-b border-gray-100" : ""
               }`}
             >
-              {/* User */}
               <div className="col-span-3 flex items-center gap-3">
                 {user.photo ? (
                   <img
@@ -201,29 +197,23 @@ export default function ManageUsersPage() {
                 </div>
               </div>
 
-              {/* Role */}
               <div className="col-span-2">
                 <span className={`text-xs font-bold px-2 py-1 rounded-lg capitalize ${roleColors[user.role] || "bg-gray-100 text-gray-700"}`}>
                   {user.role}
                 </span>
               </div>
 
-              {/* Location */}
               <div className="col-span-2">
                 <p className="text-sm text-gray-500">{user.location || "N/A"}</p>
               </div>
 
-              {/* Status */}
               <div className="col-span-2">
                 <span className={`text-xs font-bold px-2 py-1 rounded-lg capitalize ${statusColors[user.status] || "bg-gray-100 text-gray-700"}`}>
                   {user.status || "active"}
                 </span>
               </div>
 
-              {/* Actions */}
               <div className="col-span-3 flex items-center justify-end gap-2">
-
-                {/* Role Change Dropdown */}
                 <select
                   value={user.role}
                   onChange={(e) => handleUpdateRole(user.email, e.target.value)}
@@ -234,7 +224,6 @@ export default function ManageUsersPage() {
                   <option value="admin">Admin</option>
                 </select>
 
-                {/* Block/Unblock */}
                 {user.status === "blocked" ? (
                   <button
                     onClick={() => handleUpdateStatus(user.email, "active")}
@@ -253,7 +242,6 @@ export default function ManageUsersPage() {
                   </button>
                 )}
 
-                {/* Delete */}
                 <button
                   onClick={() => handleDelete(user.email)}
                   className="w-8 h-8 rounded-lg bg-red-50 hover:bg-red-100 flex items-center justify-center text-red-500 transition-all"
@@ -261,7 +249,6 @@ export default function ManageUsersPage() {
                 >
                   <FaTrash size={13} />
                 </button>
-
               </div>
 
             </motion.div>

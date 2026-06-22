@@ -2,76 +2,79 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Button } from "@heroui/react";
 import { FaCheckCircle, FaShoppingBag, FaHome } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { fetchWithAuth } from "@/lib/fetchWithAuth";
 
 export default function PaymentSuccessClient({ session, productId, sellerEmail, sellerName }) {
   const { data: userSession } = useSession();
-  const router = useRouter();
   const [orderSaved, setOrderSaved] = useState(false);
 
   useEffect(() => {
     const saveOrder = async () => {
-        if (orderSaved || !userSession?.user) return;
+      if (orderSaved || !userSession?.user) return;
 
-        try {
-        // Check if order already exists with this transaction ID
-        const checkRes = await fetch(
-            `${process.env.NEXT_PUBLIC_SERVER_URL}/api/orders/check?transactionId=${session.payment_intent?.id}`
+      try {
+        // Check if order already exists
+        const checkRes = await fetchWithAuth(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/orders/check?transactionId=${session.payment_intent?.id}`
         );
         const checkData = await checkRes.json();
-        
+
         if (checkData.exists) {
-            setOrderSaved(true);
-            return; // Order already saved, don't save again
+          setOrderSaved(true);
+          return;
         }
 
-        // Save order to DB
-        await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/orders`, {
+        // Save order
+        await fetchWithAuth(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/orders`,
+          {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-            buyerInfo: {
+              buyerInfo: {
                 userId: userSession.user.id,
                 name: userSession.user.name,
                 email: userSession.user.email,
-            },
-            sellerInfo: {
+              },
+              sellerInfo: {
                 email: sellerEmail,
                 name: sellerName,
-            },
-            productId,
-            amount: session.amount_total / 100,
-            paymentStatus: "paid",
-            orderStatus: "pending",
-            transactionId: session.payment_intent?.id,
+              },
+              productId,
+              amount: session.amount_total / 100,
+              paymentStatus: "paid",
+              orderStatus: "pending",
+              transactionId: session.payment_intent?.id,
             }),
-        });
+          }
+        );
 
-        // Save payment to DB
-        await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/payments`, {
+        // Save payment
+        await fetchWithAuth(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/payments`,
+          {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-            orderId: session.id,
-            transactionId: session.payment_intent?.id,
-            buyerEmail: userSession.user.email,
-            amount: session.amount_total / 100,
-            paymentStatus: "success",
-            paymentMethod: "stripe",
-            paymentDate: new Date(),
+              orderId: session.id,
+              transactionId: session.payment_intent?.id,
+              buyerEmail: userSession.user.email,
+              amount: session.amount_total / 100,
+              paymentStatus: "success",
+              paymentMethod: "stripe",
+              paymentDate: new Date(),
             }),
-        });
+          }
+        );
 
         setOrderSaved(true);
         toast.success("Order placed successfully!");
-        } catch (error) {
+      } catch (error) {
         console.error("Failed to save order:", error);
-        }
+      }
     };
 
     saveOrder();
@@ -84,7 +87,6 @@ export default function PaymentSuccessClient({ session, productId, sellerEmail, 
         animate={{ opacity: 1, scale: 1 }}
         className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md text-center"
       >
-        {/* Success Icon */}
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
@@ -95,11 +97,8 @@ export default function PaymentSuccessClient({ session, productId, sellerEmail, 
         </motion.div>
 
         <h1 className="text-2xl font-black text-gray-800 mb-2">Payment Successful!</h1>
-        <p className="text-gray-400 text-sm mb-6">
-          Your order has been placed successfully
-        </p>
+        <p className="text-gray-400 text-sm mb-6">Your order has been placed successfully</p>
 
-        {/* Order Summary */}
         <div className="bg-gray-50 rounded-2xl p-4 mb-6 text-left space-y-3">
           <div className="flex justify-between">
             <span className="text-sm text-gray-500">Amount Paid</span>
@@ -127,7 +126,6 @@ export default function PaymentSuccessClient({ session, productId, sellerEmail, 
           </div>
         </div>
 
-        {/* Actions */}
         <div className="flex gap-3">
           <Link href="/dashboard/buyer/orders" className="flex-1">
             <Button
@@ -147,7 +145,6 @@ export default function PaymentSuccessClient({ session, productId, sellerEmail, 
             </Button>
           </Link>
         </div>
-
       </motion.div>
     </div>
   );

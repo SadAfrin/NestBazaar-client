@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FaClipboardList, FaEye, FaCheck, FaTimes, FaTruck, FaBoxOpen } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { fetchWithAuth } from "@/lib/fetchWithAuth";
 
 const statusColors = {
   "pending": "bg-yellow-100 text-yellow-700",
@@ -23,7 +24,7 @@ export default function ManageOrdersPage() {
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch(
+      const res = await fetchWithAuth(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/orders/seller?email=${session?.user?.email}`
       );
       const data = await res.json();
@@ -39,7 +40,6 @@ export default function ManageOrdersPage() {
     if (session?.user?.email) fetchOrders();
   }, [session]);
 
-  // Auto refresh every 30 seconds
   useEffect(() => {
     if (!session?.user?.email) return;
     const interval = setInterval(() => {
@@ -48,7 +48,6 @@ export default function ManageOrdersPage() {
     return () => clearInterval(interval);
   }, [session]);
 
-  // Update selected order when orders refresh
   useEffect(() => {
     if (selectedOrder) {
       const updated = orders.find(o => o._id === selectedOrder._id);
@@ -58,11 +57,10 @@ export default function ManageOrdersPage() {
 
   const handleUpdateStatus = async (orderId, newStatus) => {
     try {
-      const res = await fetch(
+      const res = await fetchWithAuth(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/orders/${orderId}`,
         {
           method: "PATCH",
-          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ orderStatus: newStatus }),
         }
       );
@@ -160,7 +158,6 @@ export default function ManageOrdersPage() {
         </div>
       )}
 
-      {/* Order Detail Modal — Seller can update status step by step */}
       {selectedOrder && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <motion.div
@@ -207,7 +204,6 @@ export default function ManageOrdersPage() {
               </div>
             </div>
 
-            {/* Seller controls status step by step */}
             <div className="space-y-3">
               <p className="text-sm font-bold text-gray-600">Update Order Status:</p>
               <div className="grid grid-cols-2 gap-2">

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FaClipboardList, FaSearch, FaEye, FaTimes } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { fetchWithAuth } from "@/lib/fetchWithAuth";
 
 const statusColors = {
   "pending": "bg-yellow-100 text-yellow-700",
@@ -24,7 +25,9 @@ export default function AdminManageOrdersPage() {
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/orders`);
+      const res = await fetchWithAuth(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/orders`
+      );
       const data = await res.json();
       if (data.success) setOrders(data.data);
     } catch (error) {
@@ -38,7 +41,6 @@ export default function AdminManageOrdersPage() {
     fetchOrders();
   }, []);
 
-  // Auto refresh every 30 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       fetchOrders();
@@ -46,7 +48,6 @@ export default function AdminManageOrdersPage() {
     return () => clearInterval(interval);
   }, []);
 
-  // Update selected order when orders refresh
   useEffect(() => {
     if (selectedOrder) {
       const updated = orders.find(o => o._id === selectedOrder._id);
@@ -56,11 +57,10 @@ export default function AdminManageOrdersPage() {
 
   const handleUpdateStatus = async (orderId, status) => {
     try {
-      const res = await fetch(
+      const res = await fetchWithAuth(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/orders/${orderId}`,
         {
           method: "PATCH",
-          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ orderStatus: status }),
         }
       );
@@ -180,7 +180,6 @@ export default function AdminManageOrdersPage() {
         </div>
       )}
 
-      {/* Admin Order Detail Modal — can set any status */}
       {selectedOrder && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <motion.div
@@ -227,7 +226,6 @@ export default function AdminManageOrdersPage() {
               </div>
             </div>
 
-            {/* Admin can set any status */}
             <div className="space-y-2">
               <p className="text-sm font-bold text-gray-600">Update Status:</p>
               <div className="grid grid-cols-3 gap-2">

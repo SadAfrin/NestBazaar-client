@@ -9,6 +9,7 @@ import { Button } from "@heroui/react";
 import { FaHeart, FaTrash, FaEye, FaShoppingBag, FaMapMarkerAlt } from "react-icons/fa";
 import { MdVerified } from "react-icons/md";
 import { toast } from "react-toastify";
+import { fetchWithAuth } from "@/lib/fetchWithAuth";
 
 const conditionColors = {
   "Like New": "bg-green-100 text-green-700",
@@ -24,7 +25,7 @@ export default function WishlistPage() {
 
   const fetchWishlist = async () => {
     try {
-      const res = await fetch(
+      const res = await fetchWithAuth(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/wishlist?email=${session?.user?.email}`
       );
       const data = await res.json();
@@ -42,9 +43,8 @@ export default function WishlistPage() {
 
   const handleRemove = async (productId) => {
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/wishlist`, {
+      await fetchWithAuth(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/wishlist`, {
         method: "DELETE",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: session?.user?.email,
           productId,

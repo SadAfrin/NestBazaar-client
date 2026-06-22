@@ -7,6 +7,7 @@ import { FaUser, FaEnvelope, FaPhone, FaCamera } from "react-icons/fa";
 import { MdLocationOn } from "react-icons/md";
 import { toast } from "react-toastify";
 import { authClient } from "@/lib/auth-client";
+import { fetchWithAuth } from "@/lib/fetchWithAuth";
 
 export default function ProfilePage() {
   const { data: session } = useSession();
@@ -24,10 +25,14 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await fetch(
+        // const { data: tokenData } = await authClient.token();
+        // console.log("JWT Token:", tokenData?.token);
+
+        const res = await fetchWithAuth(
           `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/profile?email=${session?.user?.email}`
         );
         const data = await res.json();
+        // console.log("Profile response:", data);
         if (data.success) {
           setFormData({
             name: data.data.name || "",
@@ -55,30 +60,29 @@ export default function ProfilePage() {
     e.preventDefault();
     setLoading(true);
     try {
-        // Update our users collection
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/profile`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-        });
-        const data = await res.json();
+      const res = await fetchWithAuth(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/profile`,
+        {
+          method: "PATCH",
+          body: JSON.stringify(formData),
+        }
+      );
+      const data = await res.json();
 
-        if (data.success) {
-        // Also update BetterAuth user collection
+      if (data.success) {
         await authClient.updateUser({
-            name: formData.name,
-            image: formData.photo,
-            // custom fields
-            location: formData.location,
+          name: formData.name,
+          image: formData.photo,
+          location: formData.location,
         });
         toast.success("Profile updated successfully!");
-        } else {
+      } else {
         toast.error("Failed to update profile!");
-        }
+      }
     } catch (error) {
-        toast.error("Something went wrong!");
+      toast.error("Something went wrong!");
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
 
@@ -132,7 +136,6 @@ export default function ProfilePage() {
         <h3 className="font-black text-gray-800 mb-6">Personal Information</h3>
         <form onSubmit={handleSubmit} className="space-y-4">
 
-          {/* Name */}
           <div className="space-y-1.5">
             <label className="text-sm font-bold text-gray-600">Full Name</label>
             <div className="relative">
@@ -147,7 +150,6 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Email — read only */}
           <div className="space-y-1.5">
             <label className="text-sm font-bold text-gray-600">Email Address</label>
             <div className="relative">
@@ -163,7 +165,6 @@ export default function ProfilePage() {
             <p className="text-xs text-gray-400">Email cannot be changed</p>
           </div>
 
-          {/* Phone */}
           <div className="space-y-1.5">
             <label className="text-sm font-bold text-gray-600">Phone Number</label>
             <div className="relative">
@@ -179,7 +180,6 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Location */}
           <div className="space-y-1.5">
             <label className="text-sm font-bold text-gray-600">Location</label>
             <div className="relative">
@@ -203,7 +203,6 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Photo URL */}
           <div className="space-y-1.5">
             <label className="text-sm font-bold text-gray-600">Profile Photo URL</label>
             <div className="relative">

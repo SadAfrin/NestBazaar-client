@@ -4,6 +4,7 @@ import { useSession } from "@/lib/auth-client";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FaCreditCard, FaCheckCircle, FaTimesCircle, FaClock } from "react-icons/fa";
+import { fetchWithAuth } from "@/lib/fetchWithAuth";
 
 const statusColors = {
   "success": "bg-green-100 text-green-700",
@@ -25,7 +26,7 @@ export default function PaymentHistoryPage() {
   useEffect(() => {
     const fetchPayments = async () => {
       try {
-        const res = await fetch(
+        const res = await fetchWithAuth(
           `${process.env.NEXT_PUBLIC_SERVER_URL}/api/payments?email=${session?.user?.email}`
         );
         const data = await res.json();
@@ -120,46 +121,34 @@ export default function PaymentHistoryPage() {
                 index !== payments.length - 1 ? "border-b border-gray-100" : ""
               }`}
             >
-              {/* Transaction ID */}
               <div className="col-span-3">
                 <p className="text-xs font-bold text-gray-700 truncate">
                   {payment.transactionId?.slice(-14)}
                 </p>
               </div>
-
-              {/* Date */}
               <div className="col-span-2">
                 <p className="text-xs text-gray-500">
                   {new Date(payment.paymentDate || payment.createdAt).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric"
+                    month: "short", day: "numeric", year: "numeric"
                   })}
                 </p>
               </div>
-
-              {/* Method */}
               <div className="col-span-2">
                 <span className="text-xs font-bold text-gray-600 capitalize bg-gray-100 px-2 py-1 rounded-lg">
                   {payment.paymentMethod || "stripe"}
                 </span>
               </div>
-
-              {/* Amount */}
               <div className="col-span-2">
                 <p className="font-black text-green-600 text-sm">
                   ৳{payment.amount?.toLocaleString()}
                 </p>
               </div>
-
-              {/* Status */}
               <div className="col-span-3">
                 <span className={`text-xs font-bold px-2 py-1 rounded-lg capitalize flex items-center gap-1.5 w-fit ${statusColors[payment.paymentStatus] || "bg-gray-100 text-gray-700"}`}>
                   {statusIcons[payment.paymentStatus]}
                   {payment.paymentStatus}
                 </span>
               </div>
-
             </motion.div>
           ))}
         </div>

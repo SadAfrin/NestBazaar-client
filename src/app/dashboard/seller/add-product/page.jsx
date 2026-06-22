@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@heroui/react";
 import { FaBoxOpen, FaTag, FaDollarSign, FaList, FaImage } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { fetchWithAuth } from "@/lib/fetchWithAuth";
 
 const categories = ["Electronics", "Furniture", "Vehicles", "Fashion", "Mobile Phones", "Other"];
 const conditions = ["Like New", "Good", "Refurbished"];
@@ -83,11 +84,13 @@ export default function AddProductPage() {
         createdAt: new Date(),
       };
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/products/add`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(productData),
-      });
+      const res = await fetchWithAuth(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/products/add`,
+        {
+          method: "POST",
+          body: JSON.stringify(productData),
+        }
+      );
 
       const data = await res.json();
       if (data.success) {
@@ -114,7 +117,6 @@ export default function AddProductPage() {
       <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
         <form onSubmit={handleSubmit} className="space-y-5">
 
-          {/* Title */}
           <div className="space-y-1.5">
             <label className="text-sm font-bold text-gray-600">Product Title</label>
             <div className="relative">
@@ -131,7 +133,6 @@ export default function AddProductPage() {
             </div>
           </div>
 
-          {/* Category + Condition */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <label className="text-sm font-bold text-gray-600">Category</label>
@@ -172,7 +173,6 @@ export default function AddProductPage() {
             </div>
           </div>
 
-          {/* Price + Stock */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1.5">
               <label className="text-sm font-bold text-gray-600">Price (৳)</label>
@@ -206,7 +206,6 @@ export default function AddProductPage() {
             </div>
           </div>
 
-          {/* Description */}
           <div className="space-y-1.5">
             <label className="text-sm font-bold text-gray-600">Description</label>
             <textarea
@@ -220,7 +219,6 @@ export default function AddProductPage() {
             />
           </div>
 
-          {/* Images */}
           <div className="space-y-1.5">
             <label className="text-sm font-bold text-gray-600">
               Product Images (URL) — Max 4
@@ -261,7 +259,6 @@ export default function AddProductPage() {
             </div>
           </div>
 
-          {/* Image Preview */}
           {formData.images[0] && (
             <div className="space-y-1.5">
               <label className="text-sm font-bold text-gray-600">Preview</label>

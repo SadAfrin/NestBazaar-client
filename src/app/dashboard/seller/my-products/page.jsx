@@ -7,6 +7,7 @@ import { Button } from "@heroui/react";
 import Link from "next/link";
 import { FaEdit, FaTrash, FaPlus, FaBoxOpen, FaTag, FaSearch } from "react-icons/fa";
 import { toast } from "react-toastify";
+import { fetchWithAuth } from "@/lib/fetchWithAuth";
 
 const conditionColors = {
   "Like New": "bg-green-100 text-green-700",
@@ -29,7 +30,7 @@ export default function MyProductsPage() {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch(
+      const res = await fetchWithAuth(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/products/seller?email=${session?.user?.email}`
       );
       const data = await res.json();
@@ -49,7 +50,7 @@ export default function MyProductsPage() {
     if (!confirm("Are you sure you want to delete this product?")) return;
     setDeleteLoading(productId);
     try {
-      const res = await fetch(
+      const res = await fetchWithAuth(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/products/${productId}`,
         { method: "DELETE" }
       );
@@ -133,7 +134,6 @@ export default function MyProductsPage() {
         </div>
       ) : (
         <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
-          {/* Table Header */}
           <div className="grid grid-cols-12 gap-4 px-4 py-3 bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
             <div className="col-span-5">Product</div>
             <div className="col-span-2">Category</div>
@@ -142,7 +142,6 @@ export default function MyProductsPage() {
             <div className="col-span-2 text-right">Actions</div>
           </div>
 
-          {/* Table Rows */}
           {filteredProducts.map((product, index) => (
             <motion.div
               key={product._id}
@@ -153,7 +152,6 @@ export default function MyProductsPage() {
                 index !== filteredProducts.length - 1 ? "border-b border-gray-100" : ""
               }`}
             >
-              {/* Product */}
               <div className="col-span-5 flex items-center gap-3">
                 <div className="w-12 h-12 rounded-xl overflow-hidden border border-gray-100 shrink-0">
                   <img
@@ -170,7 +168,6 @@ export default function MyProductsPage() {
                 </div>
               </div>
 
-              {/* Category */}
               <div className="col-span-2">
                 <div className="flex items-center gap-1 text-xs text-gray-500">
                   <FaTag size={10} className="text-green-500" />
@@ -178,19 +175,16 @@ export default function MyProductsPage() {
                 </div>
               </div>
 
-              {/* Price */}
               <div className="col-span-2">
                 <p className="font-black text-green-600 text-sm">৳{product.price?.toLocaleString()}</p>
               </div>
 
-              {/* Status */}
               <div className="col-span-1">
                 <span className={`text-xs font-bold px-2 py-1 rounded-lg capitalize ${statusColors[product.status] || "bg-gray-100 text-gray-700"}`}>
                   {product.status}
                 </span>
               </div>
 
-              {/* Actions */}
               <div className="col-span-2 flex items-center justify-end gap-2">
                 <Link href={`/dashboard/seller/edit-product/${product._id.toString()}`}>
                   <button className="w-8 h-8 rounded-lg bg-blue-50 hover:bg-blue-100 flex items-center justify-center text-blue-600 transition-all">

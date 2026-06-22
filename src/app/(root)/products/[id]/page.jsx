@@ -8,6 +8,7 @@ import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaArrowLeft, FaShoppingCart, FaHea
 import { MdVerified } from "react-icons/md";
 import { toast } from "react-toastify";
 import { useSession } from "@/lib/auth-client";
+import { fetchWithAuth } from "@/lib/fetchWithAuth";
 
 const conditionColors = {
   "Like New": "bg-green-100 text-green-700",
@@ -26,11 +27,12 @@ export default function ProductDetailsPage() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/products/${id}`);
+        // Public route — no token needed
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/products/${id}`
+        );
         const data = await res.json();
-        if (data.success) {
-          setProduct(data.data);
-        }
+        if (data.success) setProduct(data.data);
       } catch (error) {
         console.error("Failed to fetch product:", error);
       } finally {
@@ -67,7 +69,6 @@ export default function ProductDetailsPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-emerald-50/30 py-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* Back Button */}
         <button
           onClick={() => router.back()}
           className="flex items-center gap-2 text-gray-500 hover:text-green-600 transition-colors mb-8 font-semibold"
@@ -194,7 +195,7 @@ export default function ProductDetailsPage() {
                     return;
                   }
                   try {
-                    // Fetch role from our users collection
+                    // Public route — no token needed for role check
                     const roleRes = await fetch(
                       `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/role?email=${session.user.email}`
                     );
@@ -238,36 +239,39 @@ export default function ProductDetailsPage() {
                 className="border-2 border-green-500 text-green-600 font-bold rounded-2xl hover:bg-green-50 transition-all"
                 startContent={<FaHeart size={14} />}
                 onClick={async () => {
-                    if (!session) {
-                        toast.warn("Please login to add to wishlist!");
-                        router.push("/login");
-                        return;
+                  if (!session) {
+                    toast.warn("Please login to add to wishlist!");
+                    router.push("/login");
+                    return;
+                  }
+                  try {
+                    // Public route — no token needed for role check
+                    const roleRes = await fetch(
+                      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/role?email=${session.user.email}`
+                    );
+                    const roleData = await roleRes.json();
+                    const userRole = roleData.role;
+
+                    if (userRole === "admin" || userRole === "seller") {
+                      toast.warn("Only buyers can add to wishlist!");
+                      return;
                     }
-                    try {
-                        // Fetch role from our users collection
-                        const roleRes = await fetch(
-                        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/role?email=${session.user.email}`
-                        );
-                        const roleData = await roleRes.json();
-                        const userRole = roleData.role;
 
-                        if (userRole === "admin" || userRole === "seller") {
-                        toast.warn("Only buyers can add to wishlist!");
-                        return;
-                        }
-
-                        await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/wishlist`, {
+                    // Protected route — token needed
+                    await fetchWithAuth(
+                      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/wishlist`,
+                      {
                         method: "POST",
-                        headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
-                            email: session.user.email,
-                            productId: product._id,
+                          email: session.user.email,
+                          productId: product._id,
                         }),
-                        });
-                        toast.success("Added to wishlist!");
-                    } catch (error) {
-                        toast.error("Failed to add to wishlist!");
-                    }
+                      }
+                    );
+                    toast.success("Added to wishlist!");
+                  } catch (error) {
+                    toast.error("Failed to add to wishlist!");
+                  }
                 }}
               >
                 Wishlist

@@ -7,6 +7,7 @@ import { FaShoppingBag, FaTruck, FaCheckCircle, FaClock, FaTimesCircle, FaBoxOpe
 import { MdVerified } from "react-icons/md";
 import Link from "next/link";
 import { Button } from "@heroui/react";
+import { fetchWithAuth } from "@/lib/fetchWithAuth";
 
 const statusColors = {
   "pending": "bg-yellow-100 text-yellow-700",
@@ -35,7 +36,7 @@ export default function MyOrdersPage() {
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch(
+      const res = await fetchWithAuth(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/orders?email=${session?.user?.email}`
       );
       const data = await res.json();
