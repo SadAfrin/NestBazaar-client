@@ -14,6 +14,8 @@ const statusColors = {
   "cancelled": "bg-red-100 text-red-700",
 };
 
+const statusOptions = ["pending", "accepted", "processing", "shipped", "delivered", "cancelled"];
+
 export default function AdminManageOrdersPage() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -36,6 +38,22 @@ export default function AdminManageOrdersPage() {
     fetchOrders();
   }, []);
 
+  // Auto refresh every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchOrders();
+    }, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Update selected order when orders refresh
+  useEffect(() => {
+    if (selectedOrder) {
+      const updated = orders.find(o => o._id === selectedOrder._id);
+      if (updated) setSelectedOrder(updated);
+    }
+  }, [orders]);
+
   const handleUpdateStatus = async (orderId, status) => {
     try {
       const res = await fetch(
@@ -48,7 +66,7 @@ export default function AdminManageOrdersPage() {
       );
       const data = await res.json();
       if (data.success) {
-        toast.success("Order status updated!");
+        toast.success(`Order status updated to ${status}!`);
         fetchOrders();
         setSelectedOrder(null);
       }
@@ -66,13 +84,11 @@ export default function AdminManageOrdersPage() {
   return (
     <div className="space-y-6">
 
-      {/* Header */}
       <div>
         <h1 className="text-2xl font-black text-gray-800">Manage Orders</h1>
         <p className="text-gray-400 text-sm mt-1">{orders.length} total orders</p>
       </div>
 
-      {/* Search */}
       <div className="relative">
         <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
         <input
@@ -104,8 +120,6 @@ export default function AdminManageOrdersPage() {
         </div>
       ) : (
         <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
-
-          {/* Table Header */}
           <div className="grid grid-cols-12 gap-4 px-4 py-3 bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
             <div className="col-span-2">Order ID</div>
             <div className="col-span-3">Buyer</div>
@@ -126,54 +140,33 @@ export default function AdminManageOrdersPage() {
                 index !== filteredOrders.length - 1 ? "border-b border-gray-100" : ""
               }`}
             >
-              {/* Order ID */}
               <div className="col-span-2">
-                <p className="font-bold text-gray-800 text-sm">
-                  #{order._id?.toString().slice(-6).toUpperCase()}
-                </p>
-                <p className="text-xs text-gray-400">
-                  {new Date(order.createdAt).toLocaleDateString()}
-                </p>
+                <p className="font-bold text-gray-800 text-sm">#{order._id?.toString().slice(-6).toUpperCase()}</p>
+                <p className="text-xs text-gray-400">{new Date(order.createdAt).toLocaleDateString()}</p>
               </div>
-
-              {/* Buyer */}
               <div className="col-span-3">
                 <p className="font-bold text-gray-800 text-sm">{order.buyerInfo?.name}</p>
                 <p className="text-xs text-gray-400">{order.buyerInfo?.email}</p>
               </div>
-
-              {/* Seller */}
               <div className="col-span-2">
                 <p className="font-bold text-gray-800 text-sm">{order.sellerInfo?.name}</p>
                 <p className="text-xs text-gray-400">{order.sellerInfo?.email}</p>
               </div>
-
-              {/* Amount */}
               <div className="col-span-1">
-                <p className="font-black text-green-600 text-sm">
-                  ৳{order.amount?.toLocaleString()}
-                </p>
+                <p className="font-black text-green-600 text-sm">৳{order.amount?.toLocaleString()}</p>
               </div>
-
-              {/* Payment */}
               <div className="col-span-2">
                 <span className={`text-xs font-bold px-2 py-1 rounded-lg capitalize ${
-                  order.paymentStatus === "paid"
-                    ? "bg-green-100 text-green-700"
-                    : "bg-yellow-100 text-yellow-700"
+                  order.paymentStatus === "paid" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"
                 }`}>
                   {order.paymentStatus}
                 </span>
               </div>
-
-              {/* Status */}
               <div className="col-span-1">
                 <span className={`text-xs font-bold px-2 py-1 rounded-lg capitalize ${statusColors[order.orderStatus] || "bg-gray-100 text-gray-700"}`}>
                   {order.orderStatus}
                 </span>
               </div>
-
-              {/* View */}
               <div className="col-span-1 flex justify-end">
                 <button
                   onClick={() => setSelectedOrder(order)}
@@ -182,13 +175,12 @@ export default function AdminManageOrdersPage() {
                   <FaEye size={13} />
                 </button>
               </div>
-
             </motion.div>
           ))}
         </div>
       )}
 
-      {/* Order Detail Modal */}
+      {/* Admin Order Detail Modal — can set any status */}
       {selectedOrder && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <motion.div
@@ -222,30 +214,30 @@ export default function AdminManageOrdersPage() {
                 <span className="text-sm font-black text-green-600">৳{selectedOrder.amount?.toLocaleString()}</span>
               </div>
               <div className="flex justify-between py-2 border-b border-gray-100">
-                <span className="text-sm text-gray-500">Payment Status</span>
+                <span className="text-sm text-gray-500">Payment</span>
                 <span className={`text-sm font-bold capitalize ${selectedOrder.paymentStatus === "paid" ? "text-green-600" : "text-yellow-600"}`}>
                   {selectedOrder.paymentStatus}
                 </span>
               </div>
               <div className="flex justify-between py-2">
-                <span className="text-sm text-gray-500">Order Status</span>
+                <span className="text-sm text-gray-500">Current Status</span>
                 <span className={`text-xs font-bold px-2 py-1 rounded-lg capitalize ${statusColors[selectedOrder.orderStatus]}`}>
                   {selectedOrder.orderStatus}
                 </span>
               </div>
             </div>
 
-            {/* Update Status */}
+            {/* Admin can set any status */}
             <div className="space-y-2">
               <p className="text-sm font-bold text-gray-600">Update Status:</p>
               <div className="grid grid-cols-3 gap-2">
-                {["pending", "processing", "shipped", "delivered", "cancelled"].map((status) => (
+                {statusOptions.map((status) => (
                   <button
                     key={status}
                     onClick={() => handleUpdateStatus(selectedOrder._id, status)}
                     className={`px-3 py-2 rounded-xl text-xs font-bold capitalize transition-all ${
                       selectedOrder.orderStatus === status
-                        ? "bg-green-500 text-white"
+                        ? "bg-green-500 text-white shadow-md"
                         : "bg-gray-100 text-gray-600 hover:bg-green-50 hover:text-green-600"
                     }`}
                   >
@@ -253,7 +245,11 @@ export default function AdminManageOrdersPage() {
                   </button>
                 ))}
               </div>
+              <p className="text-xs text-gray-400 text-center pt-2">
+                Admin can override any order status
+              </p>
             </div>
+
           </motion.div>
         </div>
       )}

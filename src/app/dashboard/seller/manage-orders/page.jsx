@@ -3,7 +3,7 @@
 import { useSession } from "@/lib/auth-client";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { FaClipboardList, FaEye, FaCheck, FaTimes, FaTruck } from "react-icons/fa";
+import { FaClipboardList, FaEye, FaCheck, FaTimes, FaTruck, FaBoxOpen } from "react-icons/fa";
 import { toast } from "react-toastify";
 
 const statusColors = {
@@ -14,8 +14,6 @@ const statusColors = {
   "delivered": "bg-green-100 text-green-700",
   "cancelled": "bg-red-100 text-red-700",
 };
-
-const statusFlow = ["pending", "accepted", "processing", "shipped", "delivered"];
 
 export default function ManageOrdersPage() {
   const { data: session } = useSession();
@@ -41,6 +39,23 @@ export default function ManageOrdersPage() {
     if (session?.user?.email) fetchOrders();
   }, [session]);
 
+  // Auto refresh every 30 seconds
+  useEffect(() => {
+    if (!session?.user?.email) return;
+    const interval = setInterval(() => {
+      fetchOrders();
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [session]);
+
+  // Update selected order when orders refresh
+  useEffect(() => {
+    if (selectedOrder) {
+      const updated = orders.find(o => o._id === selectedOrder._id);
+      if (updated) setSelectedOrder(updated);
+    }
+  }, [orders]);
+
   const handleUpdateStatus = async (orderId, newStatus) => {
     try {
       const res = await fetch(
@@ -53,7 +68,7 @@ export default function ManageOrdersPage() {
       );
       const data = await res.json();
       if (data.success) {
-        toast.success(`Order ${newStatus} successfully!`);
+        toast.success(`Order marked as ${newStatus}!`);
         fetchOrders();
         setSelectedOrder(null);
       } else {
@@ -67,7 +82,6 @@ export default function ManageOrdersPage() {
   return (
     <div className="space-y-6">
 
-      {/* Header */}
       <div>
         <h1 className="text-2xl font-black text-gray-800">Manage Orders</h1>
         <p className="text-gray-400 text-sm mt-1">{orders.length} total orders</p>
@@ -96,8 +110,6 @@ export default function ManageOrdersPage() {
         </div>
       ) : (
         <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
-
-          {/* Table Header */}
           <div className="grid grid-cols-12 gap-4 px-4 py-3 bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
             <div className="col-span-3">Order ID</div>
             <div className="col-span-3">Buyer</div>
@@ -116,64 +128,39 @@ export default function ManageOrdersPage() {
                 index !== orders.length - 1 ? "border-b border-gray-100" : ""
               }`}
             >
-              {/* Order ID */}
               <div className="col-span-3">
-                <p className="font-bold text-gray-800 text-sm">
-                  #{order._id?.toString().slice(-6).toUpperCase()}
-                </p>
-                <p className="text-xs text-gray-400 mt-0.5">
-                  {new Date(order.createdAt).toLocaleDateString()}
-                </p>
+                <p className="font-bold text-gray-800 text-sm">#{order._id?.toString().slice(-6).toUpperCase()}</p>
+                <p className="text-xs text-gray-400 mt-0.5">{new Date(order.createdAt).toLocaleDateString()}</p>
               </div>
-
-              {/* Buyer */}
               <div className="col-span-3">
-                <p className="font-bold text-gray-800 text-sm">
-                  {order.buyerInfo?.name}
-                </p>
-                <p className="text-xs text-gray-400 mt-0.5">
-                  {order.buyerInfo?.email}
-                </p>
+                <p className="font-bold text-gray-800 text-sm">{order.buyerInfo?.name}</p>
+                <p className="text-xs text-gray-400 mt-0.5">{order.buyerInfo?.email}</p>
               </div>
-
-              {/* Amount */}
               <div className="col-span-2">
-                <p className="font-black text-green-600 text-sm">
-                  ৳{order.amount?.toLocaleString()}
-                </p>
-                <p className={`text-xs font-bold mt-0.5 ${
-                  order.paymentStatus === "paid"
-                    ? "text-green-500"
-                    : "text-yellow-500"
-                }`}>
+                <p className="font-black text-green-600 text-sm">৳{order.amount?.toLocaleString()}</p>
+                <p className={`text-xs font-bold mt-0.5 ${order.paymentStatus === "paid" ? "text-green-500" : "text-yellow-500"}`}>
                   {order.paymentStatus}
                 </p>
               </div>
-
-              {/* Status */}
               <div className="col-span-2">
                 <span className={`text-xs font-bold px-2 py-1 rounded-lg capitalize ${statusColors[order.orderStatus] || "bg-gray-100 text-gray-700"}`}>
                   {order.orderStatus}
                 </span>
               </div>
-
-              {/* Actions */}
-              <div className="col-span-2 flex items-center justify-end gap-2">
+              <div className="col-span-2 flex items-center justify-end">
                 <button
                   onClick={() => setSelectedOrder(order)}
                   className="w-8 h-8 rounded-lg bg-blue-50 hover:bg-blue-100 flex items-center justify-center text-blue-600 transition-all"
-                  title="View & Update"
                 >
                   <FaEye size={13} />
                 </button>
               </div>
-
             </motion.div>
           ))}
         </div>
       )}
 
-      {/* Order Detail Modal */}
+      {/* Order Detail Modal — Seller can update status step by step */}
       {selectedOrder && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <motion.div
@@ -187,13 +174,12 @@ export default function ManageOrdersPage() {
               </h3>
               <button
                 onClick={() => setSelectedOrder(null)}
-                className="w-8 h-8 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 transition-all"
+                className="w-8 h-8 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600"
               >
                 <FaTimes size={14} />
               </button>
             </div>
 
-            {/* Order Info */}
             <div className="space-y-3 mb-6">
               <div className="flex justify-between py-2 border-b border-gray-100">
                 <span className="text-sm text-gray-500">Buyer</span>
@@ -221,7 +207,7 @@ export default function ManageOrdersPage() {
               </div>
             </div>
 
-            {/* Update Status */}
+            {/* Seller controls status step by step */}
             <div className="space-y-3">
               <p className="text-sm font-bold text-gray-600">Update Order Status:</p>
               <div className="grid grid-cols-2 gap-2">
@@ -231,15 +217,13 @@ export default function ManageOrdersPage() {
                       onClick={() => handleUpdateStatus(selectedOrder._id, "accepted")}
                       className="flex items-center justify-center gap-2 px-4 py-2.5 bg-blue-500 hover:bg-blue-600 text-white text-sm font-bold rounded-xl transition-all"
                     >
-                      <FaCheck size={12} />
-                      Accept
+                      <FaCheck size={12} /> Accept Order
                     </button>
                     <button
                       onClick={() => handleUpdateStatus(selectedOrder._id, "cancelled")}
                       className="flex items-center justify-center gap-2 px-4 py-2.5 bg-red-500 hover:bg-red-600 text-white text-sm font-bold rounded-xl transition-all"
                     >
-                      <FaTimes size={12} />
-                      Reject
+                      <FaTimes size={12} /> Reject Order
                     </button>
                   </>
                 )}
@@ -248,7 +232,7 @@ export default function ManageOrdersPage() {
                     onClick={() => handleUpdateStatus(selectedOrder._id, "processing")}
                     className="flex items-center justify-center gap-2 px-4 py-2.5 bg-purple-500 hover:bg-purple-600 text-white text-sm font-bold rounded-xl transition-all col-span-2"
                   >
-                    Mark as Processing
+                    <FaBoxOpen size={12} /> Mark as Processing
                   </button>
                 )}
                 {selectedOrder.orderStatus === "processing" && (
@@ -256,8 +240,7 @@ export default function ManageOrdersPage() {
                     onClick={() => handleUpdateStatus(selectedOrder._id, "shipped")}
                     className="flex items-center justify-center gap-2 px-4 py-2.5 bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-bold rounded-xl transition-all col-span-2"
                   >
-                    <FaTruck size={12} />
-                    Mark as Shipped
+                    <FaTruck size={12} /> Mark as Shipped
                   </button>
                 )}
                 {selectedOrder.orderStatus === "shipped" && (
@@ -265,13 +248,14 @@ export default function ManageOrdersPage() {
                     onClick={() => handleUpdateStatus(selectedOrder._id, "delivered")}
                     className="flex items-center justify-center gap-2 px-4 py-2.5 bg-green-500 hover:bg-green-600 text-white text-sm font-bold rounded-xl transition-all col-span-2"
                   >
-                    <FaCheck size={12} />
-                    Mark as Delivered
+                    <FaCheck size={12} /> Mark as Delivered
                   </button>
                 )}
                 {(selectedOrder.orderStatus === "delivered" || selectedOrder.orderStatus === "cancelled") && (
-                  <div className="col-span-2 text-center py-2 text-sm text-gray-400">
-                    Order is {selectedOrder.orderStatus}. No further actions needed.
+                  <div className="col-span-2 text-center py-3 bg-gray-50 rounded-xl">
+                    <p className="text-sm text-gray-400 font-bold">
+                      Order is {selectedOrder.orderStatus}. No further actions needed.
+                    </p>
                   </div>
                 )}
               </div>

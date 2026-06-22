@@ -33,22 +33,40 @@ export default function MyOrdersPage() {
   const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState(null);
 
+  const fetchOrders = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/orders?email=${session?.user?.email}`
+      );
+      const data = await res.json();
+      if (data.success) setOrders(data.data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/orders?email=${session?.user?.email}`
-        );
-        const data = await res.json();
-        if (data.success) setOrders(data.data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
     if (session?.user?.email) fetchOrders();
   }, [session]);
+
+  // Auto refresh every 30 seconds
+  useEffect(() => {
+    if (!session?.user?.email) return;
+    const interval = setInterval(() => {
+      fetchOrders();
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [session]);
+
+  // Update selected order when orders refresh
+  useEffect(() => {
+    if (selectedOrder) {
+      const updated = orders.find(o => o._id === selectedOrder._id);
+      if (updated) setSelectedOrder(updated);
+    }
+  }, [orders]);
 
   const getStepIndex = (status) => statusSteps.indexOf(status);
 
@@ -94,8 +112,6 @@ export default function MyOrdersPage() {
         </div>
       ) : (
         <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
-
-          {/* Table Header */}
           <div className="grid grid-cols-12 gap-4 px-4 py-3 bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
             <div className="col-span-2">Order ID</div>
             <div className="col-span-2">Date</div>
@@ -105,7 +121,6 @@ export default function MyOrdersPage() {
             <div className="col-span-1 text-right">View</div>
           </div>
 
-          {/* Table Rows */}
           {orders.map((order, index) => (
             <motion.div
               key={order._id}
@@ -116,60 +131,43 @@ export default function MyOrdersPage() {
                 index !== orders.length - 1 ? "border-b border-gray-100" : ""
               }`}
             >
-              {/* Order ID */}
               <div className="col-span-2">
                 <p className="font-bold text-gray-800 text-sm">
                   #{order._id?.toString().slice(-6).toUpperCase()}
                 </p>
               </div>
-
-              {/* Date */}
               <div className="col-span-2">
                 <p className="text-xs text-gray-500">
                   {new Date(order.createdAt).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                    year: "numeric"
+                    month: "short", day: "numeric", year: "numeric"
                   })}
                 </p>
               </div>
-
-              {/* Seller */}
               <div className="col-span-3 flex items-center gap-1">
                 <MdVerified className="text-green-500 shrink-0" size={13} />
                 <span className="text-sm text-gray-700 truncate">{order.sellerInfo?.name}</span>
               </div>
-
-              {/* Amount */}
               <div className="col-span-2">
-                <p className="font-black text-green-600 text-sm">
-                  ৳{order.amount?.toLocaleString()}
-                </p>
+                <p className="font-black text-green-600 text-sm">৳{order.amount?.toLocaleString()}</p>
                 <span className={`text-xs font-bold capitalize ${
                   order.paymentStatus === "paid" ? "text-green-500" : "text-yellow-500"
                 }`}>
                   {order.paymentStatus}
                 </span>
               </div>
-
-              {/* Status */}
               <div className="col-span-2">
                 <span className={`text-xs font-bold px-2 py-1 rounded-lg capitalize ${statusColors[order.orderStatus] || "bg-gray-100 text-gray-700"}`}>
                   {order.orderStatus}
                 </span>
               </div>
-
-              {/* View Button */}
               <div className="col-span-1 flex justify-end">
                 <button
                   onClick={() => setSelectedOrder(order)}
                   className="w-8 h-8 rounded-lg bg-blue-50 hover:bg-blue-100 flex items-center justify-center text-blue-600 transition-all"
-                  title="View Details"
                 >
                   <FaEye size={13} />
                 </button>
               </div>
-
             </motion.div>
           ))}
         </div>
@@ -183,7 +181,6 @@ export default function MyOrdersPage() {
             animate={{ opacity: 1, scale: 1 }}
             className="bg-white rounded-3xl shadow-2xl p-6 w-full max-w-lg"
           >
-            {/* Modal Header */}
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h3 className="font-black text-gray-800 text-lg">
@@ -203,7 +200,6 @@ export default function MyOrdersPage() {
               </button>
             </div>
 
-            {/* Order Info */}
             <div className="space-y-2 mb-6">
               <div className="flex justify-between py-2 border-b border-gray-100">
                 <span className="text-sm text-gray-500">Seller</span>
@@ -214,16 +210,12 @@ export default function MyOrdersPage() {
               </div>
               <div className="flex justify-between py-2 border-b border-gray-100">
                 <span className="text-sm text-gray-500">Amount</span>
-                <span className="text-sm font-black text-green-600">
-                  ৳{selectedOrder.amount?.toLocaleString()}
-                </span>
+                <span className="text-sm font-black text-green-600">৳{selectedOrder.amount?.toLocaleString()}</span>
               </div>
               <div className="flex justify-between py-2 border-b border-gray-100">
                 <span className="text-sm text-gray-500">Payment</span>
                 <span className={`text-xs font-bold px-2 py-1 rounded-lg capitalize ${
-                  selectedOrder.paymentStatus === "paid"
-                    ? "bg-green-100 text-green-700"
-                    : "bg-yellow-100 text-yellow-700"
+                  selectedOrder.paymentStatus === "paid" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"
                 }`}>
                   {selectedOrder.paymentStatus}
                 </span>
@@ -236,11 +228,9 @@ export default function MyOrdersPage() {
               </div>
             </div>
 
-            {/* Timeline */}
+            {/* Timeline — read only for buyer */}
             <div className="bg-gray-50 rounded-2xl p-4">
-              <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4">
-                Order Progress
-              </p>
+              <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4">Order Progress</p>
               <div className="flex items-center justify-between">
                 {selectedOrder.orderStatus === "cancelled" ? (
                   <div className="flex flex-col items-center gap-2 w-full">
@@ -258,28 +248,25 @@ export default function MyOrdersPage() {
                       <div key={step} className="flex items-center flex-1">
                         <div className="flex flex-col items-center gap-1">
                           <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
-                            isDone
-                              ? "bg-green-500 text-white shadow-md shadow-green-200"
-                              : "bg-gray-200 text-gray-400"
+                            isDone ? "bg-green-500 text-white shadow-md shadow-green-200" : "bg-gray-200 text-gray-400"
                           } ${isActive ? "ring-2 ring-green-300 ring-offset-1" : ""}`}>
                             {stepIcons[step]}
                           </div>
-                          <p className={`text-[9px] font-bold capitalize text-center ${
-                            isDone ? "text-green-600" : "text-gray-400"
-                          }`}>
+                          <p className={`text-[9px] font-bold capitalize text-center ${isDone ? "text-green-600" : "text-gray-400"}`}>
                             {step}
                           </p>
                         </div>
                         {index < statusSteps.length - 1 && (
-                          <div className={`flex-1 h-1 mx-1 rounded-full mb-4 ${
-                            index < currentIndex ? "bg-green-400" : "bg-gray-200"
-                          }`} />
+                          <div className={`flex-1 h-1 mx-1 rounded-full mb-4 ${index < currentIndex ? "bg-green-400" : "bg-gray-200"}`} />
                         )}
                       </div>
                     );
                   })
                 )}
               </div>
+              <p className="text-xs text-gray-400 text-center mt-3">
+                Status updates automatically every 30 seconds
+              </p>
             </div>
 
           </motion.div>
