@@ -7,6 +7,7 @@ import { FaShoppingBag, FaTruck, FaCheckCircle, FaClock, FaTimesCircle, FaBoxOpe
 import { MdVerified } from "react-icons/md";
 import Link from "next/link";
 import { Button } from "@heroui/react";
+import { toast } from "react-toastify";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
 
 const statusColors = {
@@ -33,6 +34,7 @@ export default function MyOrdersPage() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [cancelling, setCancelling] = useState(false);
 
   const fetchOrders = async () => {
     try {
@@ -52,7 +54,6 @@ export default function MyOrdersPage() {
     if (session?.user?.email) fetchOrders();
   }, [session]);
 
-  // Auto refresh every 30 seconds
   useEffect(() => {
     if (!session?.user?.email) return;
     const interval = setInterval(() => {
@@ -61,7 +62,6 @@ export default function MyOrdersPage() {
     return () => clearInterval(interval);
   }, [session]);
 
-  // Update selected order when orders refresh
   useEffect(() => {
     if (selectedOrder) {
       const updated = orders.find(o => o._id === selectedOrder._id);
@@ -69,12 +69,37 @@ export default function MyOrdersPage() {
     }
   }, [orders]);
 
+  const handleCancelOrder = async () => {
+    if (!confirm("Are you sure you want to cancel this order?")) return;
+    setCancelling(true);
+    try {
+      const res = await fetchWithAuth(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/orders/${selectedOrder._id}`,
+        {
+          method: "PATCH",
+          body: JSON.stringify({ orderStatus: "cancelled" }),
+        }
+      );
+      const data = await res.json();
+      if (data.success) {
+        toast.success("Order cancelled successfully!");
+        setSelectedOrder(null);
+        fetchOrders();
+      } else {
+        toast.error("Failed to cancel order!");
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+    } finally {
+      setCancelling(false);
+    }
+  };
+
   const getStepIndex = (status) => statusSteps.indexOf(status);
 
   return (
     <div className="space-y-6">
 
-      {/* Header */}
       <div>
         <h1 className="text-2xl font-black text-gray-800">My Orders</h1>
         <p className="text-gray-400 text-sm mt-1">
@@ -216,7 +241,9 @@ export default function MyOrdersPage() {
               <div className="flex justify-between py-2 border-b border-gray-100">
                 <span className="text-sm text-gray-500">Payment</span>
                 <span className={`text-xs font-bold px-2 py-1 rounded-lg capitalize ${
-                  selectedOrder.paymentStatus === "paid" ? "bg-green-100 text-green-700" : "bg-yellow-100 text-yellow-700"
+                  selectedOrder.paymentStatus === "paid"
+                    ? "bg-green-100 text-green-700"
+                    : "bg-yellow-100 text-yellow-700"
                 }`}>
                   {selectedOrder.paymentStatus}
                 </span>
@@ -229,7 +256,7 @@ export default function MyOrdersPage() {
               </div>
             </div>
 
-            {/* Timeline — read only for buyer */}
+            {/* Timeline */}
             <div className="bg-gray-50 rounded-2xl p-4">
               <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4">Order Progress</p>
               <div className="flex items-center justify-between">
@@ -265,10 +292,30 @@ export default function MyOrdersPage() {
                   })
                 )}
               </div>
-              <p className="text-xs text-gray-400 text-center mt-3">
-                Status updates automatically every 30 seconds
-              </p>
             </div>
+
+            {/* Cancel Order Button — only before shipment */}
+            {(selectedOrder.orderStatus === "pending" ||
+              selectedOrder.orderStatus === "accepted" ||
+              selectedOrder.orderStatus === "processing") && (
+              <button
+                onClick={handleCancelOrder}
+                disabled={cancelling}
+                className="w-full mt-4 py-3 bg-red-50 hover:bg-red-100 text-red-600 font-bold rounded-2xl transition-all text-sm disabled:opacity-50"
+              >
+                {cancelling ? "Cancelling..." : "Cancel Order"}
+              </button>
+            )}
+
+            {/* Cannot cancel after shipment */}
+            {(selectedOrder.orderStatus === "shipped" ||
+              selectedOrder.orderStatus === "delivered") && (
+              <div className="mt-4 py-3 bg-gray-50 rounded-2xl text-center">
+                <p className="text-xs text-gray-400 font-bold">
+                  Order cannot be cancelled after shipment
+                </p>
+              </div>
+            )}
 
           </motion.div>
         </div>

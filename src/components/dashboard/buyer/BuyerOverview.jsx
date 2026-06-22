@@ -155,7 +155,7 @@ export default function BuyerOverview() {
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-6">
                   <div className="text-right">
                     <p className="font-black text-green-600 text-sm">
                       ৳{order.amount?.toLocaleString()}
