@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession, signOut } from "@/lib/auth-client";
 import { toast } from "react-toastify";
 import { Button } from "@heroui/react";
@@ -32,20 +32,44 @@ export default function Navbar() {
   const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [userRole, setUserRole] = useState("buyer");
+
+  useEffect(() => {
+    const fetchRole = async () => {
+      if (!session?.user?.email) return;
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/role?email=${session.user.email}`
+        );
+        const data = await res.json();
+        if (data.success) setUserRole(data.role);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchRole();
+  }, [session]);
+
+  const ordersHref =
+    userRole === "admin"
+      ? "/dashboard/admin/manage-orders"
+      : userRole === "seller"
+      ? "/dashboard/seller/manage-orders"
+      : "/dashboard/buyer/orders";
 
   const handleLogout = async () => {
     await signOut({
-        fetchOptions: {
+      fetchOptions: {
         onSuccess: () => {
-            setDropdownOpen(false);
-            toast.success("Logged out successfully!");
-            router.push("/login");
-            router.refresh();
+          setDropdownOpen(false);
+          toast.success("Logged out successfully!");
+          router.push("/login");
+          router.refresh();
         },
         onError: () => {
-            toast.error("Logout failed. Please try again.");
+          toast.error("Logout failed. Please try again.");
         },
-        },
+      },
     });
   };
 
@@ -106,13 +130,11 @@ export default function Navbar() {
             {/* Right Side */}
             <div className="hidden md:flex items-center gap-2">
               {session ? (
-                /* Avatar + Dropdown when logged in */
                 <div className="relative">
                   <button
                     onClick={() => setDropdownOpen(!dropdownOpen)}
                     className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-green-50 transition-all duration-200"
                   >
-                    {/* Avatar — image or first letter */}
                     {session.user?.image ? (
                       <img
                         src={session.user.image}
@@ -124,7 +146,6 @@ export default function Navbar() {
                         {session.user?.name?.charAt(0).toUpperCase()}
                       </div>
                     )}
-                    {/* Hi, Name */}
                     <span className="text-sm font-semibold text-gray-700">
                       Hi, {session.user?.name?.split(" ")[0]}
                     </span>
@@ -136,7 +157,7 @@ export default function Navbar() {
                     />
                   </button>
 
-                  {/* Dropdown Menu */}
+                  {/* Desktop Dropdown Menu */}
                   {dropdownOpen && (
                     <div className="absolute right-0 top-12 w-48 bg-white/90 backdrop-blur-xl border border-gray-100 rounded-2xl shadow-xl shadow-gray-100 py-2 z-50">
                       <Link
@@ -156,7 +177,7 @@ export default function Navbar() {
                         Settings
                       </Link>
                       <Link
-                        href="/dashboard/orders"
+                        href={ordersHref}
                         onClick={() => setDropdownOpen(false)}
                         className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-600 hover:bg-green-50 hover:text-green-600 transition-all"
                       >
@@ -176,7 +197,6 @@ export default function Navbar() {
                   )}
                 </div>
               ) : (
-                /* Login + Register when not logged in */
                 <div className="flex items-center gap-2">
                   <Link href="/login">
                     <Button
@@ -267,16 +287,31 @@ export default function Navbar() {
                     <p className="text-xs text-gray-400">{session.user?.email}</p>
                   </div>
                 </div>
-                <Link href="/dashboard/profile" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-gray-600 hover:bg-green-100 hover:text-green-600 transition-all">
+                <Link
+                  href="/dashboard/profile"
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-gray-600 hover:bg-green-100 hover:text-green-600 transition-all"
+                >
                   <FaUser size={13} /> My Profile
                 </Link>
-                <Link href="/dashboard/settings" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-gray-600 hover:bg-green-100 hover:text-green-600 transition-all">
+                <Link
+                  href="/dashboard/settings"
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-gray-600 hover:bg-green-100 hover:text-green-600 transition-all"
+                >
                   <FaCog size={13} /> Settings
                 </Link>
-                <Link href="/dashboard/orders" onClick={() => setIsOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-gray-600 hover:bg-green-100 hover:text-green-600 transition-all">
+                <Link
+                  href={ordersHref}
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-gray-600 hover:bg-green-100 hover:text-green-600 transition-all"
+                >
                   <FaShoppingCart size={13} /> Orders
                 </Link>
-                <button onClick={handleLogout} className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-red-500 hover:bg-red-50 transition-all">
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-red-500 hover:bg-red-50 transition-all"
+                >
                   <FaSignOutAlt size={14} /> Logout
                 </button>
               </div>
