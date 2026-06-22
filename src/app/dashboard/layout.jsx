@@ -4,18 +4,35 @@ import { useSession } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Sidebar from "@/components/dashboard/Sidebar";
-import { FaBars, FaTimes } from "react-icons/fa";
+import { FaBars } from "react-icons/fa";
 
 export default function DashboardLayout({ children }) {
   const { data: session, isPending } = useSession();
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [role, setRole] = useState("buyer");
 
   useEffect(() => {
     if (!isPending && !session) {
       router.push("/login");
     }
   }, [session, isPending]);
+
+  useEffect(() => {
+    const fetchRole = async () => {
+      if (!session?.user?.email) return;
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/role?email=${session.user.email}`
+        );
+        const data = await res.json();
+        if (data.success) setRole(data.role);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchRole();
+  }, [session]);
 
   if (isPending) {
     return (
@@ -54,7 +71,6 @@ export default function DashboardLayout({ children }) {
         {/* Top Bar */}
         <div className="bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between sticky top-0 z-30">
           <div className="flex items-center gap-4">
-            {/* Mobile menu button */}
             <button
               className="lg:hidden p-2 rounded-xl text-gray-600 hover:bg-gray-100 transition-all"
               onClick={() => setSidebarOpen(true)}
@@ -63,7 +79,7 @@ export default function DashboardLayout({ children }) {
             </button>
             <div>
               <h2 className="font-black text-gray-800 text-lg">Dashboard</h2>
-              <p className="text-xs text-gray-400 capitalize">{session.user?.role || "buyer"} Account</p>
+              <p className="text-xs text-gray-400 capitalize">{role} Account</p>
             </div>
           </div>
 
