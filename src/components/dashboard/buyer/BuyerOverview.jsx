@@ -25,17 +25,28 @@ export default function BuyerOverview() {
         const wishlistData = await wishlistRes.json();
         const wishlistCount = wishlistData.success ? wishlistData.data.length : 0;
 
-        // Fetch orders count
+        // Fetch orders
         const ordersRes = await fetch(
           `${process.env.NEXT_PUBLIC_SERVER_URL}/api/orders?email=${session?.user?.email}`
         );
         const ordersData = await ordersRes.json();
-        const totalOrders = ordersData.success ? ordersData.data.length : 0;
+        const orders = ordersData.success ? ordersData.data : [];
+        const totalOrders = orders.length;
+
+        // Fetch payments to calculate total spent
+        const paymentsRes = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/payments?email=${session?.user?.email}`
+        );
+        const paymentsData = await paymentsRes.json();
+        const payments = paymentsData.success ? paymentsData.data : [];
+        const totalSpent = payments
+          .filter(p => p.paymentStatus === "success")
+          .reduce((acc, p) => acc + (p.amount || 0), 0);
 
         setStats({
           totalOrders,
           wishlistCount,
-          totalSpent: 0,
+          totalSpent,
           recentPurchases: totalOrders,
         });
       } catch (error) {
@@ -48,7 +59,7 @@ export default function BuyerOverview() {
   const cards = [
     { label: "Total Orders", value: stats.totalOrders, icon: <FaShoppingBag size={20} />, color: "from-blue-400 to-blue-600", href: "/dashboard/buyer/orders" },
     { label: "Wishlist Items", value: stats.wishlistCount, icon: <FaHeart size={20} />, color: "from-pink-400 to-pink-600", href: "/dashboard/buyer/wishlist" },
-    { label: "Total Spent", value: `৳${stats.totalSpent}`, icon: <FaCreditCard size={20} />, color: "from-green-400 to-green-600", href: "/dashboard/buyer/payments" },
+    { label: "Total Spent", value: `৳${stats.totalSpent.toLocaleString()}`, icon: <FaCreditCard size={20} />, color: "from-green-400 to-green-600", href: "/dashboard/buyer/payments" },
     { label: "Recent Purchases", value: stats.recentPurchases, icon: <FaBoxOpen size={20} />, color: "from-purple-400 to-purple-600", href: "/dashboard/buyer/orders" },
   ];
 
