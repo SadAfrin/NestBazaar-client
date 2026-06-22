@@ -57,6 +57,39 @@ export default function ManageUsersPage() {
     }
   };
 
+  const handleUpdateRole = async (email, role) => {
+    try {
+      // Update users collection
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/update-role`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, role }),
+        }
+      );
+      const data = await res.json();
+
+      if (data.success) {
+        // Also update BetterAuth user collection
+        await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/users/update-betterauth-role`,
+          {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, role }),
+          }
+        );
+        toast.success(`User role updated to ${role}!`);
+        fetchUsers();
+      } else {
+        toast.error("Failed to update role!");
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+    }
+  };
+
   const handleDelete = async (email) => {
     if (!confirm("Are you sure you want to delete this user?")) return;
     try {
@@ -129,11 +162,11 @@ export default function ManageUsersPage() {
 
           {/* Table Header */}
           <div className="grid grid-cols-12 gap-4 px-4 py-3 bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
-            <div className="col-span-4">User</div>
+            <div className="col-span-3">User</div>
             <div className="col-span-2">Role</div>
             <div className="col-span-2">Location</div>
             <div className="col-span-2">Status</div>
-            <div className="col-span-2 text-right">Actions</div>
+            <div className="col-span-3 text-right">Actions</div>
           </div>
 
           {filteredUsers.map((user, index) => (
@@ -147,7 +180,7 @@ export default function ManageUsersPage() {
               }`}
             >
               {/* User */}
-              <div className="col-span-4 flex items-center gap-3">
+              <div className="col-span-3 flex items-center gap-3">
                 {user.photo ? (
                   <img
                     src={user.photo}
@@ -188,7 +221,20 @@ export default function ManageUsersPage() {
               </div>
 
               {/* Actions */}
-              <div className="col-span-2 flex items-center justify-end gap-6">
+              <div className="col-span-3 flex items-center justify-end gap-2">
+
+                {/* Role Change Dropdown */}
+                <select
+                  value={user.role}
+                  onChange={(e) => handleUpdateRole(user.email, e.target.value)}
+                  className="text-xs font-bold text-gray-600 bg-gray-100 border-0 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-green-400 cursor-pointer"
+                >
+                  <option value="buyer">Buyer</option>
+                  <option value="seller">Seller</option>
+                  <option value="admin">Admin</option>
+                </select>
+
+                {/* Block/Unblock */}
                 {user.status === "blocked" ? (
                   <button
                     onClick={() => handleUpdateStatus(user.email, "active")}
@@ -206,6 +252,8 @@ export default function ManageUsersPage() {
                     <FaBan size={13} />
                   </button>
                 )}
+
+                {/* Delete */}
                 <button
                   onClick={() => handleDelete(user.email)}
                   className="w-8 h-8 rounded-lg bg-red-50 hover:bg-red-100 flex items-center justify-center text-red-500 transition-all"
@@ -213,6 +261,7 @@ export default function ManageUsersPage() {
                 >
                   <FaTrash size={13} />
                 </button>
+
               </div>
 
             </motion.div>
