@@ -18,14 +18,24 @@ export default function PaymentSuccessClient({ session, productId, sellerEmail, 
     const saveOrder = async () => {
       if (orderSaved || !userSession?.user) return;
 
+      console.log("Starting saveOrder...");
+      console.log("userSession:", userSession?.user?.email);
+      console.log("transactionId:", session.payment_intent?.id);
+      console.log("productId:", productId);
+      console.log("sellerEmail:", sellerEmail);
+      console.log("amount:", session.amount_total / 100);
+
       try {
         // Check if order already exists
         const checkRes = await fetchWithAuth(
           `${process.env.NEXT_PUBLIC_SERVER_URL}/api/orders/check?transactionId=${session.payment_intent?.id}`
         );
+        console.log("Check status:", checkRes.status);
         const checkData = await checkRes.json();
+        console.log("Check data:", checkData);
 
         if (checkData.exists) {
+          console.log("Order already exists!");
           setOrderSaved(true);
           return;
         }
@@ -53,13 +63,16 @@ export default function PaymentSuccessClient({ session, productId, sellerEmail, 
             }),
           }
         );
+        console.log("Order save status:", orderRes.status);
         const orderData = await orderRes.json();
+        console.log("Order save response:", orderData);
+
         if (orderData.result?.insertedId) {
           setOrderId(orderData.result.insertedId);
         }
 
         // Save payment
-        await fetchWithAuth(
+        const paymentRes = await fetchWithAuth(
           `${process.env.NEXT_PUBLIC_SERVER_URL}/api/payments`,
           {
             method: "POST",
@@ -75,6 +88,9 @@ export default function PaymentSuccessClient({ session, productId, sellerEmail, 
             }),
           }
         );
+        console.log("Payment save status:", paymentRes.status);
+        const paymentData = await paymentRes.json();
+        console.log("Payment save response:", paymentData);
 
         // Remove from wishlist after ordering
         try {
@@ -175,7 +191,6 @@ export default function PaymentSuccessClient({ session, productId, sellerEmail, 
 
         {/* Action Buttons */}
         <div className="flex gap-3">
-          {/* View Order Details */}
           <Link href="/dashboard/buyer/orders" className="flex-1">
             <Button
               className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-2xl shadow-md"
@@ -185,7 +200,6 @@ export default function PaymentSuccessClient({ session, productId, sellerEmail, 
             </Button>
           </Link>
 
-          {/* Continue Shopping */}
           <Link href="/products" className="flex-1">
             <Button
               variant="bordered"
