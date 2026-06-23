@@ -18,12 +18,16 @@ import {
   FaShoppingCart,
   FaSignOutAlt,
   FaChevronDown,
+  FaInfoCircle,
+  FaEnvelope,
 } from "react-icons/fa";
 
 const navLinks = [
   { name: "Home", href: "/", icon: <FaHome size={14} /> },
   { name: "Products", href: "/products", icon: <FaShoppingBag size={14} /> },
   { name: "Categories", href: "/categories", icon: <FaTh size={14} /> },
+  { name: "About", href: "/about", icon: <FaInfoCircle size={14} /> },
+  { name: "Contact", href: "/contact", icon: <FaEnvelope size={14} /> },
 ];
 
 export default function Navbar() {
