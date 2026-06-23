@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "@/lib/auth-client";
 import { motion } from "framer-motion";
@@ -10,7 +10,7 @@ import { MdVerified } from "react-icons/md";
 import { toast } from "react-toastify";
 import Link from "next/link";
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data: session } = useSession();
@@ -30,14 +30,12 @@ export default function CheckoutPage() {
 
     const fetchData = async () => {
       try {
-        // Fetch product
         const productRes = await fetch(
           `${process.env.NEXT_PUBLIC_SERVER_URL}/api/products/${productId}`
         );
         const productData = await productRes.json();
         if (productData.success) setProduct(productData.data);
 
-        // Fetch buyer profile
         const profileRes = await fetch(
           `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/profile?email=${session.user.email}`
         );
@@ -113,7 +111,6 @@ export default function CheckoutPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-emerald-50/30 py-10">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
 
-        {/* Back Button */}
         <button
           onClick={() => router.back()}
           className="flex items-center gap-2 text-gray-500 hover:text-green-600 transition-colors mb-8 font-semibold"
@@ -194,7 +191,6 @@ export default function CheckoutPage() {
                 </span>
               </div>
             </div>
-
           </motion.div>
 
           {/* Right — Delivery Info + Actions */}
@@ -213,7 +209,9 @@ export default function CheckoutPage() {
                 <FaUser className="text-green-500 shrink-0" size={14} />
                 <div>
                   <p className="text-xs text-gray-400">Full Name</p>
-                  <p className="text-sm font-bold text-gray-800">{buyerProfile?.name || session?.user?.name}</p>
+                  <p className="text-sm font-bold text-gray-800">
+                    {buyerProfile?.name || session?.user?.name}
+                  </p>
                 </div>
               </div>
 
@@ -221,7 +219,9 @@ export default function CheckoutPage() {
                 <FaEnvelope className="text-green-500 shrink-0" size={14} />
                 <div>
                   <p className="text-xs text-gray-400">Email</p>
-                  <p className="text-sm font-bold text-gray-800">{buyerProfile?.email || session?.user?.email}</p>
+                  <p className="text-sm font-bold text-gray-800">
+                    {buyerProfile?.email || session?.user?.email}
+                  </p>
                 </div>
               </div>
 
@@ -271,7 +271,6 @@ export default function CheckoutPage() {
 
             {/* Action Buttons */}
             <div className="flex gap-3">
-              {/* Cancel */}
               <Button
                 variant="bordered"
                 className="flex-1 border-2 border-gray-200 text-gray-600 font-bold rounded-2xl"
@@ -281,7 +280,6 @@ export default function CheckoutPage() {
                 Cancel
               </Button>
 
-              {/* Proceed to Payment */}
               <Button
                 className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-2xl shadow-lg shadow-green-200"
                 isLoading={payLoading}
@@ -297,5 +295,17 @@ export default function CheckoutPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin w-10 h-10 border-4 border-green-500 border-t-transparent rounded-full"></div>
+      </div>
+    }>
+      <CheckoutContent />
+    </Suspense>
   );
 }
