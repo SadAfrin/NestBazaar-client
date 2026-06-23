@@ -27,7 +27,6 @@ export default function RegisterPage() {
     role: "buyer",
   });
 
-  // Password validation conditions
   const passwordConditions = [
     { label: "At least 8 characters", test: (p) => p.length >= 8 },
     { label: "One uppercase letter (A-Z)", test: (p) => /[A-Z]/.test(p) },
@@ -38,7 +37,6 @@ export default function RegisterPage() {
 
   const isPasswordValid = passwordConditions.every((c) => c.test(formData.password));
 
-  // Check if Google user exists after redirect
   useEffect(() => {
     if (!session?.user) return;
     if (isEmailRegistering) return;
@@ -68,7 +66,6 @@ export default function RegisterPage() {
     e.preventDefault();
     setIsEmailRegistering(true);
 
-    // Check password validity
     if (!isPasswordValid) {
       toast.error("Please meet all password requirements!");
       setIsEmailRegistering(false);
@@ -80,7 +77,7 @@ export default function RegisterPage() {
     try {
       await signUp.email({
         name: formData.name,
-        email: formData.email,
+        email: formData.email.toLowerCase(), // ← fixed
         password: formData.password,
         callbackURL: "/login",
         role: formData.role,
@@ -92,7 +89,7 @@ export default function RegisterPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: formData.name,
-          email: formData.email,
+          email: formData.email.toLowerCase(), // ← fixed
           role: formData.role,
           location: formData.location,
         }),
