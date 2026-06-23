@@ -192,48 +192,33 @@ export default function ProductDetailsPage() {
                 isLoading={orderLoading}
                 disabled={orderLoading}
                 onClick={async () => {
-                  if (!session) {
-                    toast.warn("Please login to place an order!");
-                    router.push("/login");
-                    return;
-                  }
-                  setOrderLoading(true);
-                  try {
-                    const roleRes = await fetch(
-                      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/role?email=${session.user.email}`
-                    );
-                    const roleData = await roleRes.json();
-                    const userRole = roleData.role;
-
-                    if (userRole === "admin" || userRole === "seller") {
-                      toast.warn("Only buyers can place orders!");
-                      return;
+                    if (!session) {
+                        toast.warn("Please login to place an order!");
+                        router.push("/login");
+                        return;
                     }
+                    setOrderLoading(true);
+                    try {
+                        const roleRes = await fetch(
+                        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/role?email=${session.user.email}`
+                        );
+                        const roleData = await roleRes.json();
+                        const userRole = roleData.role;
 
-                    toast.info("Redirecting to payment...");
-                    const res = await fetch("/api/checkout", {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({
-                        product,
-                        buyerEmail: session.user.email,
-                        buyerName: session.user.name,
-                        sellerEmail: product.sellerInfo?.email,
-                        sellerName: product.sellerInfo?.name,
-                      }),
-                    });
-                    const data = await res.json();
-                    if (data.url) {
-                      window.location.href = data.url;
-                    } else {
-                      toast.error("Failed to initiate payment!");
+                        if (userRole === "admin" || userRole === "seller") {
+                        toast.warn("Only buyers can place orders!");
+                        return;
+                        }
+
+                        // Redirect to checkout page instead of directly to Stripe
+                        router.push(`/checkout?productId=${product._id}`);
+
+                    } catch (error) {
+                        toast.error("Something went wrong!");
+                    } finally {
+                        setOrderLoading(false);
                     }
-                  } catch (error) {
-                    toast.error("Something went wrong!");
-                  } finally {
-                    setOrderLoading(false);
-                  }
-                }}
+                  }}
               >
                 {orderLoading ? "Processing..." : "Place Order"}
               </Button>
