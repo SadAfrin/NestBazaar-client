@@ -25,6 +25,17 @@ export default function ManageUsersPage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
 
+  const superAdminEmail = process.env.NEXT_PUBLIC_SUPER_ADMIN_EMAIL;
+  const isSuperAdmin = session?.user?.email === superAdminEmail;
+  const isCurrentUser = (user) => user.email === session?.user?.email;
+
+  const canManage = (user) => {
+    if (isCurrentUser(user)) return false; // nobody can modify themselves
+    if (isSuperAdmin) return true; // super admin can manage everyone
+    if (user.role === "admin") return false; // regular admin cannot manage other admins
+    return true; // regular admin can manage buyers and sellers
+  };
+
   const fetchUsers = async () => {
     try {
       const res = await fetchWithAuth(
@@ -74,7 +85,6 @@ export default function ManageUsersPage() {
         }
       );
       const data = await res.json();
-
       if (data.success) {
         await fetchWithAuth(
           `${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/users/update-betterauth-role`,
@@ -117,10 +127,6 @@ export default function ManageUsersPage() {
       u.name?.toLowerCase().includes(search.toLowerCase()) ||
       u.email?.toLowerCase().includes(search.toLowerCase())
   );
-
-  // Check if user is protected (admin or current logged in user)
-  const isProtected = (user) =>
-    user.role === "admin" || user.email === session?.user?.email;
 
   return (
     <div className="space-y-6">
@@ -197,9 +203,19 @@ export default function ManageUsersPage() {
                   </div>
                 )}
                 <div className="min-w-0">
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1 flex-wrap">
                     <p className="font-bold text-gray-800 text-sm truncate">{user.name}</p>
                     <MdVerified className="text-green-500 shrink-0" size={12} />
+                    {isCurrentUser(user) && (
+                      <span className="text-xs font-bold text-purple-600 bg-purple-50 px-1.5 py-0.5 rounded-md">
+                        You
+                      </span>
+                    )}
+                    {user.email === superAdminEmail && (
+                      <span className="text-xs font-bold text-orange-600 bg-orange-50 px-1.5 py-0.5 rounded-md">
+                        Super Admin
+                      </span>
+                    )}
                   </div>
                   <p className="text-xs text-gray-400 truncate">{user.email}</p>
                 </div>
@@ -226,10 +242,9 @@ export default function ManageUsersPage() {
 
               {/* Actions */}
               <div className="col-span-3 flex items-center justify-end gap-2">
-                {isProtected(user) ? (
-                  // Show label for protected users
-                  <span className="text-xs text-gray-400 font-bold px-2 py-1 bg-gray-50 rounded-lg">
-                    {user.email === session?.user?.email ? "You" : "Admin"}
+                {!canManage(user) ? (
+                  <span className="text-xs text-gray-400 font-semibold italic">
+                    {isCurrentUser(user) ? "You" : "Protected"}
                   </span>
                 ) : (
                   <>
