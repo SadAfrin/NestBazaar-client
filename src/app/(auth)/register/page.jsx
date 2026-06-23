@@ -98,9 +98,14 @@ export default function RegisterPage() {
         }),
       });
 
-      await signOut();
-      toast.success("Account created successfully! Please login.");
-      router.push("/login");
+      await signOut({
+        fetchOptions: {
+          onSuccess: () => {
+            toast.success("Account created successfully! Please login.");
+            window.location.href = "/login";
+          },
+        },
+      });
     } catch (err) {
       toast.error(err.message || "Registration failed. Please try again.");
       setError(err.message || "Registration failed. Please try again.");
