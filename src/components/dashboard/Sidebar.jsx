@@ -23,7 +23,6 @@ import {
   FaTimes,
   FaChevronDown,
   FaLock,
-  FaCreditCard,
 } from "react-icons/fa";
 
 const buyerLinks = [
