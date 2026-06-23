@@ -275,13 +275,12 @@ export default function ProductDetailsPage() {
 
           </motion.div>
         </div>
-      </div>
-    
-      {/* Review Section */}
+        {/* Review Section */}
         <div className="col-span-1 lg:col-span-2">
         <ReviewSection productId={id} />
         </div>
 
+      </div>
     </div>
   );
 }
