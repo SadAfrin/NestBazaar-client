@@ -1,36 +1,96 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+---
 
-## Getting Started
+## 🔐 Authentication
 
-First, run the development server:
+- Email/password registration and login via **BetterAuth**
+- Google OAuth login
+- JWT token verification on all protected API routes
+- Role-based authorization — **buyer**, **seller**, **admin**
+- Super admin (`admin@admin.com`) has full platform control
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## 💳 Payment Flow
+
+1. Buyer clicks **Place Order** on product page
+2. Redirected to **Checkout page** with order summary
+3. Clicks **Proceed to Payment** → Stripe hosted checkout
+4. After successful payment → **Payment Success page**
+5. Order and payment saved to MongoDB automatically
+6. Product removed from wishlist automatically
+
+---
+
+## 🚀 Challenges Implemented
+
+| Challenge | Details |
+|-----------|---------|
+| Advanced Search & Sort | Search by name/category, sort by price |
+| Pagination | 9 products per page on All Products page |
+| JWT Authentication | Token verification + role-based authorization |
+
+---
+
+## ⚙️ Environment Variables
+
+### Client (.env)
+```env
+BETTER_AUTH_SECRET=
+BETTER_AUTH_URL=
+MONGODB_URI=
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+NEXT_PUBLIC_BETTER_AUTH_URL=
+NEXT_PUBLIC_SERVER_URL=
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
+STRIPE_SECRET_KEY=
+NEXT_PUBLIC_SUPER_ADMIN_EMAIL=admin@admin.com
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Server (.env)
+```env
+MONGODB_URI=
+CLIENT_URL=
+PORT=5000
+```
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🏃 Run Locally
 
-## Learn More
+### Client
+```bash
+git clone https://github.com/SadAfrin/NestBazaar-client.git
+cd NestBazaar-client
+npm install
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+### Server
+```bash
+git clone https://github.com/SadAfrin/NestBazaar-server.git
+cd NestBazaar-server
+npm install
+node index.js
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📦 MongoDB Collections
 
-## Deploy on Vercel
+| Collection | Description |
+|------------|-------------|
+| `users` | Custom user profiles with role and status |
+| `user` | BetterAuth managed authentication |
+| `products` | Product listings with seller info |
+| `orders` | Order records with buyer/seller info |
+| `payments` | Payment transaction records |
+| `reviews` | Product reviews with ratings |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 👨‍💻 Developer
+
+**Sad Afrin**
+- GitHub: [@SadAfrin](https://github.com/SadAfrin)
+- Batch: PH-L1 | Assignment 10
