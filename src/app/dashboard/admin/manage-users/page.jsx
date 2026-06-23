@@ -6,6 +6,7 @@ import { FaUsers, FaSearch, FaTrash, FaBan, FaCheck } from "react-icons/fa";
 import { MdVerified } from "react-icons/md";
 import { toast } from "react-toastify";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
+import { useSession } from "@/lib/auth-client";
 
 const roleColors = {
   "buyer": "bg-blue-100 text-blue-700",
@@ -19,6 +20,7 @@ const statusColors = {
 };
 
 export default function ManageUsersPage() {
+  const { data: session } = useSession();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -116,6 +118,10 @@ export default function ManageUsersPage() {
       u.email?.toLowerCase().includes(search.toLowerCase())
   );
 
+  // Check if user is protected (admin or current logged in user)
+  const isProtected = (user) =>
+    user.role === "admin" || user.email === session?.user?.email;
+
   return (
     <div className="space-y-6">
 
@@ -158,6 +164,7 @@ export default function ManageUsersPage() {
         </div>
       ) : (
         <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
+
           <div className="grid grid-cols-12 gap-4 px-4 py-3 bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
             <div className="col-span-3">User</div>
             <div className="col-span-2">Role</div>
@@ -176,6 +183,7 @@ export default function ManageUsersPage() {
                 index !== filteredUsers.length - 1 ? "border-b border-gray-100" : ""
               }`}
             >
+              {/* User */}
               <div className="col-span-3 flex items-center gap-3">
                 {user.photo ? (
                   <img
@@ -197,58 +205,74 @@ export default function ManageUsersPage() {
                 </div>
               </div>
 
+              {/* Role */}
               <div className="col-span-2">
                 <span className={`text-xs font-bold px-2 py-1 rounded-lg capitalize ${roleColors[user.role] || "bg-gray-100 text-gray-700"}`}>
                   {user.role}
                 </span>
               </div>
 
+              {/* Location */}
               <div className="col-span-2">
                 <p className="text-sm text-gray-500">{user.location || "N/A"}</p>
               </div>
 
+              {/* Status */}
               <div className="col-span-2">
                 <span className={`text-xs font-bold px-2 py-1 rounded-lg capitalize ${statusColors[user.status] || "bg-gray-100 text-gray-700"}`}>
                   {user.status || "active"}
                 </span>
               </div>
 
+              {/* Actions */}
               <div className="col-span-3 flex items-center justify-end gap-2">
-                <select
-                  value={user.role}
-                  onChange={(e) => handleUpdateRole(user.email, e.target.value)}
-                  className="text-xs font-bold text-gray-600 bg-gray-100 border-0 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-green-400 cursor-pointer"
-                >
-                  <option value="buyer">Buyer</option>
-                  <option value="seller">Seller</option>
-                  <option value="admin">Admin</option>
-                </select>
-
-                {user.status === "blocked" ? (
-                  <button
-                    onClick={() => handleUpdateStatus(user.email, "active")}
-                    className="w-8 h-8 rounded-lg bg-green-50 hover:bg-green-100 flex items-center justify-center text-green-600 transition-all"
-                    title="Unblock"
-                  >
-                    <FaCheck size={13} />
-                  </button>
+                {isProtected(user) ? (
+                  // Show label for protected users
+                  <span className="text-xs text-gray-400 font-bold px-2 py-1 bg-gray-50 rounded-lg">
+                    {user.email === session?.user?.email ? "You" : "Admin"}
+                  </span>
                 ) : (
-                  <button
-                    onClick={() => handleUpdateStatus(user.email, "blocked")}
-                    className="w-8 h-8 rounded-lg bg-yellow-50 hover:bg-yellow-100 flex items-center justify-center text-yellow-600 transition-all"
-                    title="Block"
-                  >
-                    <FaBan size={13} />
-                  </button>
-                )}
+                  <>
+                    {/* Role Change */}
+                    <select
+                      value={user.role}
+                      onChange={(e) => handleUpdateRole(user.email, e.target.value)}
+                      className="text-xs font-bold text-gray-600 bg-gray-100 border-0 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-green-400 cursor-pointer"
+                    >
+                      <option value="buyer">Buyer</option>
+                      <option value="seller">Seller</option>
+                      <option value="admin">Admin</option>
+                    </select>
 
-                <button
-                  onClick={() => handleDelete(user.email)}
-                  className="w-8 h-8 rounded-lg bg-red-50 hover:bg-red-100 flex items-center justify-center text-red-500 transition-all"
-                  title="Delete"
-                >
-                  <FaTrash size={13} />
-                </button>
+                    {/* Block/Unblock */}
+                    {user.status === "blocked" ? (
+                      <button
+                        onClick={() => handleUpdateStatus(user.email, "active")}
+                        className="w-8 h-8 rounded-lg bg-green-50 hover:bg-green-100 flex items-center justify-center text-green-600 transition-all"
+                        title="Unblock"
+                      >
+                        <FaCheck size={13} />
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => handleUpdateStatus(user.email, "blocked")}
+                        className="w-8 h-8 rounded-lg bg-yellow-50 hover:bg-yellow-100 flex items-center justify-center text-yellow-600 transition-all"
+                        title="Block"
+                      >
+                        <FaBan size={13} />
+                      </button>
+                    )}
+
+                    {/* Delete */}
+                    <button
+                      onClick={() => handleDelete(user.email)}
+                      className="w-8 h-8 rounded-lg bg-red-50 hover:bg-red-100 flex items-center justify-center text-red-500 transition-all"
+                      title="Delete"
+                    >
+                      <FaTrash size={13} />
+                    </button>
+                  </>
+                )}
               </div>
 
             </motion.div>
