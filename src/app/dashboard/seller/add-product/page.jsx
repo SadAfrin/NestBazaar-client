@@ -66,6 +66,13 @@ export default function AddProductPage() {
 
     setLoading(true);
     try {
+      // Fetch seller profile to get phone and location
+      const profileRes = await fetchWithAuth(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/profile?email=${session?.user?.email}`
+      );
+      const profileData = await profileRes.json();
+      const sellerProfile = profileData.success ? profileData.data : {};
+
       const productData = {
         title: formData.title,
         category: formData.category,
@@ -78,7 +85,8 @@ export default function AddProductPage() {
           userId: session?.user?.id,
           name: session?.user?.name,
           email: session?.user?.email,
-          phone: "",
+          phone: sellerProfile.phone || "",
+          location: sellerProfile.location || "",
         },
         status: "available",
         createdAt: new Date(),
