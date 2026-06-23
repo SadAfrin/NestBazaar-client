@@ -9,6 +9,7 @@ import { FaShoppingCart, FaMapMarkerAlt, FaUser, FaEnvelope, FaArrowLeft, FaLock
 import { MdVerified } from "react-icons/md";
 import { toast } from "react-toastify";
 import Link from "next/link";
+import { fetchWithAuth } from "@/lib/fetchWithAuth";
 
 function CheckoutContent() {
   const router = useRouter();
@@ -36,7 +37,8 @@ function CheckoutContent() {
         const productData = await productRes.json();
         if (productData.success) setProduct(productData.data);
 
-        const profileRes = await fetch(
+        // Fixed: use fetchWithAuth for protected profile route
+        const profileRes = await fetchWithAuth(
           `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/profile?email=${session.user.email}`
         );
         const profileData = await profileRes.json();
