@@ -26,6 +26,9 @@ export default function MyProductsPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [conditionFilter, setConditionFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
   const [deleteLoading, setDeleteLoading] = useState(null);
 
   const fetchProducts = async () => {
@@ -68,9 +71,20 @@ export default function MyProductsPage() {
     }
   };
 
-  const filteredProducts = products.filter((p) =>
-    p.title.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredProducts = products.filter((p) => {
+    const matchSearch = p.title.toLowerCase().includes(search.toLowerCase());
+    const matchCategory = categoryFilter ? p.category === categoryFilter : true;
+    const matchCondition = conditionFilter ? p.condition === conditionFilter : true;
+    const matchStatus = statusFilter ? p.status === statusFilter : true;
+    return matchSearch && matchCategory && matchCondition && matchStatus;
+  });
+
+  const handleReset = () => {
+    setSearch("");
+    setCategoryFilter("");
+    setConditionFilter("");
+    setStatusFilter("");
+  };
 
   return (
     <div className="space-y-6">
@@ -91,17 +105,75 @@ export default function MyProductsPage() {
         </Link>
       </div>
 
-      {/* Search */}
-      <div className="relative">
-        <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
-        <input
-          type="text"
-          placeholder="Search your products..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 transition-all shadow-sm"
-        />
+      {/* Search + Filters */}
+      <div className="flex flex-wrap gap-3">
+        {/* Search */}
+        <div className="relative flex-1 min-w-[200px]">
+          <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
+          <input
+            type="text"
+            placeholder="Search your products..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 transition-all shadow-sm"
+          />
+        </div>
+
+        {/* Category Filter */}
+        <select
+          value={categoryFilter}
+          onChange={(e) => setCategoryFilter(e.target.value)}
+          className="px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 transition-all shadow-sm"
+        >
+          <option value="">All Categories</option>
+          <option value="Electronics">Electronics</option>
+          <option value="Furniture">Furniture</option>
+          <option value="Vehicles">Vehicles</option>
+          <option value="Fashion">Fashion</option>
+          <option value="Mobile Phones">Mobile Phones</option>
+          <option value="Other">Other</option>
+        </select>
+
+        {/* Condition Filter */}
+        <select
+          value={conditionFilter}
+          onChange={(e) => setConditionFilter(e.target.value)}
+          className="px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 transition-all shadow-sm"
+        >
+          <option value="">All Conditions</option>
+          <option value="Like New">Like New</option>
+          <option value="Good">Good</option>
+          <option value="Refurbished">Refurbished</option>
+        </select>
+
+        {/* Status Filter */}
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 transition-all shadow-sm"
+        >
+          <option value="">All Status</option>
+          <option value="available">Available</option>
+          <option value="sold">Sold</option>
+        </select>
+
+        {/* Reset Button */}
+        {(search || categoryFilter || conditionFilter || statusFilter) && (
+          <button
+            onClick={handleReset}
+            className="px-4 py-3 bg-red-50 hover:bg-red-100 text-red-500 font-bold rounded-xl text-sm transition-all"
+          >
+            Reset
+          </button>
+        )}
       </div>
+
+      {/* Results count */}
+      {(search || categoryFilter || conditionFilter || statusFilter) && (
+        <p className="text-sm text-gray-400">
+          Showing <span className="font-bold text-gray-700">{filteredProducts.length}</span> of {products.length} products
+        </p>
+      )}
 
       {loading ? (
         <div className="space-y-3">
@@ -122,14 +194,20 @@ export default function MyProductsPage() {
               <FaBoxOpen size={40} className="text-green-400" />
             </div>
             <div className="text-center">
-              <p className="text-gray-700 font-black text-lg">No Products Yet</p>
-              <p className="text-gray-400 text-sm mt-1">Start listing products to sell</p>
+              <p className="text-gray-700 font-black text-lg">No Products Found</p>
+              <p className="text-gray-400 text-sm mt-1">
+                {search || categoryFilter || conditionFilter || statusFilter
+                  ? "Try changing your filters"
+                  : "Start listing products to sell"}
+              </p>
             </div>
-            <Link href="/dashboard/seller/add-product">
-              <Button className="bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-2xl shadow-md">
-                Add First Product
-              </Button>
-            </Link>
+            {!search && !categoryFilter && !conditionFilter && !statusFilter && (
+              <Link href="/dashboard/seller/add-product">
+                <Button className="bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-2xl shadow-md">
+                  Add First Product
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       ) : (
