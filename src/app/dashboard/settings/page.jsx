@@ -160,3 +160,5 @@ export default function SettingsPage() {
     </div>
   );
 }
+
+// password changing code is here in this file
