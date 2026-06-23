@@ -11,11 +11,11 @@ A full-stack second-hand marketplace where buyers can purchase pre-owned product
 
 | Role | Email | Password |
 |------|-------|----------|
-| Super Admin | admin@admin.com | admin123 |
-| Seller | mad@gmail.com | 123456 |
-| Buyer | sad@gmail.com | 123456 |
+| Super Admin | admin@admin.com | $Admin123 |
+| Seller | mad@gmail.com | 12345678 |
+| Buyer | sad@gmail.com | 12345678 |
 
-> **Stripe Test Card:** `4242 4242 4242 4242` — Expiry: `12/26` — CVC: `123`
+> **Stripe Test Card:** `4242 4242 4242 4242` — Expiry: `mm/yy` — CVC: `123`
 
 ---
 
@@ -51,9 +51,9 @@ A full-stack second-hand marketplace where buyers can purchase pre-owned product
 
 | Technology | Purpose |
 |------------|---------|
-| Next.js 15 | React framework |
-| HeroUI v3 | UI components |
-| Tailwind CSS v4 | Styling |
+| Next.js | React framework |
+| HeroUI | UI components |
+| Tailwind | Styling |
 | BetterAuth | Authentication |
 | Framer Motion | Animations |
 | Recharts | Charts |
@@ -110,7 +110,7 @@ NEXT_PUBLIC_SUPER_ADMIN_EMAIL=admin@admin.com
 
 ---
 
-## 🏃 Run Locally
+## Run Locally
 
 ```bash
 git clone https://github.com/SadAfrin/NestBazaar-client.git
@@ -121,6 +121,6 @@ npm run dev
 
 ---
 
-## 👨‍💻 Developer
+## Developer
 
 **Sadia Afrin** — PH-L1 | Assignment 10
