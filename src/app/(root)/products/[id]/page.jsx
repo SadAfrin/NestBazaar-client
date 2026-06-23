@@ -9,6 +9,7 @@ import { MdVerified } from "react-icons/md";
 import { toast } from "react-toastify";
 import { useSession } from "@/lib/auth-client";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
+import ReviewSection from "@/components/review/ReviewSection";
 
 const conditionColors = {
   "Like New": "bg-green-100 text-green-700",
@@ -275,6 +276,12 @@ export default function ProductDetailsPage() {
           </motion.div>
         </div>
       </div>
+    
+      {/* Review Section */}
+        <div className="col-span-1 lg:col-span-2">
+        <ReviewSection productId={id} />
+        </div>
+
     </div>
   );
 }
