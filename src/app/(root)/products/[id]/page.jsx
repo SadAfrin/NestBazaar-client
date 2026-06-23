@@ -22,12 +22,13 @@ export default function ProductDetailsPage() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [orderLoading, setOrderLoading] = useState(false);
+  const [wishlistLoading, setWishlistLoading] = useState(false);
   const { data: session } = useSession();
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        // Public route — no token needed
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_SERVER_URL}/api/products/${id}`
         );
@@ -187,15 +188,17 @@ export default function ProductDetailsPage() {
               {/* Place Order Button */}
               <Button
                 className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-2xl shadow-lg shadow-green-200 hover:shadow-green-300 transition-all"
-                startContent={<FaShoppingCart size={14} />}
+                startContent={!orderLoading && <FaShoppingCart size={14} />}
+                isLoading={orderLoading}
+                disabled={orderLoading}
                 onClick={async () => {
                   if (!session) {
                     toast.warn("Please login to place an order!");
                     router.push("/login");
                     return;
                   }
+                  setOrderLoading(true);
                   try {
-                    // Public route — no token needed for role check
                     const roleRes = await fetch(
                       `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/role?email=${session.user.email}`
                     );
@@ -227,25 +230,29 @@ export default function ProductDetailsPage() {
                     }
                   } catch (error) {
                     toast.error("Something went wrong!");
+                  } finally {
+                    setOrderLoading(false);
                   }
                 }}
               >
-                Place Order
+                {orderLoading ? "Processing..." : "Place Order"}
               </Button>
 
               {/* Wishlist Button */}
               <Button
                 variant="bordered"
                 className="border-2 border-green-500 text-green-600 font-bold rounded-2xl hover:bg-green-50 transition-all"
-                startContent={<FaHeart size={14} />}
+                startContent={!wishlistLoading && <FaHeart size={14} />}
+                isLoading={wishlistLoading}
+                disabled={wishlistLoading}
                 onClick={async () => {
                   if (!session) {
                     toast.warn("Please login to add to wishlist!");
                     router.push("/login");
                     return;
                   }
+                  setWishlistLoading(true);
                   try {
-                    // Public route — no token needed for role check
                     const roleRes = await fetch(
                       `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/role?email=${session.user.email}`
                     );
@@ -257,7 +264,6 @@ export default function ProductDetailsPage() {
                       return;
                     }
 
-                    // Protected route — token needed
                     await fetchWithAuth(
                       `${process.env.NEXT_PUBLIC_SERVER_URL}/api/wishlist`,
                       {
@@ -271,10 +277,12 @@ export default function ProductDetailsPage() {
                     toast.success("Added to wishlist!");
                   } catch (error) {
                     toast.error("Failed to add to wishlist!");
+                  } finally {
+                    setWishlistLoading(false);
                   }
                 }}
               >
-                Wishlist
+                {wishlistLoading ? "Adding..." : "Wishlist"}
               </Button>
 
             </div>
