@@ -23,6 +23,7 @@ import {
   FaTimes,
   FaChevronDown,
   FaLock,
+  FaCreditCard,
 } from "react-icons/fa";
 
 const buyerLinks = [
@@ -45,6 +46,7 @@ const adminLinks = [
   { name: "Manage Users", href: "/dashboard/admin/manage-users", icon: <FaUsers size={16} /> },
   { name: "Manage Products", href: "/dashboard/admin/manage-products", icon: <FaBoxOpen size={16} /> },
   { name: "Manage Orders", href: "/dashboard/admin/manage-orders", icon: <FaClipboardList size={16} /> },
+  { name: "Manage Payments", href: "/dashboard/admin/manage-payments", icon: <FaCreditCard size={16} /> }, // ← ADD
   { name: "Platform Analytics", href: "/dashboard/admin/analytics", icon: <FaChartBar size={16} /> },
 ];
 
