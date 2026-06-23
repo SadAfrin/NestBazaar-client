@@ -1,11 +1,73 @@
+# NestBazaar — Second-Hand Marketplace
+
+A full-stack second-hand marketplace where buyers can purchase pre-owned products, sellers can list items, and admins can manage the entire platform.
+
+🌐 **Live Site:** [https://nest-bazaar-client.vercel.app](https://nest-bazaar-client.vercel.app)
+🔧 **Server:** [https://nest-bazaar-server.vercel.app](https://nest-bazaar-server.vercel.app)
+
 ---
 
-## 🔐 Authentication
+## 🔑 Test Credentials
 
-- Email/password registration and login via **BetterAuth**
-- Google OAuth login
+| Role | Email | Password |
+|------|-------|----------|
+| Super Admin | admin@admin.com | admin123 |
+| Seller | mad@gmail.com | 123456 |
+| Buyer | sad@gmail.com | 123456 |
+
+> **Stripe Test Card:** `4242 4242 4242 4242` — Expiry: `12/26` — CVC: `123`
+
+---
+
+## ✨ Features
+
+### Buyer
+- Browse, search, filter and sort products
+- Add products to wishlist
+- Secure Stripe checkout with order summary
+- Track order status with timeline progress bar
+- Cancel orders before shipment
+- View payment history and transaction records
+- Write product reviews with star ratings
+- Update profile and change password
+
+### Seller
+- Add, edit and delete product listings
+- Manage incoming orders with step-by-step status updates
+- View sales analytics with charts
+- Track revenue and pending orders
+
+### Admin
+- Platform overview with real-time statistics
+- Manage users — block/unblock, delete, change roles
+- Super admin can manage other admins
+- Approve, reject and delete product listings
+- Monitor all orders and payment transactions
+- Platform analytics with charts
+
+---
+
+## 🛠️ Tech Stack
+
+| Technology | Purpose |
+|------------|---------|
+| Next.js 15 | React framework |
+| HeroUI v3 | UI components |
+| Tailwind CSS v4 | Styling |
+| BetterAuth | Authentication |
+| Framer Motion | Animations |
+| Recharts | Charts |
+| Stripe | Payment gateway |
+| MongoDB Atlas | Database |
+| Express.js | Backend server |
+
+---
+
+## 🔐 Authentication & Security
+
+- Email/password and Google OAuth via BetterAuth
 - JWT token verification on all protected API routes
-- Role-based authorization — **buyer**, **seller**, **admin**
+- Role-based authorization on both client and server
 - Super admin (`admin@admin.com`) has full platform control
 
 ---
@@ -13,10 +75,10 @@
 ## 💳 Payment Flow
 
 1. Buyer clicks **Place Order** on product page
-2. Redirected to **Checkout page** with order summary
+2. Redirected to **Checkout page** with full order summary
 3. Clicks **Proceed to Payment** → Stripe hosted checkout
 4. After successful payment → **Payment Success page**
-5. Order and payment saved to MongoDB automatically
+5. Order and payment saved to database automatically
 6. Product removed from wishlist automatically
 
 ---
@@ -25,15 +87,14 @@
 
 | Challenge | Details |
 |-----------|---------|
-| Advanced Search & Sort | Search by name/category, sort by price |
+| Advanced Search & Sort | Search by name/category, sort by price low/high |
 | Pagination | 9 products per page on All Products page |
-| JWT Authentication | Token verification + role-based authorization |
+| JWT + Role Authorization | Token verification and role-based API protection |
 
 ---
 
 ## ⚙️ Environment Variables
 
-### Client (.env)
 ```env
 BETTER_AUTH_SECRET=
 BETTER_AUTH_URL=
@@ -47,18 +108,10 @@ STRIPE_SECRET_KEY=
 NEXT_PUBLIC_SUPER_ADMIN_EMAIL=admin@admin.com
 ```
 
-### Server (.env)
-```env
-MONGODB_URI=
-CLIENT_URL=
-PORT=5000
-```
-
 ---
 
 ## 🏃 Run Locally
 
-### Client
 ```bash
 git clone https://github.com/SadAfrin/NestBazaar-client.git
 cd NestBazaar-client
@@ -66,31 +119,8 @@ npm install
 npm run dev
 ```
 
-### Server
-```bash
-git clone https://github.com/SadAfrin/NestBazaar-server.git
-cd NestBazaar-server
-npm install
-node index.js
-```
-
----
-
-## 📦 MongoDB Collections
-
-| Collection | Description |
-|------------|-------------|
-| `users` | Custom user profiles with role and status |
-| `user` | BetterAuth managed authentication |
-| `products` | Product listings with seller info |
-| `orders` | Order records with buyer/seller info |
-| `payments` | Payment transaction records |
-| `reviews` | Product reviews with ratings |
-
 ---
 
 ## 👨‍💻 Developer
 
-**Sad Afrin**
-- GitHub: [@SadAfrin](https://github.com/SadAfrin)
-- Batch: PH-L1 | Assignment 10
+**Sadia Afrin** — PH-L1 | Assignment 10
