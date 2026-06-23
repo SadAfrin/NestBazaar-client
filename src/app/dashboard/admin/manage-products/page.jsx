@@ -23,6 +23,9 @@ export default function ManageProductsPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [conditionFilter, setConditionFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
 
   const fetchProducts = async () => {
     try {
@@ -82,11 +85,22 @@ export default function ManageProductsPage() {
     }
   };
 
-  const filteredProducts = products.filter(
-    (p) =>
+  const handleReset = () => {
+    setSearch("");
+    setCategoryFilter("");
+    setConditionFilter("");
+    setStatusFilter("");
+  };
+
+  const filteredProducts = products.filter((p) => {
+    const matchSearch =
       p.title?.toLowerCase().includes(search.toLowerCase()) ||
-      p.category?.toLowerCase().includes(search.toLowerCase())
-  );
+      p.category?.toLowerCase().includes(search.toLowerCase());
+    const matchCategory = categoryFilter ? p.category === categoryFilter : true;
+    const matchCondition = conditionFilter ? p.condition === conditionFilter : true;
+    const matchStatus = statusFilter ? p.status === statusFilter : true;
+    return matchSearch && matchCategory && matchCondition && matchStatus;
+  });
 
   return (
     <div className="space-y-6">
@@ -96,16 +110,71 @@ export default function ManageProductsPage() {
         <p className="text-gray-400 text-sm mt-1">{products.length} total products</p>
       </div>
 
-      <div className="relative">
-        <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
-        <input
-          type="text"
-          placeholder="Search products by title or category..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 transition-all shadow-sm"
-        />
+      {/* Search + Filters */}
+      <div className="flex flex-wrap gap-3">
+        <div className="relative flex-1 min-w-[200px]">
+          <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
+          <input
+            type="text"
+            placeholder="Search by title or category..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 transition-all shadow-sm"
+          />
+        </div>
+
+        <select
+          value={categoryFilter}
+          onChange={(e) => setCategoryFilter(e.target.value)}
+          className="px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 transition-all shadow-sm"
+        >
+          <option value="">All Categories</option>
+          <option value="Electronics">Electronics</option>
+          <option value="Furniture">Furniture</option>
+          <option value="Vehicles">Vehicles</option>
+          <option value="Fashion">Fashion</option>
+          <option value="Mobile Phones">Mobile Phones</option>
+          <option value="Other">Other</option>
+        </select>
+
+        <select
+          value={conditionFilter}
+          onChange={(e) => setConditionFilter(e.target.value)}
+          className="px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 transition-all shadow-sm"
+        >
+          <option value="">All Conditions</option>
+          <option value="Like New">Like New</option>
+          <option value="Good">Good</option>
+          <option value="Refurbished">Refurbished</option>
+        </select>
+
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 transition-all shadow-sm"
+        >
+          <option value="">All Status</option>
+          <option value="available">Available</option>
+          <option value="rejected">Rejected</option>
+          <option value="sold">Sold</option>
+        </select>
+
+        {(search || categoryFilter || conditionFilter || statusFilter) && (
+          <button
+            onClick={handleReset}
+            className="px-4 py-3 bg-red-50 hover:bg-red-100 text-red-500 font-bold rounded-xl text-sm transition-all"
+          >
+            Reset
+          </button>
+        )}
       </div>
+
+      {/* Results count */}
+      {(search || categoryFilter || conditionFilter || statusFilter) && (
+        <p className="text-sm text-gray-400">
+          Showing <span className="font-bold text-gray-700">{filteredProducts.length}</span> of {products.length} products
+        </p>
+      )}
 
       {loading ? (
         <div className="space-y-3">
@@ -126,6 +195,11 @@ export default function ManageProductsPage() {
               <FaBoxOpen size={40} className="text-green-400" />
             </div>
             <p className="text-gray-700 font-black text-lg">No Products Found</p>
+            <p className="text-gray-400 text-sm">
+              {search || categoryFilter || conditionFilter || statusFilter
+                ? "Try changing your filters"
+                : "No products listed yet"}
+            </p>
           </div>
         </div>
       ) : (

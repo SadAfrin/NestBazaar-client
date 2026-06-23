@@ -21,6 +21,8 @@ export default function AdminManageOrdersPage() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [paymentFilter, setPaymentFilter] = useState("");
   const [selectedOrder, setSelectedOrder] = useState(null);
 
   const fetchOrders = async () => {
@@ -75,11 +77,21 @@ export default function AdminManageOrdersPage() {
     }
   };
 
-  const filteredOrders = orders.filter(
-    (o) =>
+  const handleReset = () => {
+    setSearch("");
+    setStatusFilter("");
+    setPaymentFilter("");
+  };
+
+  const filteredOrders = orders.filter((o) => {
+    const matchSearch =
       o.buyerInfo?.name?.toLowerCase().includes(search.toLowerCase()) ||
-      o.buyerInfo?.email?.toLowerCase().includes(search.toLowerCase())
-  );
+      o.buyerInfo?.email?.toLowerCase().includes(search.toLowerCase()) ||
+      o.sellerInfo?.name?.toLowerCase().includes(search.toLowerCase());
+    const matchStatus = statusFilter ? o.orderStatus === statusFilter : true;
+    const matchPayment = paymentFilter ? o.paymentStatus === paymentFilter : true;
+    return matchSearch && matchStatus && matchPayment;
+  });
 
   return (
     <div className="space-y-6">
@@ -89,16 +101,62 @@ export default function AdminManageOrdersPage() {
         <p className="text-gray-400 text-sm mt-1">{orders.length} total orders</p>
       </div>
 
-      <div className="relative">
-        <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
-        <input
-          type="text"
-          placeholder="Search by buyer name or email..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 transition-all shadow-sm"
-        />
+      {/* Search + Filters */}
+      <div className="flex flex-wrap gap-3">
+        <div className="relative flex-1 min-w-[200px]">
+          <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
+          <input
+            type="text"
+            placeholder="Search by buyer or seller name..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 transition-all shadow-sm"
+          />
+        </div>
+
+        {/* Order Status Filter */}
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 transition-all shadow-sm"
+        >
+          <option value="">All Statuses</option>
+          <option value="pending">Pending</option>
+          <option value="accepted">Accepted</option>
+          <option value="processing">Processing</option>
+          <option value="shipped">Shipped</option>
+          <option value="delivered">Delivered</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+
+        {/* Payment Status Filter */}
+        <select
+          value={paymentFilter}
+          onChange={(e) => setPaymentFilter(e.target.value)}
+          className="px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 transition-all shadow-sm"
+        >
+          <option value="">All Payments</option>
+          <option value="paid">Paid</option>
+          <option value="pending">Pending</option>
+        </select>
+
+        {/* Reset */}
+        {(search || statusFilter || paymentFilter) && (
+          <button
+            onClick={handleReset}
+            className="px-4 py-3 bg-red-50 hover:bg-red-100 text-red-500 font-bold rounded-xl text-sm transition-all"
+          >
+            Reset
+          </button>
+        )}
       </div>
+
+      {/* Results count */}
+      {(search || statusFilter || paymentFilter) && (
+        <p className="text-sm text-gray-400">
+          Showing <span className="font-bold text-gray-700">{filteredOrders.length}</span> of {orders.length} orders
+        </p>
+      )}
 
       {loading ? (
         <div className="space-y-3">
@@ -115,7 +173,12 @@ export default function AdminManageOrdersPage() {
             <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center shadow-inner">
               <FaClipboardList size={40} className="text-green-400" />
             </div>
-            <p className="text-gray-700 font-black text-lg">No Orders Yet</p>
+            <p className="text-gray-700 font-black text-lg">No Orders Found</p>
+            <p className="text-gray-400 text-sm">
+              {search || statusFilter || paymentFilter
+                ? "Try changing your filters"
+                : "No orders yet"}
+            </p>
           </div>
         </div>
       ) : (
@@ -180,6 +243,7 @@ export default function AdminManageOrdersPage() {
         </div>
       )}
 
+      {/* Order Detail Modal */}
       {selectedOrder && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <motion.div
