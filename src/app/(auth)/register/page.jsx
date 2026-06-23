@@ -4,12 +4,11 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signUp, signIn, signOut, useSession } from "@/lib/auth-client";
-import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash, FaGoogle, FaShoppingBag, FaStore } from "react-icons/fa";
+import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash, FaGoogle, FaShoppingBag, FaStore, FaArrowLeft, FaCheck, FaTimes } from "react-icons/fa";
 import { MdLocationOn } from "react-icons/md";
 import { Button } from "@heroui/react";
 import { toast } from "react-toastify";
 import RoleSelectionModal from "@/components/shared/RoleSelectionModal";
-import { FaArrowLeft } from "react-icons/fa";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -18,6 +17,7 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showRoleModal, setShowRoleModal] = useState(false);
+  const [isEmailRegistering, setIsEmailRegistering] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -27,9 +27,21 @@ export default function RegisterPage() {
     role: "buyer",
   });
 
-  // Check if Google user exists after redirect back to register page
+  // Password validation conditions
+  const passwordConditions = [
+    { label: "At least 8 characters", test: (p) => p.length >= 8 },
+    { label: "One uppercase letter (A-Z)", test: (p) => /[A-Z]/.test(p) },
+    { label: "One lowercase letter (a-z)", test: (p) => /[a-z]/.test(p) },
+    { label: "One number (0-9)", test: (p) => /[0-9]/.test(p) },
+    { label: "One special character (!@#$%^&*)", test: (p) => /[!@#$%^&*]/.test(p) },
+  ];
+
+  const isPasswordValid = passwordConditions.every((c) => c.test(formData.password));
+
+  // Check if Google user exists after redirect
   useEffect(() => {
     if (!session?.user) return;
+    if (isEmailRegistering) return;
     const checkUser = async () => {
       try {
         const res = await fetch(
@@ -46,7 +58,7 @@ export default function RegisterPage() {
       }
     };
     checkUser();
-  }, [session]);
+  }, [session, isEmailRegistering]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -54,6 +66,15 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsEmailRegistering(true);
+
+    // Check password validity
+    if (!isPasswordValid) {
+      toast.error("Please meet all password requirements!");
+      setIsEmailRegistering(false);
+      return;
+    }
+
     setLoading(true);
     setError("");
     try {
@@ -77,9 +98,7 @@ export default function RegisterPage() {
         }),
       });
 
-      // Sign out after registration so user must login manually
       await signOut();
-
       toast.success("Account created successfully! Please login.");
       router.push("/login");
     } catch (err) {
@@ -130,7 +149,7 @@ export default function RegisterPage() {
             </div>
             <h1 className="text-2xl font-black text-gray-800">Create Account</h1>
             <p className="text-sm text-gray-500 mt-1">Join thousands of buyers and sellers</p>
-          </div> 
+          </div>
 
           {/* Error */}
           {error && (
@@ -169,6 +188,7 @@ export default function RegisterPage() {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
+
             <div className="relative">
               <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
               <input
@@ -216,6 +236,7 @@ export default function RegisterPage() {
               </select>
             </div>
 
+            {/* Password Input */}
             <div className="relative">
               <FaLock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
               <input
@@ -236,13 +257,44 @@ export default function RegisterPage() {
               </button>
             </div>
 
+            {/* Password Strength Indicator */}
+            {formData.password.length > 0 && (
+              <div className="bg-gray-50 border border-gray-100 rounded-xl p-4 space-y-2">
+                <p className="text-xs font-bold text-gray-500 mb-2">Password Requirements:</p>
+                {passwordConditions.map((condition, index) => (
+                  <div key={index} className="flex items-center gap-2">
+                    <div className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 ${
+                      condition.test(formData.password)
+                        ? "bg-green-500"
+                        : "bg-gray-200"
+                    }`}>
+                      {condition.test(formData.password) ? (
+                        <FaCheck size={8} className="text-white" />
+                      ) : (
+                        <FaTimes size={8} className="text-gray-400" />
+                      )}
+                    </div>
+                    <span className={`text-xs font-semibold ${
+                      condition.test(formData.password)
+                        ? "text-green-600"
+                        : "text-gray-400"
+                    }`}>
+                      {condition.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+
             <Button
               type="submit"
               isLoading={loading}
-              className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-3 rounded-xl shadow-lg shadow-green-200 hover:shadow-green-300 hover:scale-[1.01] transition-all duration-200 mt-2"
+              disabled={loading || !isPasswordValid}
+              className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-3 rounded-xl shadow-lg shadow-green-200 hover:shadow-green-300 hover:scale-[1.01] transition-all duration-200 mt-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
               {loading ? "Creating Account..." : "Create Account"}
             </Button>
+
           </form>
 
           {/* Divider */}
@@ -272,7 +324,7 @@ export default function RegisterPage() {
         </div>
       </div>
 
-      {/* Role Selection Modal */}
+      {/* Role Selection Modal — Google only */}
       {showRoleModal && (
         <RoleSelectionModal
           session={session}
