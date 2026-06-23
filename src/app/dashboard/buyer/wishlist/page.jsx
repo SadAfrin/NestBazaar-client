@@ -82,7 +82,7 @@ export default function WishlistPage() {
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {[...Array(4)].map((_, i) => (
             <div key={i} className="bg-white rounded-2xl p-4 animate-pulse flex gap-4">
               <div className="w-16 h-16 bg-gray-200 rounded-xl shrink-0" />
@@ -112,7 +112,7 @@ export default function WishlistPage() {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {wishlist.map((product, index) => (
             <motion.div
               key={product._id}
