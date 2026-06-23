@@ -25,6 +25,7 @@ export default function ProductDetailsPage() {
   const [selectedImage, setSelectedImage] = useState(0);
   const [orderLoading, setOrderLoading] = useState(false);
   const [wishlistLoading, setWishlistLoading] = useState(false);
+  const [sellerProfile, setSellerProfile] = useState(null);
   const { data: session } = useSession();
 
   useEffect(() => {
@@ -43,6 +44,23 @@ export default function ProductDetailsPage() {
     };
     fetchProduct();
   }, [id]);
+
+  // Fetch seller live profile
+  useEffect(() => {
+    const fetchSellerProfile = async () => {
+      if (!product?.sellerInfo?.email) return;
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/check?email=${product.sellerInfo.email}`
+        );
+        const data = await res.json();
+        if (data.exists) setSellerProfile(data.user);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    if (product) fetchSellerProfile();
+  }, [product]);
 
   if (loading) {
     return (
@@ -150,12 +168,22 @@ export default function ProductDetailsPage() {
             <div className="bg-white border border-gray-100 rounded-2xl p-5 space-y-4">
               <h3 className="font-black text-gray-800">Seller Information</h3>
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white font-black text-lg shadow-md">
-                  {product.sellerInfo?.name?.charAt(0)}
-                </div>
+                {sellerProfile?.photo ? (
+                  <img
+                    src={sellerProfile.photo}
+                    alt={sellerProfile.name}
+                    className="w-12 h-12 rounded-2xl object-cover border-2 border-green-100 shadow-md"
+                  />
+                ) : (
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white font-black text-lg shadow-md">
+                    {product.sellerInfo?.name?.charAt(0)}
+                  </div>
+                )}
                 <div>
                   <div className="flex items-center gap-1">
-                    <p className="font-black text-gray-800">{product.sellerInfo?.name}</p>
+                    <p className="font-black text-gray-800">
+                      {sellerProfile?.name || product.sellerInfo?.name}
+                    </p>
                     <MdVerified className="text-green-500" size={16} />
                   </div>
                   <div className="flex items-center gap-1 mt-0.5">
@@ -170,15 +198,19 @@ export default function ProductDetailsPage() {
               <div className="space-y-2">
                 <div className="flex items-center gap-3 text-sm text-gray-500">
                   <FaEnvelope className="text-green-500" size={14} />
-                  <span>{product.sellerInfo?.email}</span>
+                  <span>{sellerProfile?.email || product.sellerInfo?.email}</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm text-gray-500">
                   <FaPhone className="text-green-500" size={14} />
-                  <span>{product.sellerInfo?.phone}</span>
+                  <span>
+                    {sellerProfile?.phone || product.sellerInfo?.phone || "Not provided"}
+                  </span>
                 </div>
                 <div className="flex items-center gap-3 text-sm text-gray-500">
                   <FaMapMarkerAlt className="text-green-500" size={14} />
-                  <span>{product.sellerInfo?.location || "Bangladesh"}</span>
+                  <span>
+                    {sellerProfile?.location || product.sellerInfo?.location || "Bangladesh"}
+                  </span>
                 </div>
               </div>
             </div>
@@ -193,33 +225,31 @@ export default function ProductDetailsPage() {
                 isLoading={orderLoading}
                 disabled={orderLoading}
                 onClick={async () => {
-                    if (!session) {
-                        toast.warn("Please login to place an order!");
-                        router.push("/login");
-                        return;
+                  if (!session) {
+                    toast.warn("Please login to place an order!");
+                    router.push("/login");
+                    return;
+                  }
+                  setOrderLoading(true);
+                  try {
+                    const roleRes = await fetch(
+                      `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/role?email=${session.user.email}`
+                    );
+                    const roleData = await roleRes.json();
+                    const userRole = roleData.role;
+
+                    if (userRole === "admin" || userRole === "seller") {
+                      toast.warn("Only buyers can place orders!");
+                      return;
                     }
-                    setOrderLoading(true);
-                    try {
-                        const roleRes = await fetch(
-                        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/role?email=${session.user.email}`
-                        );
-                        const roleData = await roleRes.json();
-                        const userRole = roleData.role;
 
-                        if (userRole === "admin" || userRole === "seller") {
-                        toast.warn("Only buyers can place orders!");
-                        return;
-                        }
-
-                        // Redirect to checkout page instead of directly to Stripe
-                        router.push(`/checkout?productId=${product._id}`);
-
-                    } catch (error) {
-                        toast.error("Something went wrong!");
-                    } finally {
-                        setOrderLoading(false);
-                    }
-                  }}
+                    router.push(`/checkout?productId=${product._id}`);
+                  } catch (error) {
+                    toast.error("Something went wrong!");
+                  } finally {
+                    setOrderLoading(false);
+                  }
+                }}
               >
                 {orderLoading ? "Processing..." : "Place Order"}
               </Button>
@@ -275,10 +305,9 @@ export default function ProductDetailsPage() {
 
           </motion.div>
         </div>
+
         {/* Review Section */}
-        <div className="col-span-1 lg:col-span-2">
         <ReviewSection productId={id} />
-        </div>
 
       </div>
     </div>
