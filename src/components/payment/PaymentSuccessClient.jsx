@@ -5,13 +5,14 @@ import { useSession } from "@/lib/auth-client";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Button } from "@heroui/react";
-import { FaCheckCircle, FaShoppingBag, FaHome } from "react-icons/fa";
+import { FaCheckCircle, FaShoppingBag, FaHome, FaShoppingCart, FaEye } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
 
 export default function PaymentSuccessClient({ session, productId, sellerEmail, sellerName }) {
   const { data: userSession } = useSession();
   const [orderSaved, setOrderSaved] = useState(false);
+  const [orderId, setOrderId] = useState(null);
 
   useEffect(() => {
     const saveOrder = async () => {
@@ -30,7 +31,7 @@ export default function PaymentSuccessClient({ session, productId, sellerEmail, 
         }
 
         // Save order
-        await fetchWithAuth(
+        const orderRes = await fetchWithAuth(
           `${process.env.NEXT_PUBLIC_SERVER_URL}/api/orders`,
           {
             method: "POST",
@@ -52,6 +53,10 @@ export default function PaymentSuccessClient({ session, productId, sellerEmail, 
             }),
           }
         );
+        const orderData = await orderRes.json();
+        if (orderData.result?.insertedId) {
+          setOrderId(orderData.result.insertedId);
+        }
 
         // Save payment
         await fetchWithAuth(
@@ -97,6 +102,15 @@ export default function PaymentSuccessClient({ session, productId, sellerEmail, 
     saveOrder();
   }, [userSession]);
 
+  // Format payment date
+  const paymentDate = new Date().toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 flex items-center justify-center p-4">
       <motion.div
@@ -104,6 +118,7 @@ export default function PaymentSuccessClient({ session, productId, sellerEmail, 
         animate={{ opacity: 1, scale: 1 }}
         className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md text-center"
       >
+        {/* Success Icon */}
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
@@ -116,25 +131,38 @@ export default function PaymentSuccessClient({ session, productId, sellerEmail, 
         <h1 className="text-2xl font-black text-gray-800 mb-2">Payment Successful!</h1>
         <p className="text-gray-400 text-sm mb-6">Your order has been placed successfully</p>
 
+        {/* Order Summary */}
         <div className="bg-gray-50 rounded-2xl p-4 mb-6 text-left space-y-3">
+          <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Order Summary</p>
+
           <div className="flex justify-between">
             <span className="text-sm text-gray-500">Amount Paid</span>
             <span className="text-sm font-black text-green-600">
               ৳{(session.amount_total / 100).toLocaleString()}
             </span>
           </div>
+
           <div className="flex justify-between">
             <span className="text-sm text-gray-500">Transaction ID</span>
             <span className="text-xs font-bold text-gray-700 truncate max-w-[180px]">
               {session.payment_intent?.id}
             </span>
           </div>
+
           <div className="flex justify-between">
             <span className="text-sm text-gray-500">Email</span>
-            <span className="text-sm font-bold text-gray-700">
+            <span className="text-sm font-bold text-gray-700 truncate max-w-[180px]">
               {session.customer_details?.email}
             </span>
           </div>
+
+          <div className="flex justify-between">
+            <span className="text-sm text-gray-500">Payment Date</span>
+            <span className="text-xs font-bold text-gray-700">
+              {paymentDate}
+            </span>
+          </div>
+
           <div className="flex justify-between">
             <span className="text-sm text-gray-500">Status</span>
             <span className="text-sm font-bold text-green-600 capitalize">
@@ -143,25 +171,43 @@ export default function PaymentSuccessClient({ session, productId, sellerEmail, 
           </div>
         </div>
 
-        <div className="flex gap-3">
-          <Link href="/dashboard/buyer/orders" className="flex-1">
+        {/* Action Buttons */}
+        <div className="flex flex-col gap-3">
+          {/* View Order Details */}
+          <Link href="/dashboard/buyer/orders" className="w-full">
             <Button
               className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-2xl shadow-md"
-              startContent={<FaShoppingBag size={14} />}
+              startContent={<FaEye size={14} />}
             >
-              My Orders
+              View Order Details
             </Button>
           </Link>
-          <Link href="/" className="flex-1">
-            <Button
-              variant="bordered"
-              className="w-full border-2 border-green-500 text-green-600 font-bold rounded-2xl"
-              startContent={<FaHome size={14} />}
-            >
-              Home
-            </Button>
-          </Link>
+
+          <div className="flex gap-3">
+            {/* Go to My Orders */}
+            <Link href="/dashboard/buyer/orders" className="flex-1">
+              <Button
+                variant="bordered"
+                className="w-full border-2 border-green-500 text-green-600 font-bold rounded-2xl"
+                startContent={<FaShoppingBag size={14} />}
+              >
+                My Orders
+              </Button>
+            </Link>
+
+            {/* Continue Shopping */}
+            <Link href="/products" className="flex-1">
+              <Button
+                variant="bordered"
+                className="w-full border-2 border-gray-200 text-gray-600 font-bold rounded-2xl"
+                startContent={<FaShoppingCart size={14} />}
+              >
+                Shop More
+              </Button>
+            </Link>
+          </div>
         </div>
+
       </motion.div>
     </div>
   );
