@@ -5,7 +5,7 @@ import { useSession } from "@/lib/auth-client";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Button } from "@heroui/react";
-import { FaCheckCircle, FaShoppingBag, FaHome, FaShoppingCart, FaEye } from "react-icons/fa";
+import { FaCheckCircle, FaShoppingCart, FaEye } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
 
@@ -66,9 +66,10 @@ export default function PaymentSuccessClient({ session, productId, sellerEmail, 
             body: JSON.stringify({
               orderId: session.id,
               transactionId: session.payment_intent?.id,
+              buyerId: userSession.user.id,
               buyerEmail: userSession.user.email,
               amount: session.amount_total / 100,
-              paymentStatus: "success",
+              paymentStatus: "paid",
               paymentMethod: "stripe",
               paymentDate: new Date(),
             }),
@@ -102,7 +103,6 @@ export default function PaymentSuccessClient({ session, productId, sellerEmail, 
     saveOrder();
   }, [userSession]);
 
-  // Format payment date
   const paymentDate = new Date().toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
@@ -133,7 +133,9 @@ export default function PaymentSuccessClient({ session, productId, sellerEmail, 
 
         {/* Order Summary */}
         <div className="bg-gray-50 rounded-2xl p-4 mb-6 text-left space-y-3">
-          <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Order Summary</p>
+          <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+            Order Summary
+          </p>
 
           <div className="flex justify-between">
             <span className="text-sm text-gray-500">Amount Paid</span>
@@ -172,40 +174,27 @@ export default function PaymentSuccessClient({ session, productId, sellerEmail, 
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-col gap-3">
+        <div className="flex gap-3">
           {/* View Order Details */}
-          <Link href="/dashboard/buyer/orders" className="w-full">
+          <Link href="/dashboard/buyer/orders" className="flex-1">
             <Button
               className="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-2xl shadow-md"
               startContent={<FaEye size={14} />}
             >
-              View Order Details
+              View Orders
             </Button>
           </Link>
 
-          <div className="flex gap-3">
-            {/* Go to My Orders */}
-            <Link href="/dashboard/buyer/orders" className="flex-1">
-              <Button
-                variant="bordered"
-                className="w-full border-2 border-green-500 text-green-600 font-bold rounded-2xl"
-                startContent={<FaShoppingBag size={14} />}
-              >
-                My Orders
-              </Button>
-            </Link>
-
-            {/* Continue Shopping */}
-            <Link href="/products" className="flex-1">
-              <Button
-                variant="bordered"
-                className="w-full border-2 border-gray-200 text-gray-600 font-bold rounded-2xl"
-                startContent={<FaShoppingCart size={14} />}
-              >
-                Shop More
-              </Button>
-            </Link>
-          </div>
+          {/* Continue Shopping */}
+          <Link href="/products" className="flex-1">
+            <Button
+              variant="bordered"
+              className="w-full border-2 border-gray-200 text-gray-600 font-bold rounded-2xl"
+              startContent={<FaShoppingCart size={14} />}
+            >
+              Shop More
+            </Button>
+          </Link>
         </div>
 
       </motion.div>
