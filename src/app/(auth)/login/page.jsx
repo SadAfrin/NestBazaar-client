@@ -4,11 +4,10 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn, useSession } from "@/lib/auth-client";
-import { FaEnvelope, FaLock, FaEye, FaEyeSlash, FaGoogle } from "react-icons/fa";
+import { FaEnvelope, FaLock, FaEye, FaEyeSlash, FaGoogle, FaArrowLeft } from "react-icons/fa";
 import { Button } from "@heroui/react";
 import { toast } from "react-toastify";
 import RoleSelectionModal from "@/components/shared/RoleSelectionModal";
-import { FaArrowLeft } from "react-icons/fa";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -17,15 +16,16 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showRoleModal, setShowRoleModal] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
-  // Check if user exists in our collection after login
   useEffect(() => {
     if (!session?.user) return;
+    if (!isLoggingIn) return;
     const checkUser = async () => {
       try {
         const res = await fetch(
@@ -42,7 +42,7 @@ export default function LoginPage() {
       }
     };
     checkUser();
-  }, [session]);
+  }, [session, isLoggingIn]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -65,6 +65,7 @@ export default function LoginPage() {
         return;
       }
 
+      setIsLoggingIn(true);
       toast.success("Welcome back to NestBazaar!");
       router.refresh();
     } catch (err) {
@@ -77,6 +78,7 @@ export default function LoginPage() {
 
   const handleGoogleLogin = async () => {
     try {
+      setIsLoggingIn(true);
       await signIn.social({
         provider: "google",
         callbackURL: "/login",
@@ -116,7 +118,6 @@ export default function LoginPage() {
             <h1 className="text-2xl font-black text-gray-800">Welcome Back!</h1>
             <p className="text-sm text-gray-500 mt-1">Login to your NestBazaar account</p>
           </div>
-          
 
           {/* Error */}
           {error && (
