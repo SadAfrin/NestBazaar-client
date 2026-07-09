@@ -161,9 +161,3 @@ The app will be available at `http://localhost:3000`.
 `4242 4242 4242 4242` — Expiry: any future `mm/yy` — CVC: any 3 digits (e.g. `123`)
 
 ---
-
-## 🔗 Links
-
-- 🌐 Live Site: [nest-bazaar-client.vercel.app](https://nest-bazaar-client.vercel.app)
-- 🔧 Live Server: [nest-bazaar-server.vercel.app](https://nest-bazaar-server.vercel.app)
-- 💻 Client Repo: [github.com/SadAfrin/NestBazaar-client](https://github.com/SadAfrin/NestBazaar-client)
