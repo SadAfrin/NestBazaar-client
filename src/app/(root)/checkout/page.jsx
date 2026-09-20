@@ -10,6 +10,7 @@ import { MdVerified } from "react-icons/md";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
+import Avatar from "@/components/shared/Avatar";
 
 function CheckoutContent() {
   const router = useRouter();
@@ -250,9 +251,12 @@ function CheckoutContent() {
             <div className="bg-card border border-gray-100 rounded-2xl p-5 shadow-sm space-y-3">
               <h3 className="font-black text-foreground">Seller Information</h3>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white font-black shadow-md">
-                  {product.sellerInfo?.name?.charAt(0)}
-                </div>
+                <Avatar
+                  name={product.sellerInfo?.name}
+                  size="md"
+                  rounded="xl"
+                  className="shadow-md"
+                />
                 <div>
                   <div className="flex items-center gap-1">
                     <p className="font-black text-foreground text-sm">{product.sellerInfo?.name}</p>

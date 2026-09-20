@@ -8,6 +8,7 @@ import { MdLocationOn } from "react-icons/md";
 import { toast } from "react-toastify";
 import { authClient } from "@/lib/auth-client";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
+import Avatar from "@/components/shared/Avatar";
 
 export default function ProfilePage() {
   const { data: session } = useSession();
@@ -106,17 +107,13 @@ export default function ProfilePage() {
       <div className="bg-card border border-gray-100 rounded-2xl p-6 shadow-sm">
         <div className="flex items-center gap-6">
           <div className="relative">
-            {formData.photo ? (
-              <img
-                src={formData.photo}
-                alt={formData.name}
-                className="w-20 h-20 rounded-2xl object-cover border-2 border-green-200"
-              />
-            ) : (
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white font-black text-2xl shadow-md">
-                {formData.name?.charAt(0).toUpperCase()}
-              </div>
-            )}
+            <Avatar
+              name={formData.name}
+              src={formData.photo}
+              size="xl"
+              rounded="2xl"
+              className="border-2 border-green-200"
+            />
             <div className="absolute -bottom-2 -right-2 w-7 h-7 bg-green-500 rounded-full flex items-center justify-center shadow-md cursor-pointer hover:bg-green-600 transition-all">
               <FaCamera size={10} className="text-white" />
             </div>

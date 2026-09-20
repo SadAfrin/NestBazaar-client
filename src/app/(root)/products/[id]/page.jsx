@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import { useSession } from "@/lib/auth-client";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
 import ReviewSection from "@/components/review/ReviewSection";
+import Avatar from "@/components/shared/Avatar";
 
 const conditionColors = {
   "Like New": "bg-green-100 text-green-700",
@@ -168,17 +169,13 @@ export default function ProductDetailsPage() {
             <div className="bg-card border border-gray-100 rounded-2xl p-5 space-y-4">
               <h3 className="font-black text-foreground">Seller Information</h3>
               <div className="flex items-center gap-4">
-                {sellerProfile?.photo ? (
-                  <img
-                    src={sellerProfile.photo}
-                    alt={sellerProfile.name}
-                    className="w-12 h-12 rounded-2xl object-cover border-2 border-green-100 shadow-md"
-                  />
-                ) : (
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white font-black text-lg shadow-md">
-                    {product.sellerInfo?.name?.charAt(0)}
-                  </div>
-                )}
+                <Avatar
+                  name={sellerProfile?.name || product.sellerInfo?.name}
+                  src={sellerProfile?.photo}
+                  size="lg"
+                  rounded="2xl"
+                  className="border-2 border-green-100 shadow-md"
+                />
                 <div>
                   <div className="flex items-center gap-1">
                     <p className="font-black text-foreground">

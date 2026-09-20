@@ -26,6 +26,7 @@ NestBazaar is a role-based e-commerce platform tailored for the second-hand good
 | Framer Motion | Animations |
 | Recharts | Analytics charts |
 | Stripe | Payment gateway |
+| Google Gemini AI | Admin fraud / suspicious listing detection (new addition beyond the original mandatory stack) |
 
 ---
 
@@ -52,8 +53,18 @@ NestBazaar is a role-based e-commerce platform tailored for the second-hand good
 - Manage users — block/unblock, delete, change roles
 - Super admin can manage other admins
 - Approve, reject, and delete product listings
+- AI Fraud Detection — automatically flags suspicious product listings using Google Gemini AI, comparing price/description against similar listings and highlighting risk level for admin review (assistive only; admin still approves or rejects manually)
 - Monitor all orders and payment transactions
 - Platform-wide analytics with charts
+
+---
+
+## 🤖 AI Features
+
+- **AI Fraud Detection (Admin)** — Automatically flags suspicious product listings using Google Gemini AI, comparing price/description against similar listings and highlighting risk level for admin review. Assistive only: listings are never auto-blocked or deleted.
+
+### New Technology Used
+Google Gemini AI API (`@google/genai`) was integrated as a **new addition beyond the original mandatory stack**. The API key stays on the server (`GEMINI_API_KEY`) and is never exposed to the client.
 
 ---
 
@@ -117,6 +128,7 @@ NEXT_PUBLIC_SUPER_ADMIN_EMAIL=admin@admin.com
 - `recharts` — charts and analytics
 - `tailwindcss` — utility-first styling
 - HeroUI component packages
+- `@google/genai` — Google Gemini AI SDK (server-side fraud risk analysis)
 
 > Full list available in `package.json` for both client and server.
 

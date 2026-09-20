@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useSession, signOut } from "@/lib/auth-client";
 import { toast } from "react-toastify";
+import Avatar from "@/components/shared/Avatar";
 import {
   FaHome,
   FaShoppingBag,
@@ -119,17 +120,12 @@ export default function Sidebar({ onClose }) {
       {/* User Info */}
       <div className="p-4 mx-3 mt-3 bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl border border-green-100">
         <div className="flex items-center gap-3">
-          {session?.user?.image ? (
-            <img
-              src={session.user.image}
-              alt={session.user.name}
-              className="w-10 h-10 rounded-full object-cover border-2 border-green-200"
-            />
-          ) : (
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white font-black shadow-md">
-              {session?.user?.name?.charAt(0).toUpperCase()}
-            </div>
-          )}
+          <Avatar
+            name={session?.user?.name}
+            src={session?.user?.image}
+            size="md"
+            className="border-2 border-green-200"
+          />
           <div className="min-w-0">
             <p className="text-sm font-black text-foreground truncate">{session?.user?.name}</p>
             <span className="text-xs font-bold text-green-600 capitalize bg-green-100 px-2 py-0.5 rounded-full">

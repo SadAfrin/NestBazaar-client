@@ -26,18 +26,7 @@ export default function RoleSelectionModal({ session, onComplete }) {
         }),
         });
 
-        // Update role in users collection
         await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/update-role`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            email: session.user.email,
-            role: role,
-        }),
-        });
-
-        // Update role in BetterAuth user collection
-        await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/users/update-betterauth-role`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { FaBoxOpen, FaSearch, FaTrash, FaCheck, FaTimes, FaTag } from "react-icons/fa";
+import { FaBoxOpen, FaSearch, FaTrash, FaCheck, FaTimes, FaTag, FaSync, FaInfoCircle } from "react-icons/fa";
 import { MdVerified } from "react-icons/md";
 import { toast } from "react-toastify";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
@@ -19,6 +19,39 @@ const statusColors = {
   "rejected": "bg-red-100 text-red-700",
 };
 
+const riskColors = {
+  Low: "bg-green-100 text-green-700",
+  Medium: "bg-yellow-100 text-yellow-700",
+  High: "bg-red-100 text-red-700",
+  Unknown: "bg-gray-100 text-gray-700",
+};
+
+function RiskBadge({ product, openReasonId, setOpenReasonId }) {
+  const level = product.riskLevel || "Unknown";
+  const reason = product.riskReason || "Not analyzed yet";
+  const isOpen = openReasonId === product._id;
+
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setOpenReasonId(isOpen ? null : product._id)}
+        className={`inline-flex items-center gap-1 text-xs font-bold px-2 py-1 rounded-lg ${riskColors[level] || riskColors.Unknown}`}
+        title={reason}
+        aria-label={`${level} risk. ${reason}`}
+      >
+        {level}
+        <FaInfoCircle size={10} className="opacity-70" />
+      </button>
+      {isOpen && (
+        <div className="absolute z-30 top-full mt-1 w-56 max-w-[calc(100vw-2rem)] p-3 bg-card border border-gray-200 rounded-xl shadow-lg text-xs text-foreground leading-relaxed break-words right-0 sm:right-auto sm:left-0">
+          {reason}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function ManageProductsPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,6 +59,8 @@ export default function ManageProductsPage() {
   const [categoryFilter, setCategoryFilter] = useState("");
   const [conditionFilter, setConditionFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
+  const [openReasonId, setOpenReasonId] = useState(null);
+  const [analyzingId, setAnalyzingId] = useState(null);
 
   const fetchProducts = async () => {
     try {
@@ -82,6 +117,33 @@ export default function ManageProductsPage() {
       }
     } catch (error) {
       toast.error("Something went wrong!");
+    }
+  };
+
+  const handleReanalyze = async (id) => {
+    setAnalyzingId(id);
+    try {
+      const res = await fetchWithAuth(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/products/${id}/analyze-risk`,
+        { method: "POST" }
+      );
+      const data = await res.json();
+      if (data.success && data.data) {
+        setProducts((prev) =>
+          prev.map((p) =>
+            p._id === id
+              ? { ...p, riskLevel: data.data.riskLevel, riskReason: data.data.riskReason }
+              : p
+          )
+        );
+        toast.success("Risk analysis updated!");
+      } else {
+        toast.error(data.message || "Failed to re-analyze product!");
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+    } finally {
+      setAnalyzingId(null);
     }
   };
 
@@ -204,12 +266,15 @@ export default function ManageProductsPage() {
         </div>
       ) : (
         <div className="bg-card border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
-          <div className="grid grid-cols-12 gap-4 px-4 py-3 bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
-            <div className="col-span-4">Product</div>
-            <div className="col-span-2">Category</div>
-            <div className="col-span-2">Price</div>
-            <div className="col-span-2">Status</div>
-            <div className="col-span-2 text-right">Actions</div>
+          <div className="overflow-x-auto">
+            <div className="min-w-0">
+          <div className="grid grid-cols-12 gap-3 px-4 py-3 bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
+            <div className="col-span-6 sm:col-span-4 lg:col-span-3">Product</div>
+            <div className="hidden lg:block lg:col-span-1">Category</div>
+            <div className="hidden sm:block sm:col-span-3 lg:col-span-2">Price</div>
+            <div className="col-span-3 sm:col-span-2">Risk</div>
+            <div className="hidden lg:block lg:col-span-1">Status</div>
+            <div className="col-span-3 text-right">Actions</div>
           </div>
 
           {filteredProducts.map((product, index) => (
@@ -218,11 +283,11 @@ export default function ManageProductsPage() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
-              className={`grid grid-cols-12 gap-4 px-4 py-4 items-center hover:bg-gray-50 transition-all ${
+              className={`grid grid-cols-12 gap-3 px-4 py-4 items-center hover:bg-gray-50 transition-all ${
                 index !== filteredProducts.length - 1 ? "border-b border-gray-100" : ""
               }`}
             >
-              <div className="col-span-4 flex items-center gap-3">
+              <div className="col-span-6 sm:col-span-4 lg:col-span-3 flex items-center gap-3 min-w-0">
                 <div className="w-12 h-12 rounded-xl overflow-hidden border border-gray-100 shrink-0">
                   <img
                     src={product.images?.[0]}
@@ -234,19 +299,23 @@ export default function ManageProductsPage() {
                   <p className="font-bold text-foreground text-sm line-clamp-1">{product.title}</p>
                   <div className="flex items-center gap-1 mt-0.5">
                     <MdVerified className="text-green-500" size={12} />
-                    <p className="text-xs text-gray-400">{product.sellerInfo?.name}</p>
+                    <p className="text-xs text-gray-400 truncate">
+                      {product.sellerInfo?.name}
+                      <span className="lg:hidden capitalize"> · {product.status}</span>
+                    </p>
                   </div>
+                  <p className="sm:hidden font-black text-green-600 text-xs mt-0.5">
+                    ৳{product.price?.toLocaleString()}
+                  </p>
                 </div>
               </div>
 
-              <div className="col-span-2">
-                <div className="flex items-center gap-1 text-xs text-gray-500">
-                  <FaTag size={10} className="text-green-500" />
-                  <span>{product.category}</span>
-                </div>
+              <div className="hidden lg:flex lg:col-span-1 items-center gap-1 text-xs text-gray-500 min-w-0">
+                <FaTag size={10} className="text-green-500" />
+                <span>{product.category}</span>
               </div>
 
-              <div className="col-span-2">
+              <div className="hidden sm:block sm:col-span-3 lg:col-span-2">
                 <p className="font-black text-green-600 text-sm">
                   ৳{product.price?.toLocaleString()}
                 </p>
@@ -255,13 +324,29 @@ export default function ManageProductsPage() {
                 </span>
               </div>
 
-              <div className="col-span-2">
+              <div className="col-span-3 sm:col-span-2">
+                <RiskBadge
+                  product={product}
+                  openReasonId={openReasonId}
+                  setOpenReasonId={setOpenReasonId}
+                />
+              </div>
+
+              <div className="hidden lg:block lg:col-span-1">
                 <span className={`text-xs font-bold px-2 py-1 rounded-lg capitalize ${statusColors[product.status] || "bg-gray-100 text-gray-700"}`}>
                   {product.status}
                 </span>
               </div>
 
-              <div className="col-span-2 flex items-center justify-end gap-2">
+              <div className="col-span-3 flex items-center justify-end gap-1 sm:gap-2">
+                <button
+                  onClick={() => handleReanalyze(product._id)}
+                  disabled={analyzingId === product._id}
+                  className="w-8 h-8 rounded-lg bg-blue-50 hover:bg-blue-100 flex items-center justify-center text-blue-600 transition-all disabled:opacity-50"
+                  title="Re-analyze risk"
+                >
+                  <FaSync size={12} className={analyzingId === product._id ? "animate-spin" : ""} />
+                </button>
                 {product.status !== "available" && (
                   <button
                     onClick={() => handleUpdateStatus(product._id, "available")}
@@ -291,6 +376,8 @@ export default function ManageProductsPage() {
 
             </motion.div>
           ))}
+            </div>
+          </div>
         </div>
       )}
     </div>

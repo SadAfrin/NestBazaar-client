@@ -22,6 +22,7 @@ import {
   FaEnvelope,
 } from "react-icons/fa";
 import ThemeToggle from "@/components/shared/ThemeToggle";
+import Avatar from "@/components/shared/Avatar";
 
 const navLinks = [
   { name: "Home", href: "/", icon: <FaHome size={14} /> },
@@ -141,17 +142,12 @@ export default function Navbar() {
                     onClick={() => setDropdownOpen(!dropdownOpen)}
                     className="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-green-50 transition-all duration-200"
                   >
-                    {session.user?.image ? (
-                      <img
-                        src={session.user.image}
-                        alt={session.user.name}
-                        className="w-8 h-8 rounded-full object-cover shadow-md border-2 border-green-200"
-                      />
-                    ) : (
-                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white font-bold text-sm shadow-md">
-                        {session.user?.name?.charAt(0).toUpperCase()}
-                      </div>
-                    )}
+                    <Avatar
+                      name={session.user?.name}
+                      src={session.user?.image}
+                      size="xs"
+                      className="shadow-md border-2 border-green-200"
+                    />
                     <span className="text-sm font-semibold text-gray-700">
                       Hi, {session.user?.name?.split(" ")[0]}
                     </span>
@@ -281,17 +277,12 @@ export default function Navbar() {
               <div className="flex flex-col gap-2">
                 {/* User info */}
                 <div className="flex items-center gap-3 px-4 py-2">
-                  {session.user?.image ? (
-                    <img
-                      src={session.user.image}
-                      alt={session.user.name}
-                      className="w-9 h-9 rounded-full object-cover border-2 border-green-200"
-                    />
-                  ) : (
-                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white font-bold shadow-md">
-                      {session.user?.name?.charAt(0).toUpperCase()}
-                    </div>
-                  )}
+                  <Avatar
+                    name={session.user?.name}
+                    src={session.user?.image}
+                    size="sm"
+                    className="border-2 border-green-200"
+                  />
                   <div>
                     <p className="text-sm font-bold text-gray-700">Hi, {session.user?.name?.split(" ")[0]}</p>
                     <p className="text-xs text-gray-400">{session.user?.email}</p>

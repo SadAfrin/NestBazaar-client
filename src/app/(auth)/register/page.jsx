@@ -43,10 +43,10 @@ export default function RegisterPage() {
     const checkUser = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/check?email=${session.user.email}`
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/check?email=${encodeURIComponent(session.user.email)}`
         );
         const data = await res.json();
-        if (!data.exists) {
+        if (!data.exists || !data.user?.role) {
           setShowRoleModal(true);
         } else {
           router.push("/");

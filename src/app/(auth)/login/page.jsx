@@ -11,38 +11,45 @@ import RoleSelectionModal from "@/components/shared/RoleSelectionModal";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, isPending } = useSession();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showRoleModal, setShowRoleModal] = useState(false);
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
+  // Runs after Google OAuth returns to /login (full remount) AND after email login.
+  // Do not gate this on in-memory flags — those are lost across the Google redirect.
   useEffect(() => {
-    if (!session?.user) return;
-    if (!isLoggingIn) return;
+    if (isPending || !session?.user?.email || showRoleModal) return;
+
+    let cancelled = false;
     const checkUser = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/check?email=${session.user.email}`
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/check?email=${encodeURIComponent(session.user.email)}`
         );
         const data = await res.json();
-        if (!data.exists) {
+        if (cancelled) return;
+        if (!data.exists || !data.user?.role) {
           setShowRoleModal(true);
         } else {
           router.push("/");
+          router.refresh();
         }
       } catch (error) {
         console.error(error);
       }
     };
     checkUser();
-  }, [session, isLoggingIn]);
+    return () => {
+      cancelled = true;
+    };
+  }, [session, isPending, showRoleModal, router]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -65,7 +72,6 @@ export default function LoginPage() {
         return;
       }
 
-      setIsLoggingIn(true);
       toast.success("Welcome back to NestBazaar!");
       router.refresh();
     } catch (err) {
@@ -78,7 +84,6 @@ export default function LoginPage() {
 
   const handleGoogleLogin = async () => {
     try {
-      setIsLoggingIn(true);
       await signIn.social({
         provider: "google",
         callbackURL: "/login",

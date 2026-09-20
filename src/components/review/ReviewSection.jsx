@@ -8,6 +8,7 @@ import { MdVerified } from "react-icons/md";
 import { toast } from "react-toastify";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
 import { Button } from "@heroui/react";
+import Avatar from "@/components/shared/Avatar";
 
 function StarRating({ rating, setRating, interactive = false, size = 14 }) {
   const [hover, setHover] = useState(0);
@@ -291,17 +292,12 @@ export default function ReviewSection({ productId }) {
             >
               <div className="flex items-start justify-between gap-4 mb-4">
                 <div className="flex items-center gap-3">
-                  {review.reviewerInfo?.image ? (
-                    <img
-                      src={review.reviewerInfo.image}
-                      alt={review.reviewerInfo.name}
-                      className="w-12 h-12 rounded-full object-cover border-2 border-green-100 shadow-sm"
-                    />
-                  ) : (
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white font-black text-lg shadow-md">
-                      {review.reviewerInfo?.name?.charAt(0).toUpperCase()}
-                    </div>
-                  )}
+                  <Avatar
+                    name={review.reviewerInfo?.name}
+                    src={review.reviewerInfo?.image}
+                    size="lg"
+                    className="border-2 border-green-100 shadow-sm"
+                  />
                   <div>
                     <div className="flex items-center gap-1">
                       <p className="font-black text-foreground text-sm">

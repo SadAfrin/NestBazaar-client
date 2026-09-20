@@ -7,6 +7,7 @@ import { FaUsers, FaBoxOpen, FaShoppingBag, FaDollarSign, FaUserPlus, FaClipboar
 import { MdVerified } from "react-icons/md";
 import Link from "next/link";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
+import Avatar from "@/components/shared/Avatar";
 
 const statusColors = {
   "pending": "bg-yellow-100 text-yellow-700",
@@ -183,17 +184,12 @@ export default function AdminOverview() {
                   className="flex items-center justify-between p-3 bg-gray-50 rounded-xl hover:bg-green-50 transition-all"
                 >
                   <div className="flex items-center gap-3">
-                    {user.photo ? (
-                      <img
-                        src={user.photo}
-                        alt={user.name}
-                        className="w-9 h-9 rounded-full object-cover border-2 border-gray-100"
-                      />
-                    ) : (
-                      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white font-black text-sm">
-                        {user.name?.charAt(0).toUpperCase()}
-                      </div>
-                    )}
+                    <Avatar
+                      name={user.name}
+                      src={user.photo}
+                      size="sm"
+                      className="border-2 border-gray-100"
+                    />
                     <div>
                       <div className="flex items-center gap-1">
                         <p className="font-bold text-foreground text-xs">{user.name}</p>

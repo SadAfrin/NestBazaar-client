@@ -7,6 +7,7 @@ import { MdVerified } from "react-icons/md";
 import { toast } from "react-toastify";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
 import { useSession } from "@/lib/auth-client";
+import Avatar from "@/components/shared/Avatar";
 
 const roleColors = {
   "buyer": "bg-blue-100 text-blue-700",
@@ -191,17 +192,12 @@ export default function ManageUsersPage() {
             >
               {/* User */}
               <div className="col-span-3 flex items-center gap-3">
-                {user.photo ? (
-                  <img
-                    src={user.photo}
-                    alt={user.name}
-                    className="w-10 h-10 rounded-full object-cover border-2 border-gray-100 shrink-0"
-                  />
-                ) : (
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white font-black shrink-0">
-                    {user.name?.charAt(0).toUpperCase()}
-                  </div>
-                )}
+                <Avatar
+                  name={user.name}
+                  src={user.photo}
+                  size="md"
+                  className="border-2 border-gray-100"
+                />
                 <div className="min-w-0">
                   <div className="flex items-center gap-1 flex-wrap">
                     <p className="font-bold text-foreground text-sm truncate">{user.name}</p>

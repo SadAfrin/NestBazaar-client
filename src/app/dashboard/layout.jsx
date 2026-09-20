@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Sidebar from "@/components/dashboard/Sidebar";
 import ThemeToggle from "@/components/shared/ThemeToggle";
+import Avatar from "@/components/shared/Avatar";
 import { FaBars } from "react-icons/fa";
 
 export default function DashboardLayout({ children }) {
@@ -87,17 +88,12 @@ export default function DashboardLayout({ children }) {
           {/* User info */}
           <div className="flex items-center gap-3">
             <ThemeToggle />
-            {session.user?.image ? (
-              <img
-                src={session.user.image}
-                alt={session.user.name}
-                className="w-9 h-9 rounded-full object-cover border-2 border-green-200"
-              />
-            ) : (
-              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white font-black shadow-md">
-                {session.user?.name?.charAt(0).toUpperCase()}
-              </div>
-            )}
+            <Avatar
+              name={session.user?.name}
+              src={session.user?.image}
+              size="sm"
+              className="border-2 border-green-200"
+            />
             <div className="hidden sm:block">
               <p className="text-sm font-black text-gray-700">{session.user?.name}</p>
               <p className="text-xs text-gray-400">{session.user?.email}</p>
