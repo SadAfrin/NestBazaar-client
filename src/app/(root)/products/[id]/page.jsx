@@ -11,6 +11,8 @@ import { useSession } from "@/lib/auth-client";
 import { fetchWithAuth } from "@/lib/fetchWithAuth";
 import ReviewSection from "@/components/review/ReviewSection";
 import Avatar from "@/components/shared/Avatar";
+import RecentlyViewed from "@/components/home/RecentlyViewed";
+import { addRecentlyViewed } from "@/lib/recentlyViewed";
 
 const conditionColors = {
   "Like New": "bg-green-100 text-green-700",
@@ -62,6 +64,10 @@ export default function ProductDetailsPage() {
     };
     if (product) fetchSellerProfile();
   }, [product]);
+
+  useEffect(() => {
+    if (product?._id) addRecentlyViewed(product._id);
+  }, [product?._id]);
 
   if (loading) {
     return (
@@ -302,10 +308,12 @@ export default function ProductDetailsPage() {
 
           </motion.div>
         </div>
+      </div>
 
-        {/* Review Section */}
+      <RecentlyViewed excludeId={id} />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ReviewSection productId={id} />
-
       </div>
     </div>
   );

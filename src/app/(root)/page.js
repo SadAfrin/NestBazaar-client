@@ -1,5 +1,6 @@
 import HeroSection from "@/components/home/HeroSection";
 import FeaturedProducts from "@/components/home/FeaturedProducts";
+import RecentlyViewed from "@/components/home/RecentlyViewed";
 import PopularCategories from "@/components/home/PopularCategories";
 import SuccessStories from "@/components/home/SuccessStories";
 import MarketplaceStats from "@/components/home/MarketplaceStats";
@@ -11,6 +12,7 @@ export default function Home() {
     <main>
       <HeroSection />
       <FeaturedProducts />
+      <RecentlyViewed />
       <PopularCategories />
       <SuccessStories />
       <MarketplaceStats />

@@ -34,6 +34,7 @@ NestBazaar is a role-based e-commerce platform tailored for the second-hand good
 
 ### 👤 Buyer
 - Browse, search, filter, and sort products
+- Recently Viewed Products — Tracks and displays products the user has recently viewed for quick access, persisted across sessions using localStorage.
 - Add products to wishlist
 - Secure Stripe checkout with order summary
 - Track order status with a timeline progress bar
