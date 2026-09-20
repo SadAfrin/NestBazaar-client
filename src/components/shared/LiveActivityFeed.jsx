@@ -43,7 +43,7 @@ export default function LiveActivityFeed() {
             animate={{ opacity: 1, x: 0, y: 0 }}
             exit={{ opacity: 0, x: -50 }}
             transition={{ duration: 0.4 }}
-            className="bg-white/90 backdrop-blur-xl border border-gray-100 rounded-2xl shadow-xl shadow-gray-200 p-3 flex items-center gap-3 max-w-[260px]"
+            className="bg-card/90 backdrop-blur-xl border border-gray-100 rounded-2xl shadow-xl shadow-gray-200 p-3 flex items-center gap-3 max-w-[260px]"
           >
             {/* Avatar */}
             <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${activity.color} flex items-center justify-center text-white font-black text-sm shadow-md shrink-0`}>
@@ -53,7 +53,7 @@ export default function LiveActivityFeed() {
             {/* Content */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-1">
-                <p className="text-xs font-black text-gray-800 truncate">
+                <p className="text-xs font-black text-foreground truncate">
                   {activity.user}
                 </p>
                 <MdVerified className="text-green-500 shrink-0" size={12} />

@@ -81,21 +81,21 @@ export default function ManageOrdersPage() {
     <div className="space-y-6">
 
       <div>
-        <h1 className="text-2xl font-black text-gray-800">Manage Orders</h1>
+        <h1 className="text-2xl font-black text-foreground">Manage Orders</h1>
         <p className="text-gray-400 text-sm mt-1">{orders.length} total orders</p>
       </div>
 
       {loading ? (
         <div className="space-y-3">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="bg-white rounded-2xl p-4 animate-pulse">
+            <div key={i} className="bg-card rounded-2xl p-4 animate-pulse">
               <div className="h-4 bg-gray-200 rounded w-3/4 mb-3" />
               <div className="h-4 bg-gray-200 rounded w-1/2" />
             </div>
           ))}
         </div>
       ) : orders.length === 0 ? (
-        <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+        <div className="bg-card border border-gray-100 rounded-2xl p-6 shadow-sm">
           <div className="flex flex-col items-center justify-center py-12 gap-4">
             <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center shadow-inner">
               <FaClipboardList size={40} className="text-green-400" />
@@ -107,7 +107,7 @@ export default function ManageOrdersPage() {
           </div>
         </div>
       ) : (
-        <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
+        <div className="bg-card border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
           <div className="grid grid-cols-12 gap-4 px-4 py-3 bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
             <div className="col-span-3">Order ID</div>
             <div className="col-span-3">Buyer</div>
@@ -127,11 +127,11 @@ export default function ManageOrdersPage() {
               }`}
             >
               <div className="col-span-3">
-                <p className="font-bold text-gray-800 text-sm">#{order._id?.toString().slice(-6).toUpperCase()}</p>
+                <p className="font-bold text-foreground text-sm">#{order._id?.toString().slice(-6).toUpperCase()}</p>
                 <p className="text-xs text-gray-400 mt-0.5">{new Date(order.createdAt).toLocaleDateString()}</p>
               </div>
               <div className="col-span-3">
-                <p className="font-bold text-gray-800 text-sm">{order.buyerInfo?.name}</p>
+                <p className="font-bold text-foreground text-sm">{order.buyerInfo?.name}</p>
                 <p className="text-xs text-gray-400 mt-0.5">{order.buyerInfo?.email}</p>
               </div>
               <div className="col-span-2">
@@ -163,10 +163,10 @@ export default function ManageOrdersPage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-3xl shadow-2xl p-6 w-full max-w-lg"
+            className="bg-card rounded-3xl shadow-2xl p-6 w-full max-w-lg"
           >
             <div className="flex items-center justify-between mb-6">
-              <h3 className="font-black text-gray-800 text-lg">
+              <h3 className="font-black text-foreground text-lg">
                 Order #{selectedOrder._id?.toString().slice(-6).toUpperCase()}
               </h3>
               <button
@@ -180,11 +180,11 @@ export default function ManageOrdersPage() {
             <div className="space-y-3 mb-6">
               <div className="flex justify-between py-2 border-b border-gray-100">
                 <span className="text-sm text-gray-500">Buyer</span>
-                <span className="text-sm font-bold text-gray-800">{selectedOrder.buyerInfo?.name}</span>
+                <span className="text-sm font-bold text-foreground">{selectedOrder.buyerInfo?.name}</span>
               </div>
               <div className="flex justify-between py-2 border-b border-gray-100">
                 <span className="text-sm text-gray-500">Email</span>
-                <span className="text-sm font-bold text-gray-800">{selectedOrder.buyerInfo?.email}</span>
+                <span className="text-sm font-bold text-foreground">{selectedOrder.buyerInfo?.email}</span>
               </div>
               <div className="flex justify-between py-2 border-b border-gray-100">
                 <span className="text-sm text-gray-500">Amount</span>

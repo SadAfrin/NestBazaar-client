@@ -4,6 +4,7 @@ import { useSession } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Sidebar from "@/components/dashboard/Sidebar";
+import ThemeToggle from "@/components/shared/ThemeToggle";
 import { FaBars } from "react-icons/fa";
 
 export default function DashboardLayout({ children }) {
@@ -69,7 +70,7 @@ export default function DashboardLayout({ children }) {
       <div className="flex-1 flex flex-col min-w-0">
 
         {/* Top Bar */}
-        <div className="bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between sticky top-0 z-30">
+        <div className="bg-card border-b border-gray-100 px-6 py-4 flex items-center justify-between sticky top-0 z-30">
           <div className="flex items-center gap-4">
             <button
               className="lg:hidden p-2 rounded-xl text-gray-600 hover:bg-gray-100 transition-all"
@@ -78,13 +79,14 @@ export default function DashboardLayout({ children }) {
               <FaBars size={18} />
             </button>
             <div>
-              <h2 className="font-black text-gray-800 text-lg">Dashboard</h2>
+              <h2 className="font-black text-foreground text-lg">Dashboard</h2>
               <p className="text-xs text-gray-400 capitalize">{role} Account</p>
             </div>
           </div>
 
           {/* User info */}
           <div className="flex items-center gap-3">
+            <ThemeToggle />
             {session.user?.image ? (
               <img
                 src={session.user.image}

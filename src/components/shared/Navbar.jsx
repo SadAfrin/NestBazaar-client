@@ -21,6 +21,7 @@ import {
   FaInfoCircle,
   FaEnvelope,
 } from "react-icons/fa";
+import ThemeToggle from "@/components/shared/ThemeToggle";
 
 const navLinks = [
   { name: "Home", href: "/", icon: <FaHome size={14} /> },
@@ -107,7 +108,7 @@ export default function Navbar() {
                   className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
                     pathname === link.href
                       ? "bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-md shadow-green-200"
-                      : "text-gray-500 hover:text-green-600 hover:bg-white hover:shadow-sm"
+                      : "text-gray-500 hover:text-green-600 hover:bg-card hover:shadow-sm"
                   }`}
                 >
                   {link.icon}
@@ -122,7 +123,7 @@ export default function Navbar() {
                   className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
                     pathname.startsWith("/dashboard")
                       ? "bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-md shadow-green-200"
-                      : "text-gray-500 hover:text-green-600 hover:bg-white hover:shadow-sm"
+                      : "text-gray-500 hover:text-green-600 hover:bg-card hover:shadow-sm"
                   }`}
                 >
                   <FaThLarge size={14} />
@@ -133,6 +134,7 @@ export default function Navbar() {
 
             {/* Right Side */}
             <div className="hidden md:flex items-center gap-2">
+              <ThemeToggle />
               {session ? (
                 <div className="relative">
                   <button
@@ -163,7 +165,7 @@ export default function Navbar() {
 
                   {/* Desktop Dropdown Menu */}
                   {dropdownOpen && (
-                    <div className="absolute right-0 top-12 w-48 bg-white/90 backdrop-blur-xl border border-gray-100 rounded-2xl shadow-xl shadow-gray-100 py-2 z-50">
+                    <div className="absolute right-0 top-12 w-48 bg-card/90 backdrop-blur-xl border border-gray-100 rounded-2xl shadow-xl shadow-gray-100 py-2 z-50">
                       <Link
                         href="/dashboard/profile"
                         onClick={() => setDropdownOpen(false)}
@@ -223,13 +225,17 @@ export default function Navbar() {
               )}
             </div>
 
-            {/* Mobile Menu Button */}
-            <button
-              className="md:hidden p-2 rounded-xl text-gray-600 hover:bg-green-50 hover:text-green-600 transition-all"
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              {isOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
-            </button>
+            {/* Mobile actions */}
+            <div className="flex items-center gap-1 md:hidden">
+              <ThemeToggle />
+              <button
+                className="p-2 rounded-xl text-gray-600 hover:bg-green-50 hover:text-green-600 transition-all"
+                onClick={() => setIsOpen(!isOpen)}
+                aria-label={isOpen ? "Close menu" : "Open menu"}
+              >
+                {isOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+              </button>
+            </div>
 
           </div>
         </div>

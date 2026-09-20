@@ -1,0 +1,167 @@
+:root {
+  color-scheme: light;
+  --nb-background: #f6faf7;
+  --nb-foreground: #111827;
+  --nb-card: #ffffff;
+  --nb-muted: #f3f4f6;
+  --nb-muted-foreground: #6b7280;
+  --nb-secondary: #4b5563;
+  --nb-border: #e5e7eb;
+  --nb-accent: #ecfdf5;
+  --nb-accent-foreground: #047857;
+  --nb-input: #ffffff;
+  --nb-ring: #22c55e;
+  --nb-shadow: 0 4px 24px rgba(16, 185, 129, 0.08);
+  --nb-chart-grid: #f0f0f0;
+  --nb-chart-tooltip-border: #e5e7eb;
+}
+
+html.dark {
+  color-scheme: dark;
+  --nb-background: #0d1411;
+  --nb-foreground: #f3f4f6;
+  --nb-card: #161e1a;
+  --nb-muted: #1e2823;
+  --nb-muted-foreground: #c5cdc8;
+  --nb-secondary: #d1d5db;
+  --nb-border: #2d3b34;
+  --nb-accent: #143226;
+  --nb-accent-foreground: #6ee7b7;
+  --nb-input: #1a2320;
+  --nb-ring: #34d399;
+  --nb-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+  --nb-chart-grid: #2d3b34;
+  --nb-chart-tooltip-border: #2d3b34;
+
+  --background: #0d1411;
+  --foreground: #f3f4f6;
+  --surface: #161e1a;
+  --surface-foreground: #f3f4f6;
+  --overlay: #1a2320;
+  --overlay-foreground: #f3f4f6;
+  --border: #2d3b34;
+  --field-background: #1a2320;
+  --field-foreground: #f3f4f6;
+  --muted: #c5cdc8;
+
+  --color-gray-50: #121a16;
+  --color-gray-100: #1c2621;
+  --color-gray-200: #2d3b34;
+  --color-gray-300: #3d4d45;
+  --color-gray-400: #c9d2cd;
+  --color-gray-500: #d4dcd7;
+  --color-gray-600: #e2e8e4;
+  --color-gray-700: #eef3f0;
+
+  --color-green-50: #10261c;
+  --color-green-100: #163528;
+  --color-green-200: #1f4a37;
+  --color-green-700: #86efac;
+  --color-emerald-50: #10261e;
+  --color-emerald-100: #16352a;
+  --color-emerald-200: #1f4a3a;
+  --color-teal-50: #102424;
+  --color-teal-100: #163333;
+
+  --color-blue-50: #111c2e;
+  --color-blue-100: #182844;
+  --color-blue-700: #93c5fd;
+  --color-purple-50: #1a1428;
+  --color-purple-100: #261c3c;
+  --color-purple-700: #d8b4fe;
+  --color-orange-50: #2a1b12;
+  --color-orange-100: #3d2416;
+  --color-orange-700: #fdba74;
+  --color-amber-50: #2a2210;
+  --color-amber-100: #3d3014;
+  --color-pink-50: #2a1520;
+  --color-pink-100: #3d1c2e;
+  --color-red-50: #2a1416;
+  --color-red-100: #3d1c20;
+  --color-red-700: #fca5a5;
+  --color-yellow-50: #2a2410;
+  --color-yellow-100: #3d3214;
+  --color-yellow-700: #fde047;
+  --color-indigo-50: #16182e;
+  --color-indigo-100: #1e2244;
+  --color-indigo-700: #a5b4fc;
+}
+
+html,
+body {
+  background-color: var(--nb-background);
+  color: var(--nb-foreground);
+}
+
+.bg-background {
+  background-color: var(--nb-background);
+}
+
+.bg-card {
+  background-color: var(--nb-card);
+}
+
+.bg-card\/90 {
+  background-color: color-mix(in srgb, var(--nb-card) 90%, transparent);
+}
+
+.bg-card\/80 {
+  background-color: color-mix(in srgb, var(--nb-card) 80%, transparent);
+}
+
+.bg-card\/70 {
+  background-color: color-mix(in srgb, var(--nb-card) 70%, transparent);
+}
+
+.bg-card\/60 {
+  background-color: color-mix(in srgb, var(--nb-card) 60%, transparent);
+}
+
+.hover\:bg-card:hover {
+  background-color: var(--nb-card);
+}
+
+.focus\:bg-card:focus {
+  background-color: var(--nb-card);
+}
+
+.fill-background {
+  fill: var(--nb-background);
+}
+
+.border-border {
+  border-color: var(--nb-border);
+}
+
+input,
+textarea,
+select {
+  color: var(--nb-foreground);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--nb-muted-foreground);
+  opacity: 0.85;
+}
+
+select option {
+  background-color: var(--nb-card);
+  color: var(--nb-foreground);
+}
+
+.theme-icon-sun {
+  display: none;
+}
+
+.theme-icon-moon {
+  display: block;
+}
+
+html.dark .theme-icon-sun {
+  display: block;
+}
+
+html.dark .theme-icon-moon {
+  display: none;
+}

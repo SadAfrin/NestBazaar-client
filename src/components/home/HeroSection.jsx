@@ -176,7 +176,7 @@ export default function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
-              <h1 className="text-5xl lg:text-6xl font-black text-gray-900 leading-tight">
+              <h1 className="text-5xl lg:text-6xl font-black text-foreground leading-tight">
                 Buy & Sell
                 <span className="block bg-gradient-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent min-h-[1.2em]">
                   {displayed}
@@ -250,7 +250,7 @@ export default function HeroSection() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="relative"
           >
-            <div className="bg-white/60 backdrop-blur-xl border border-white/80 rounded-3xl shadow-2xl shadow-green-100 overflow-hidden">
+            <div className="bg-card/60 backdrop-blur-xl border border-white/80 rounded-3xl shadow-2xl shadow-green-100 overflow-hidden">
 
               {/* Image slider */}
               <div className="relative h-80 overflow-hidden">
@@ -338,7 +338,7 @@ export default function HeroSection() {
             <motion.div
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute -top-4 -left-4 bg-white rounded-2xl shadow-lg p-3 border border-green-100"
+              className="absolute -top-4 -left-4 bg-card rounded-2xl shadow-lg p-3 border border-green-100"
             >
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-green-100 rounded-xl flex items-center justify-center">
@@ -355,7 +355,7 @@ export default function HeroSection() {
             <motion.div
               animate={{ y: [0, 10, 0] }}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-              className="absolute -bottom-4 -right-4 bg-white rounded-2xl shadow-lg p-3 border border-green-100"
+              className="absolute -bottom-4 -right-4 bg-card rounded-2xl shadow-lg p-3 border border-green-100"
             >
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-emerald-100 rounded-xl flex items-center justify-center">

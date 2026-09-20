@@ -125,7 +125,7 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-green-100 via-emerald-50 to-teal-100 flex items-center justify-center p-4">
       <div className="w-full max-w-lg">
-        <div className="bg-white/70 backdrop-blur-xl border border-white/50 rounded-3xl shadow-2xl shadow-green-100 p-8 md:p-10">
+        <div className="bg-card/70 backdrop-blur-xl border border-white/50 rounded-3xl shadow-2xl shadow-green-100 p-8 md:p-10">
 
           {/* Header */}
           <div className="text-center mb-8">
@@ -149,7 +149,7 @@ export default function RegisterPage() {
                 </div>
               </Link>
             </div>
-            <h1 className="text-2xl font-black text-gray-800">Create Account</h1>
+            <h1 className="text-2xl font-black text-foreground">Create Account</h1>
             <p className="text-sm text-gray-500 mt-1">Join thousands of buyers and sellers</p>
           </div>
 
@@ -200,7 +200,7 @@ export default function RegisterPage() {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full pl-11 pr-4 py-3 bg-gray-50/80 border border-gray-200 rounded-xl text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:border-green-400 focus:bg-white transition-all"
+                className="w-full pl-11 pr-4 py-3 bg-gray-50/80 border border-gray-200 rounded-xl text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:border-green-400 focus:bg-card transition-all"
               />
             </div>
 
@@ -213,7 +213,7 @@ export default function RegisterPage() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full pl-11 pr-4 py-3 bg-gray-50/80 border border-gray-200 rounded-xl text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:border-green-400 focus:bg-white transition-all"
+                className="w-full pl-11 pr-4 py-3 bg-gray-50/80 border border-gray-200 rounded-xl text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:border-green-400 focus:bg-card transition-all"
               />
             </div>
 
@@ -224,7 +224,7 @@ export default function RegisterPage() {
                 value={formData.location}
                 onChange={handleChange}
                 required
-                className="w-full pl-11 pr-4 py-3 bg-gray-50/80 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-white transition-all appearance-none"
+                className="w-full pl-11 pr-4 py-3 bg-gray-50/80 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-card transition-all appearance-none"
               >
                 <option value="">Select Location</option>
                 <option value="Dhaka">Dhaka</option>
@@ -248,7 +248,7 @@ export default function RegisterPage() {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                className="w-full pl-11 pr-11 py-3 bg-gray-50/80 border border-gray-200 rounded-xl text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:border-green-400 focus:bg-white transition-all"
+                className="w-full pl-11 pr-11 py-3 bg-gray-50/80 border border-gray-200 rounded-xl text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:border-green-400 focus:bg-card transition-all"
               />
               <button
                 type="button"

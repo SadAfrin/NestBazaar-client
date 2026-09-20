@@ -46,7 +46,7 @@ const team = [
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-card">
 
       {/* Header */}
       <div className="bg-gradient-to-r from-green-600 to-emerald-600 py-20">
@@ -89,7 +89,7 @@ export default function AboutPage() {
           >
             <div>
               <p className="text-sm font-semibold text-green-600 uppercase tracking-widest mb-2">Our Story</p>
-              <h2 className="text-4xl font-black text-gray-900">
+              <h2 className="text-4xl font-black text-foreground">
                 Why We Built{" "}
                 <span className="bg-gradient-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent">
                   NestBazaar
@@ -120,7 +120,7 @@ export default function AboutPage() {
                 <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${value.color} flex items-center justify-center text-white mb-4 shadow-md`}>
                   {value.icon}
                 </div>
-                <h3 className="font-black text-gray-800 mb-2">{value.title}</h3>
+                <h3 className="font-black text-foreground mb-2">{value.title}</h3>
                 <p className="text-xs text-gray-500 leading-relaxed">{value.description}</p>
               </div>
             ))}
@@ -138,7 +138,7 @@ export default function AboutPage() {
             className="text-center mb-12"
           >
             <p className="text-sm font-semibold text-green-600 uppercase tracking-widest mb-2">The People</p>
-            <h2 className="text-4xl font-black text-gray-900">
+            <h2 className="text-4xl font-black text-foreground">
               Meet Our{" "}
               <span className="bg-gradient-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent">
                 Team
@@ -154,12 +154,12 @@ export default function AboutPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-white rounded-3xl p-6 text-center border border-gray-100 shadow-sm hover:shadow-lg transition-all"
+                className="bg-card rounded-3xl p-6 text-center border border-gray-100 shadow-sm hover:shadow-lg transition-all"
               >
                 <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${member.color} flex items-center justify-center text-white font-black text-2xl shadow-lg mx-auto mb-4`}>
                   {member.avatar}
                 </div>
-                <h3 className="font-black text-gray-800">{member.name}</h3>
+                <h3 className="font-black text-foreground">{member.name}</h3>
                 <p className="text-xs text-gray-400 mt-1">{member.role}</p>
               </motion.div>
             ))}

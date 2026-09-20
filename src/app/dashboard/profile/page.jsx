@@ -98,12 +98,12 @@ export default function ProfilePage() {
     <div className="space-y-6 max-w-2xl">
 
       <div>
-        <h1 className="text-2xl font-black text-gray-800">My Profile</h1>
+        <h1 className="text-2xl font-black text-foreground">My Profile</h1>
         <p className="text-gray-400 text-sm mt-1">Manage your personal information</p>
       </div>
 
       {/* Avatar Section */}
-      <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+      <div className="bg-card border border-gray-100 rounded-2xl p-6 shadow-sm">
         <div className="flex items-center gap-6">
           <div className="relative">
             {formData.photo ? (
@@ -122,7 +122,7 @@ export default function ProfilePage() {
             </div>
           </div>
           <div>
-            <p className="font-black text-gray-800 text-lg">{formData.name}</p>
+            <p className="font-black text-foreground text-lg">{formData.name}</p>
             <p className="text-gray-400 text-sm">{formData.email}</p>
             <span className="text-xs font-bold text-green-600 bg-green-100 px-3 py-1 rounded-full capitalize mt-1 inline-block">
               {formData.role}
@@ -132,8 +132,8 @@ export default function ProfilePage() {
       </div>
 
       {/* Profile Form */}
-      <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
-        <h3 className="font-black text-gray-800 mb-6">Personal Information</h3>
+      <div className="bg-card border border-gray-100 rounded-2xl p-6 shadow-sm">
+        <h3 className="font-black text-foreground mb-6">Personal Information</h3>
         <form onSubmit={handleSubmit} className="space-y-4">
 
           <div className="space-y-1.5">
@@ -145,7 +145,7 @@ export default function ProfilePage() {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-white transition-all"
+                className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-card transition-all"
               />
             </div>
           </div>
@@ -175,7 +175,7 @@ export default function ProfilePage() {
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder="+880 1XXXXXXXXX"
-                className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-white transition-all"
+                className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-card transition-all"
               />
             </div>
           </div>
@@ -188,7 +188,7 @@ export default function ProfilePage() {
                 name="location"
                 value={formData.location}
                 onChange={handleChange}
-                className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-white transition-all appearance-none"
+                className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-card transition-all appearance-none"
               >
                 <option value="">Select Location</option>
                 <option value="Dhaka">Dhaka</option>
@@ -213,7 +213,7 @@ export default function ProfilePage() {
                 value={formData.photo}
                 onChange={handleChange}
                 placeholder="https://example.com/photo.jpg"
-                className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-white transition-all"
+                className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-card transition-all"
               />
             </div>
           </div>

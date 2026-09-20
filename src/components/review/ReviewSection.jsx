@@ -27,7 +27,7 @@ function StarRating({ rating, setRating, interactive = false, size = 14 }) {
             className={`transition-all duration-150 ${
               star <= (hover || rating)
                 ? "text-yellow-400 drop-shadow-sm"
-                : "text-gray-200"
+                : "text-gray-400"
             }`}
           />
         </button>
@@ -155,7 +155,7 @@ export default function ReviewSection({ productId }) {
       {/* Section Header */}
       <div className="flex items-center justify-between flex-wrap gap-4 mb-8">
         <div>
-          <h2 className="text-2xl font-black text-gray-800">Customer Reviews</h2>
+          <h2 className="text-2xl font-black text-foreground">Customer Reviews</h2>
           <p className="text-gray-400 text-sm mt-1">
             What buyers are saying about this product
           </p>
@@ -180,7 +180,7 @@ export default function ReviewSection({ productId }) {
 
         {/* Rating Summary */}
         <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-100 rounded-3xl p-6 flex flex-col items-center justify-center text-center">
-          <p className="text-7xl font-black text-gray-800">{avgRating}</p>
+          <p className="text-7xl font-black text-foreground">{avgRating}</p>
           <StarRating rating={Math.round(avgRating)} size={20} />
           <p className="text-sm text-gray-400 mt-2 font-semibold">
             Based on {reviews.length} {reviews.length === 1 ? "review" : "reviews"}
@@ -188,7 +188,7 @@ export default function ReviewSection({ productId }) {
         </div>
 
         {/* Rating Bars */}
-        <div className="bg-white border border-gray-100 rounded-3xl p-6 shadow-sm space-y-3 lg:col-span-2">
+        <div className="bg-card border border-gray-100 rounded-3xl p-6 shadow-sm space-y-3 lg:col-span-2">
           <p className="text-sm font-black text-gray-700 mb-4">Rating Breakdown</p>
           {ratingCounts.map((item) => (
             <RatingBar
@@ -211,7 +211,7 @@ export default function ReviewSection({ productId }) {
             className="overflow-hidden mb-8"
           >
             <div className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-3xl p-6">
-              <h3 className="font-black text-gray-800 text-lg mb-5">Share Your Experience</h3>
+              <h3 className="font-black text-foreground text-lg mb-5">Share Your Experience</h3>
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
                   <label className="text-sm font-bold text-gray-600 mb-3 block">
@@ -235,7 +235,7 @@ export default function ReviewSection({ productId }) {
                     placeholder="Share your honest experience with this product..."
                     rows={4}
                     required
-                    className="w-full px-4 py-3 bg-white border border-gray-200 rounded-2xl text-sm text-gray-700 focus:outline-none focus:border-green-400 transition-all resize-none shadow-sm"
+                    className="w-full px-4 py-3 bg-card border border-gray-200 rounded-2xl text-sm text-gray-700 focus:outline-none focus:border-green-400 transition-all resize-none shadow-sm"
                   />
                   <p className="text-xs text-gray-400 mt-1">{comment.length}/500 characters</p>
                 </div>
@@ -258,7 +258,7 @@ export default function ReviewSection({ productId }) {
       {loading ? (
         <div className="space-y-4">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="bg-white rounded-3xl p-6 animate-pulse space-y-3 border border-gray-100">
+            <div key={i} className="bg-card rounded-3xl p-6 animate-pulse space-y-3 border border-gray-100">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 bg-gray-200 rounded-full" />
                 <div className="space-y-2 flex-1">
@@ -272,7 +272,7 @@ export default function ReviewSection({ productId }) {
           ))}
         </div>
       ) : reviews.length === 0 ? (
-        <div className="bg-white border border-gray-100 rounded-3xl p-12 text-center shadow-sm">
+        <div className="bg-card border border-gray-100 rounded-3xl p-12 text-center shadow-sm">
           <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-yellow-50 to-orange-50 flex items-center justify-center mx-auto mb-4 shadow-inner">
             <FaStar size={36} className="text-yellow-400" />
           </div>
@@ -287,7 +287,7 @@ export default function ReviewSection({ productId }) {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.08 }}
-              className="bg-white border border-gray-100 rounded-3xl p-6 shadow-sm hover:shadow-md hover:border-green-100 transition-all"
+              className="bg-card border border-gray-100 rounded-3xl p-6 shadow-sm hover:shadow-md hover:border-green-100 transition-all"
             >
               <div className="flex items-start justify-between gap-4 mb-4">
                 <div className="flex items-center gap-3">
@@ -304,7 +304,7 @@ export default function ReviewSection({ productId }) {
                   )}
                   <div>
                     <div className="flex items-center gap-1">
-                      <p className="font-black text-gray-800 text-sm">
+                      <p className="font-black text-foreground text-sm">
                         {review.reviewerInfo?.name}
                       </p>
                       <MdVerified className="text-green-500" size={14} />

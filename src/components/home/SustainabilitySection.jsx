@@ -45,7 +45,7 @@ const impacts = [
 
 export default function SustainabilitySection() {
   return (
-    <section className="py-20 bg-white relative overflow-hidden">
+    <section className="py-20 bg-card relative overflow-hidden">
 
       {/* Background */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-green-50 rounded-full blur-3xl opacity-50" />
@@ -67,7 +67,7 @@ export default function SustainabilitySection() {
               <p className="text-sm font-semibold text-green-600 uppercase tracking-widest mb-2">
                 Our Planet
               </p>
-              <h2 className="text-4xl font-black text-gray-900 leading-tight">
+              <h2 className="text-4xl font-black text-foreground leading-tight">
                 Shopping That{" "}
                 <span className="bg-gradient-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent">
                   Saves The Planet
@@ -116,7 +116,7 @@ export default function SustainabilitySection() {
                 <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${impact.color} flex items-center justify-center text-white mb-4 shadow-md`}>
                   {impact.icon}
                 </div>
-                <p className="text-2xl font-black text-gray-800 mb-1">{impact.value}</p>
+                <p className="text-2xl font-black text-foreground mb-1">{impact.value}</p>
                 <p className="text-sm font-bold text-gray-700 mb-2">{impact.label}</p>
                 <p className="text-xs text-gray-400 leading-relaxed">{impact.description}</p>
               </motion.div>

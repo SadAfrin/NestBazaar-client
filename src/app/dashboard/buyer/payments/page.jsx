@@ -49,7 +49,7 @@ export default function PaymentHistoryPage() {
 
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-black text-gray-800">Payment History</h1>
+        <h1 className="text-2xl font-black text-foreground">Payment History</h1>
         <p className="text-gray-400 text-sm mt-1">
           {payments.length} total {payments.length === 1 ? "transaction" : "transactions"}
         </p>
@@ -58,17 +58,17 @@ export default function PaymentHistoryPage() {
       {/* Summary Card */}
       {payments.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+          <div className="bg-card border border-gray-100 rounded-2xl p-5 shadow-sm">
             <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Total Spent</p>
             <p className="text-2xl font-black text-green-600">৳{totalSpent.toLocaleString()}</p>
           </div>
-          <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+          <div className="bg-card border border-gray-100 rounded-2xl p-5 shadow-sm">
             <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Transactions</p>
-            <p className="text-2xl font-black text-gray-800">{payments.length}</p>
+            <p className="text-2xl font-black text-foreground">{payments.length}</p>
           </div>
-          <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+          <div className="bg-card border border-gray-100 rounded-2xl p-5 shadow-sm">
             <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Successful</p>
-            <p className="text-2xl font-black text-gray-800">
+            <p className="text-2xl font-black text-foreground">
               {payments.filter(p => p.paymentStatus === "success").length}
             </p>
           </div>
@@ -76,7 +76,7 @@ export default function PaymentHistoryPage() {
       )}
 
       {loading ? (
-        <div className="bg-white rounded-2xl overflow-hidden border border-gray-100">
+        <div className="bg-card rounded-2xl overflow-hidden border border-gray-100">
           {[...Array(3)].map((_, i) => (
             <div key={i} className="grid grid-cols-12 gap-4 px-4 py-4 animate-pulse border-b border-gray-100">
               <div className="col-span-3 h-4 bg-gray-200 rounded" />
@@ -88,7 +88,7 @@ export default function PaymentHistoryPage() {
           ))}
         </div>
       ) : payments.length === 0 ? (
-        <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+        <div className="bg-card border border-gray-100 rounded-2xl p-6 shadow-sm">
           <div className="flex flex-col items-center justify-center py-12 gap-4">
             <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center shadow-inner">
               <FaCreditCard size={40} className="text-green-400" />
@@ -100,7 +100,7 @@ export default function PaymentHistoryPage() {
           </div>
         </div>
       ) : (
-        <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
+        <div className="bg-card border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
 
           {/* Table Header */}
           <div className="grid grid-cols-12 gap-4 px-4 py-3 bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">

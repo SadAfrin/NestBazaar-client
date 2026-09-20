@@ -30,7 +30,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-card">
 
       {/* Header */}
       <div className="bg-gradient-to-r from-green-600 to-emerald-600 py-16">
@@ -64,7 +64,7 @@ export default function ContactPage() {
           >
             <div>
               <p className="text-sm font-semibold text-green-600 uppercase tracking-widest mb-2">Get In Touch</p>
-              <h2 className="text-4xl font-black text-gray-900 mb-4">
+              <h2 className="text-4xl font-black text-foreground mb-4">
                 We're Here To{" "}
                 <span className="bg-gradient-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent">
                   Help
@@ -81,7 +81,7 @@ export default function ContactPage() {
                   <FaEnvelope size={18} />
                 </div>
                 <div>
-                  <p className="font-black text-gray-800 text-sm">Email Us</p>
+                  <p className="font-black text-foreground text-sm">Email Us</p>
                   <p className="text-gray-500 text-sm">support@nestbazaar.com</p>
                 </div>
               </div>
@@ -90,7 +90,7 @@ export default function ContactPage() {
                   <FaPhone size={18} />
                 </div>
                 <div>
-                  <p className="font-black text-gray-800 text-sm">Call Us</p>
+                  <p className="font-black text-foreground text-sm">Call Us</p>
                   <p className="text-gray-500 text-sm">+880 1700 000000</p>
                 </div>
               </div>
@@ -99,7 +99,7 @@ export default function ContactPage() {
                   <FaMapMarkerAlt size={18} />
                 </div>
                 <div>
-                  <p className="font-black text-gray-800 text-sm">Visit Us</p>
+                  <p className="font-black text-foreground text-sm">Visit Us</p>
                   <p className="text-gray-500 text-sm">Dhaka, Bangladesh</p>
                 </div>
               </div>
@@ -110,9 +110,9 @@ export default function ContactPage() {
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
-            className="bg-white border border-gray-100 rounded-3xl shadow-sm p-8"
+            className="bg-card border border-gray-100 rounded-3xl shadow-sm p-8"
           >
-            <h3 className="text-2xl font-black text-gray-800 mb-6">Send a Message</h3>
+            <h3 className="text-2xl font-black text-foreground mb-6">Send a Message</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
 
               <div className="relative">

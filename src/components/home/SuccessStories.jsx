@@ -57,7 +57,7 @@ const stories = [
 
 export default function SuccessStories() {
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-card">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Section Header */}
@@ -71,7 +71,7 @@ export default function SuccessStories() {
           <p className="text-sm font-semibold text-green-600 uppercase tracking-widest mb-2">
             Real Experiences
           </p>
-          <h2 className="text-4xl font-black text-gray-900">
+          <h2 className="text-4xl font-black text-foreground">
             Success{" "}
             <span className="bg-gradient-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent">
               Stories
@@ -92,7 +92,7 @@ export default function SuccessStories() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               whileHover={{ y: -5 }}
-              className="bg-white border border-gray-100 rounded-3xl p-6 shadow-sm hover:shadow-xl hover:shadow-green-100 transition-all duration-300 flex flex-col gap-4"
+              className="bg-card border border-gray-100 rounded-3xl p-6 shadow-sm hover:shadow-xl hover:shadow-green-100 transition-all duration-300 flex flex-col gap-4"
             >
               {/* Quote Icon */}
               <FaQuoteLeft className="text-green-200" size={24} />
@@ -122,7 +122,7 @@ export default function SuccessStories() {
                 </div>
                 <div>
                   <div className="flex items-center gap-1">
-                    <p className="text-sm font-black text-gray-800">{story.name}</p>
+                    <p className="text-sm font-black text-foreground">{story.name}</p>
                     <MdVerified className="text-green-500" size={14} />
                   </div>
                   <p className="text-xs text-gray-400">

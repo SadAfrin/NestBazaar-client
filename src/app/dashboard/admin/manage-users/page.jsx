@@ -132,7 +132,7 @@ export default function ManageUsersPage() {
     <div className="space-y-6">
 
       <div>
-        <h1 className="text-2xl font-black text-gray-800">Manage Users</h1>
+        <h1 className="text-2xl font-black text-foreground">Manage Users</h1>
         <p className="text-gray-400 text-sm mt-1">{users.length} total users</p>
       </div>
 
@@ -143,14 +143,14 @@ export default function ManageUsersPage() {
           placeholder="Search users by name or email..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 transition-all shadow-sm"
+          className="w-full pl-11 pr-4 py-3 bg-card border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 transition-all shadow-sm"
         />
       </div>
 
       {loading ? (
         <div className="space-y-3">
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="bg-white rounded-2xl p-4 animate-pulse flex gap-4">
+            <div key={i} className="bg-card rounded-2xl p-4 animate-pulse flex gap-4">
               <div className="w-10 h-10 bg-gray-200 rounded-full shrink-0" />
               <div className="flex-1 space-y-2">
                 <div className="h-4 bg-gray-200 rounded w-3/4" />
@@ -160,7 +160,7 @@ export default function ManageUsersPage() {
           ))}
         </div>
       ) : filteredUsers.length === 0 ? (
-        <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+        <div className="bg-card border border-gray-100 rounded-2xl p-6 shadow-sm">
           <div className="flex flex-col items-center justify-center py-12 gap-4">
             <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center shadow-inner">
               <FaUsers size={40} className="text-blue-400" />
@@ -169,7 +169,7 @@ export default function ManageUsersPage() {
           </div>
         </div>
       ) : (
-        <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
+        <div className="bg-card border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
 
           <div className="grid grid-cols-12 gap-4 px-4 py-3 bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
             <div className="col-span-3">User</div>
@@ -204,7 +204,7 @@ export default function ManageUsersPage() {
                 )}
                 <div className="min-w-0">
                   <div className="flex items-center gap-1 flex-wrap">
-                    <p className="font-bold text-gray-800 text-sm truncate">{user.name}</p>
+                    <p className="font-bold text-foreground text-sm truncate">{user.name}</p>
                     <MdVerified className="text-green-500 shrink-0" size={12} />
                     {isCurrentUser(user) && (
                       <span className="text-xs font-bold text-purple-600 bg-purple-50 px-1.5 py-0.5 rounded-md">

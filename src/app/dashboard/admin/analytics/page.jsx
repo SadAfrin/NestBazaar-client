@@ -77,7 +77,7 @@ export default function PlatformAnalyticsPage() {
 
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-black text-gray-800">Platform Analytics</h1>
+        <h1 className="text-2xl font-black text-foreground">Platform Analytics</h1>
         <p className="text-gray-400 text-sm mt-1">Overall platform performance and insights</p>
       </div>
 
@@ -89,12 +89,12 @@ export default function PlatformAnalyticsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all"
+            className="bg-card border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all"
           >
             <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${card.color} flex items-center justify-center text-white mb-4 shadow-md`}>
               {card.icon}
             </div>
-            <p className="text-2xl font-black text-gray-800">{card.value}</p>
+            <p className="text-2xl font-black text-foreground">{card.value}</p>
             <p className="text-sm text-gray-400 mt-1">{card.label}</p>
           </motion.div>
         ))}
@@ -108,16 +108,21 @@ export default function PlatformAnalyticsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm"
+          className="bg-card border border-gray-100 rounded-2xl p-6 shadow-sm"
         >
-          <h3 className="font-black text-gray-800 mb-6">User Growth</h3>
+          <h3 className="font-black text-foreground mb-6">User Growth</h3>
           <ResponsiveContainer width="100%" height={250}>
             <LineChart data={userGrowth}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis dataKey="month" tick={{ fontSize: 12 }} />
-              <YAxis tick={{ fontSize: 12 }} />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--nb-chart-grid)" />
+              <XAxis dataKey="month" tick={{ fontSize: 12, fill: "var(--nb-muted-foreground)" }} />
+              <YAxis tick={{ fontSize: 12, fill: "var(--nb-muted-foreground)" }} />
               <Tooltip
-                contentStyle={{ borderRadius: "12px", border: "1px solid #e5e7eb" }}
+                contentStyle={{
+                  borderRadius: "12px",
+                  border: "1px solid var(--nb-chart-tooltip-border)",
+                  backgroundColor: "var(--nb-card)",
+                  color: "var(--nb-foreground)",
+                }}
               />
               <Line
                 type="monotone"
@@ -135,16 +140,21 @@ export default function PlatformAnalyticsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm"
+          className="bg-card border border-gray-100 rounded-2xl p-6 shadow-sm"
         >
-          <h3 className="font-black text-gray-800 mb-6">Monthly Orders</h3>
+          <h3 className="font-black text-foreground mb-6">Monthly Orders</h3>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={monthlyOrders}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis dataKey="month" tick={{ fontSize: 12 }} />
-              <YAxis tick={{ fontSize: 12 }} />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--nb-chart-grid)" />
+              <XAxis dataKey="month" tick={{ fontSize: 12, fill: "var(--nb-muted-foreground)" }} />
+              <YAxis tick={{ fontSize: 12, fill: "var(--nb-muted-foreground)" }} />
               <Tooltip
-                contentStyle={{ borderRadius: "12px", border: "1px solid #e5e7eb" }}
+                contentStyle={{
+                  borderRadius: "12px",
+                  border: "1px solid var(--nb-chart-tooltip-border)",
+                  backgroundColor: "var(--nb-card)",
+                  color: "var(--nb-foreground)",
+                }}
               />
               <Bar dataKey="orders" fill="#8b5cf6" radius={[6, 6, 0, 0]} />
             </BarChart>
@@ -161,9 +171,9 @@ export default function PlatformAnalyticsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm"
+          className="bg-card border border-gray-100 rounded-2xl p-6 shadow-sm"
         >
-          <h3 className="font-black text-gray-800 mb-6">Category Performance</h3>
+          <h3 className="font-black text-foreground mb-6">Category Performance</h3>
           <ResponsiveContainer width="100%" height={250}>
             <PieChart>
               <Pie
@@ -180,7 +190,12 @@ export default function PlatformAnalyticsPage() {
                 ))}
               </Pie>
               <Tooltip
-                contentStyle={{ borderRadius: "12px", border: "1px solid #e5e7eb" }}
+                contentStyle={{
+                  borderRadius: "12px",
+                  border: "1px solid var(--nb-chart-tooltip-border)",
+                  backgroundColor: "var(--nb-card)",
+                  color: "var(--nb-foreground)",
+                }}
               />
               <Legend />
             </PieChart>
@@ -192,9 +207,9 @@ export default function PlatformAnalyticsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm"
+          className="bg-card border border-gray-100 rounded-2xl p-6 shadow-sm"
         >
-          <h3 className="font-black text-gray-800 mb-6">Top Categories</h3>
+          <h3 className="font-black text-foreground mb-6">Top Categories</h3>
           <div className="space-y-3">
             {topCategories.map((cat, index) => (
               <div key={index} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0">

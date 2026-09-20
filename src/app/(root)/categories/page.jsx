@@ -107,9 +107,9 @@ export default function CategoriesPage() {
                   <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${cat.color} flex items-center justify-center text-white mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                     {cat.icon}
                   </div>
-                  <h3 className="font-black text-gray-800 text-xl mb-2">{cat.name}</h3>
+                  <h3 className="font-black text-foreground text-xl mb-2">{cat.name}</h3>
                   <p className="text-gray-500 text-sm mb-4">{cat.description}</p>
-                  <span className="text-xs font-bold text-green-600 bg-white px-3 py-1.5 rounded-full border border-green-100">
+                  <span className="text-xs font-bold text-green-600 bg-card px-3 py-1.5 rounded-full border border-green-100">
                     {cat.count}
                   </span>
                 </div>

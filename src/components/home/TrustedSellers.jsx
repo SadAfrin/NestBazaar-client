@@ -101,7 +101,7 @@ export default function TrustedSellers() {
           <p className="text-sm font-semibold text-green-600 uppercase tracking-widest mb-2">
             Meet Our Best
           </p>
-          <h2 className="text-4xl font-black text-gray-900">
+          <h2 className="text-4xl font-black text-foreground">
             Trusted{" "}
             <span className="bg-gradient-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent">
               Sellers
@@ -122,7 +122,7 @@ export default function TrustedSellers() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               whileHover={{ y: -5 }}
-              className="bg-white border border-gray-100 rounded-3xl p-6 shadow-sm hover:shadow-xl hover:shadow-green-100 transition-all duration-300"
+              className="bg-card border border-gray-100 rounded-3xl p-6 shadow-sm hover:shadow-xl hover:shadow-green-100 transition-all duration-300"
             >
               <div className="flex items-start justify-between mb-4">
 
@@ -133,7 +133,7 @@ export default function TrustedSellers() {
                   </div>
                   <div>
                     <div className="flex items-center gap-1">
-                      <h3 className="font-black text-gray-800">{seller.name}</h3>
+                      <h3 className="font-black text-foreground">{seller.name}</h3>
                       <MdVerified className="text-green-500" size={16} />
                     </div>
                     <p className="text-xs text-gray-400">{seller.location}</p>
@@ -156,21 +156,21 @@ export default function TrustedSellers() {
                 <div>
                   <div className="flex items-center justify-center gap-1 mb-1">
                     <FaStar className="text-yellow-400" size={12} />
-                    <p className="font-black text-gray-800 text-sm">{seller.rating}</p>
+                    <p className="font-black text-foreground text-sm">{seller.rating}</p>
                   </div>
                   <p className="text-xs text-gray-400">Rating</p>
                 </div>
                 <div>
                   <div className="flex items-center justify-center gap-1 mb-1">
                     <FaCheckCircle className="text-green-500" size={12} />
-                    <p className="font-black text-gray-800 text-sm">{seller.totalSales}</p>
+                    <p className="font-black text-foreground text-sm">{seller.totalSales}</p>
                   </div>
                   <p className="text-xs text-gray-400">Sales</p>
                 </div>
                 <div>
                   <div className="flex items-center justify-center gap-1 mb-1">
                     <FaShoppingBag className="text-blue-500" size={12} />
-                    <p className="font-black text-gray-800 text-sm">{seller.totalListings}</p>
+                    <p className="font-black text-foreground text-sm">{seller.totalListings}</p>
                   </div>
                   <p className="text-xs text-gray-400">Listings</p>
                 </div>

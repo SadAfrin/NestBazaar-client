@@ -66,23 +66,23 @@ export default function ManagePaymentsPage() {
     <div className="space-y-6">
 
       <div>
-        <h1 className="text-2xl font-black text-gray-800">Manage Payments</h1>
+        <h1 className="text-2xl font-black text-foreground">Manage Payments</h1>
         <p className="text-gray-400 text-sm mt-1">{payments.length} total transactions</p>
       </div>
 
       {/* Revenue Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+        <div className="bg-card border border-gray-100 rounded-2xl p-5 shadow-sm">
           <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Total Revenue</p>
           <p className="text-2xl font-black text-green-600">৳{totalRevenue.toLocaleString()}</p>
         </div>
-        <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+        <div className="bg-card border border-gray-100 rounded-2xl p-5 shadow-sm">
           <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Total Transactions</p>
-          <p className="text-2xl font-black text-gray-800">{payments.length}</p>
+          <p className="text-2xl font-black text-foreground">{payments.length}</p>
         </div>
-        <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+        <div className="bg-card border border-gray-100 rounded-2xl p-5 shadow-sm">
           <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider mb-1">Successful</p>
-          <p className="text-2xl font-black text-gray-800">
+          <p className="text-2xl font-black text-foreground">
             {payments.filter(p => p.paymentStatus === "paid" || p.paymentStatus === "success").length}
           </p>
         </div>
@@ -97,14 +97,14 @@ export default function ManagePaymentsPage() {
             placeholder="Search by email or transaction ID..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 transition-all shadow-sm"
+            className="w-full pl-11 pr-4 py-3 bg-card border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 transition-all shadow-sm"
           />
         </div>
 
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 transition-all shadow-sm"
+          className="px-4 py-3 bg-card border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 transition-all shadow-sm"
         >
           <option value="">All Status</option>
           <option value="paid">Paid</option>
@@ -131,7 +131,7 @@ export default function ManagePaymentsPage() {
       )}
 
       {loading ? (
-        <div className="bg-white rounded-2xl overflow-hidden border border-gray-100">
+        <div className="bg-card rounded-2xl overflow-hidden border border-gray-100">
           {[...Array(4)].map((_, i) => (
             <div key={i} className="grid grid-cols-12 gap-4 px-4 py-4 animate-pulse border-b border-gray-100">
               <div className="col-span-3 h-4 bg-gray-200 rounded" />
@@ -143,7 +143,7 @@ export default function ManagePaymentsPage() {
           ))}
         </div>
       ) : filteredPayments.length === 0 ? (
-        <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+        <div className="bg-card border border-gray-100 rounded-2xl p-6 shadow-sm">
           <div className="flex flex-col items-center justify-center py-12 gap-4">
             <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center shadow-inner">
               <FaCreditCard size={40} className="text-green-400" />
@@ -155,7 +155,7 @@ export default function ManagePaymentsPage() {
           </div>
         </div>
       ) : (
-        <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
+        <div className="bg-card border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
           <div className="grid grid-cols-12 gap-4 px-4 py-3 bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
             <div className="col-span-3">Transaction ID</div>
             <div className="col-span-3">Buyer Email</div>

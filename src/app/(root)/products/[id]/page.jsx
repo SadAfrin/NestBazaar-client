@@ -106,7 +106,7 @@ export default function ProductDetailsPage() {
             transition={{ duration: 0.6 }}
             className="space-y-4"
           >
-            <div className="relative h-96 rounded-3xl overflow-hidden bg-white border border-gray-100 shadow-sm">
+            <div className="relative h-96 rounded-3xl overflow-hidden bg-card border border-gray-100 shadow-sm">
               <img
                 src={product.images?.[selectedImage]}
                 alt={product.title}
@@ -147,7 +147,7 @@ export default function ProductDetailsPage() {
               {product.category}
             </span>
 
-            <h1 className="text-3xl font-black text-gray-900 leading-tight">
+            <h1 className="text-3xl font-black text-foreground leading-tight">
               {product.title}
             </h1>
 
@@ -160,13 +160,13 @@ export default function ProductDetailsPage() {
               </span>
             </div>
 
-            <div className="bg-white border border-gray-100 rounded-2xl p-5">
-              <h3 className="font-black text-gray-800 mb-3">Description</h3>
+            <div className="bg-card border border-gray-100 rounded-2xl p-5">
+              <h3 className="font-black text-foreground mb-3">Description</h3>
               <p className="text-gray-500 text-sm leading-relaxed">{product.description}</p>
             </div>
 
-            <div className="bg-white border border-gray-100 rounded-2xl p-5 space-y-4">
-              <h3 className="font-black text-gray-800">Seller Information</h3>
+            <div className="bg-card border border-gray-100 rounded-2xl p-5 space-y-4">
+              <h3 className="font-black text-foreground">Seller Information</h3>
               <div className="flex items-center gap-4">
                 {sellerProfile?.photo ? (
                   <img
@@ -181,7 +181,7 @@ export default function ProductDetailsPage() {
                 )}
                 <div>
                   <div className="flex items-center gap-1">
-                    <p className="font-black text-gray-800">
+                    <p className="font-black text-foreground">
                       {sellerProfile?.name || product.sellerInfo?.name}
                     </p>
                     <MdVerified className="text-green-500" size={16} />

@@ -121,7 +121,7 @@ function CheckoutContent() {
           Back to Product
         </button>
 
-        <h1 className="text-2xl font-black text-gray-800 mb-8">Checkout</h1>
+        <h1 className="text-2xl font-black text-foreground mb-8">Checkout</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
@@ -134,7 +134,7 @@ function CheckoutContent() {
             <h2 className="font-black text-gray-700 text-lg">Order Summary</h2>
 
             {/* Product Card */}
-            <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+            <div className="bg-card border border-gray-100 rounded-2xl p-5 shadow-sm">
               <div className="flex gap-4">
                 <div className="w-24 h-24 rounded-xl overflow-hidden border border-gray-100 shrink-0">
                   <img
@@ -144,7 +144,7 @@ function CheckoutContent() {
                   />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-black text-gray-800 text-sm line-clamp-2">
+                  <h3 className="font-black text-foreground text-sm line-clamp-2">
                     {product.title}
                   </h3>
                   <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-lg mt-1 inline-block">
@@ -159,35 +159,35 @@ function CheckoutContent() {
             </div>
 
             {/* Price Breakdown */}
-            <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm space-y-3">
-              <h3 className="font-black text-gray-800">Price Details</h3>
+            <div className="bg-card border border-gray-100 rounded-2xl p-5 shadow-sm space-y-3">
+              <h3 className="font-black text-foreground">Price Details</h3>
 
               <div className="flex justify-between py-2 border-b border-gray-100">
                 <span className="text-sm text-gray-500">Product Name</span>
-                <span className="text-sm font-bold text-gray-800 text-right max-w-[200px] line-clamp-1">
+                <span className="text-sm font-bold text-foreground text-right max-w-[200px] line-clamp-1">
                   {product.title}
                 </span>
               </div>
 
               <div className="flex justify-between py-2 border-b border-gray-100">
                 <span className="text-sm text-gray-500">Product Price</span>
-                <span className="text-sm font-bold text-gray-800">
+                <span className="text-sm font-bold text-foreground">
                   ৳{product.price?.toLocaleString()}
                 </span>
               </div>
 
               <div className="flex justify-between py-2 border-b border-gray-100">
                 <span className="text-sm text-gray-500">Quantity</span>
-                <span className="text-sm font-bold text-gray-800">1</span>
+                <span className="text-sm font-bold text-foreground">1</span>
               </div>
 
               <div className="flex justify-between py-2 border-b border-gray-100">
                 <span className="text-sm text-gray-500">Condition</span>
-                <span className="text-sm font-bold text-gray-800">{product.condition}</span>
+                <span className="text-sm font-bold text-foreground">{product.condition}</span>
               </div>
 
               <div className="flex justify-between py-2">
-                <span className="text-sm font-black text-gray-800">Total Amount</span>
+                <span className="text-sm font-black text-foreground">Total Amount</span>
                 <span className="text-lg font-black text-green-600">
                   ৳{product.price?.toLocaleString()}
                 </span>
@@ -204,14 +204,14 @@ function CheckoutContent() {
             <h2 className="font-black text-gray-700 text-lg">Delivery Information</h2>
 
             {/* Buyer Info */}
-            <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm space-y-3">
-              <h3 className="font-black text-gray-800">Your Information</h3>
+            <div className="bg-card border border-gray-100 rounded-2xl p-5 shadow-sm space-y-3">
+              <h3 className="font-black text-foreground">Your Information</h3>
 
               <div className="flex items-center gap-3 py-2 border-b border-gray-100">
                 <FaUser className="text-green-500 shrink-0" size={14} />
                 <div>
                   <p className="text-xs text-gray-400">Full Name</p>
-                  <p className="text-sm font-bold text-gray-800">
+                  <p className="text-sm font-bold text-foreground">
                     {buyerProfile?.name || session?.user?.name}
                   </p>
                 </div>
@@ -221,7 +221,7 @@ function CheckoutContent() {
                 <FaEnvelope className="text-green-500 shrink-0" size={14} />
                 <div>
                   <p className="text-xs text-gray-400">Email</p>
-                  <p className="text-sm font-bold text-gray-800">
+                  <p className="text-sm font-bold text-foreground">
                     {buyerProfile?.email || session?.user?.email}
                   </p>
                 </div>
@@ -231,7 +231,7 @@ function CheckoutContent() {
                 <FaMapMarkerAlt className="text-green-500 shrink-0" size={14} />
                 <div>
                   <p className="text-xs text-gray-400">Delivery Location</p>
-                  <p className="text-sm font-bold text-gray-800">
+                  <p className="text-sm font-bold text-foreground">
                     {buyerProfile?.location || "Not set — update in profile"}
                   </p>
                 </div>
@@ -247,15 +247,15 @@ function CheckoutContent() {
             </div>
 
             {/* Seller Info */}
-            <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm space-y-3">
-              <h3 className="font-black text-gray-800">Seller Information</h3>
+            <div className="bg-card border border-gray-100 rounded-2xl p-5 shadow-sm space-y-3">
+              <h3 className="font-black text-foreground">Seller Information</h3>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white font-black shadow-md">
                   {product.sellerInfo?.name?.charAt(0)}
                 </div>
                 <div>
                   <div className="flex items-center gap-1">
-                    <p className="font-black text-gray-800 text-sm">{product.sellerInfo?.name}</p>
+                    <p className="font-black text-foreground text-sm">{product.sellerInfo?.name}</p>
                     <MdVerified className="text-green-500" size={14} />
                   </div>
                   <p className="text-xs text-gray-400">{product.sellerInfo?.email}</p>

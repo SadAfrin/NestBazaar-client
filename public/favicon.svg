@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" role="img" aria-label="NB">
+  <defs>
+    <linearGradient id="nb" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#4ade80"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+  </defs>
+  <rect width="36" height="36" rx="12" fill="url(#nb)"/>
+  <text
+    x="18"
+    y="24.2"
+    text-anchor="middle"
+    fill="#ffffff"
+    font-family="Arial Black, Arial, Helvetica, sans-serif"
+    font-size="14"
+    font-weight="900"
+    letter-spacing="-0.5"
+  >NB</text>
+</svg>

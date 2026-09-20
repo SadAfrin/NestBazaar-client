@@ -101,14 +101,14 @@ export default function MyOrdersPage() {
     <div className="space-y-6">
 
       <div>
-        <h1 className="text-2xl font-black text-gray-800">My Orders</h1>
+        <h1 className="text-2xl font-black text-foreground">My Orders</h1>
         <p className="text-gray-400 text-sm mt-1">
           {orders.length} total {orders.length === 1 ? "order" : "orders"}
         </p>
       </div>
 
       {loading ? (
-        <div className="bg-white rounded-2xl overflow-hidden border border-gray-100">
+        <div className="bg-card rounded-2xl overflow-hidden border border-gray-100">
           {[...Array(3)].map((_, i) => (
             <div key={i} className="grid grid-cols-12 gap-4 px-4 py-4 animate-pulse border-b border-gray-100">
               <div className="col-span-3 h-4 bg-gray-200 rounded" />
@@ -120,7 +120,7 @@ export default function MyOrdersPage() {
           ))}
         </div>
       ) : orders.length === 0 ? (
-        <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+        <div className="bg-card border border-gray-100 rounded-2xl p-6 shadow-sm">
           <div className="flex flex-col items-center justify-center py-12 gap-4">
             <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center shadow-inner">
               <FaShoppingBag size={40} className="text-blue-400" />
@@ -137,7 +137,7 @@ export default function MyOrdersPage() {
           </div>
         </div>
       ) : (
-        <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
+        <div className="bg-card border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
           <div className="grid grid-cols-12 gap-4 px-4 py-3 bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
             <div className="col-span-2">Order ID</div>
             <div className="col-span-2">Date</div>
@@ -158,7 +158,7 @@ export default function MyOrdersPage() {
               }`}
             >
               <div className="col-span-2">
-                <p className="font-bold text-gray-800 text-sm">
+                <p className="font-bold text-foreground text-sm">
                   #{order._id?.toString().slice(-6).toUpperCase()}
                 </p>
               </div>
@@ -205,11 +205,11 @@ export default function MyOrdersPage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-3xl shadow-2xl p-6 w-full max-w-lg"
+            className="bg-card rounded-3xl shadow-2xl p-6 w-full max-w-lg"
           >
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h3 className="font-black text-gray-800 text-lg">
+                <h3 className="font-black text-foreground text-lg">
                   Order #{selectedOrder._id?.toString().slice(-6).toUpperCase()}
                 </h3>
                 <p className="text-xs text-gray-400 mt-0.5">
@@ -231,7 +231,7 @@ export default function MyOrdersPage() {
                 <span className="text-sm text-gray-500">Seller</span>
                 <div className="flex items-center gap-1">
                   <MdVerified className="text-green-500" size={13} />
-                  <span className="text-sm font-bold text-gray-800">{selectedOrder.sellerInfo?.name}</span>
+                  <span className="text-sm font-bold text-foreground">{selectedOrder.sellerInfo?.name}</span>
                 </div>
               </div>
               <div className="flex justify-between py-2 border-b border-gray-100">

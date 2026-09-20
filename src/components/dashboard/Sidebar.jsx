@@ -92,7 +92,7 @@ export default function Sidebar({ onClose }) {
   };
 
   return (
-    <div className="h-full bg-white border-r border-gray-100 flex flex-col shadow-sm">
+    <div className="h-full bg-card border-r border-gray-100 flex flex-col shadow-sm">
 
       {/* Logo */}
       <div className="p-6 border-b border-gray-100 flex items-center justify-between">
@@ -131,7 +131,7 @@ export default function Sidebar({ onClose }) {
             </div>
           )}
           <div className="min-w-0">
-            <p className="text-sm font-black text-gray-800 truncate">{session?.user?.name}</p>
+            <p className="text-sm font-black text-foreground truncate">{session?.user?.name}</p>
             <span className="text-xs font-bold text-green-600 capitalize bg-green-100 px-2 py-0.5 rounded-full">
               {role}
             </span>

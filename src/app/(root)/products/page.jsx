@@ -95,7 +95,7 @@ export default function ProductsPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
         {/* Search + Filters */}
-        <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 mb-8">
+        <div className="bg-card rounded-3xl shadow-sm border border-gray-100 p-6 mb-8">
 
           {/* Search Bar */}
           <form onSubmit={handleSearch} className="flex gap-3 mb-6">
@@ -183,7 +183,7 @@ export default function ProductsPage() {
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(9)].map((_, i) => (
-              <div key={i} className="bg-white rounded-3xl overflow-hidden animate-pulse">
+              <div key={i} className="bg-card rounded-3xl overflow-hidden animate-pulse">
                 <div className="h-52 bg-gray-200" />
                 <div className="p-4 space-y-3">
                   <div className="h-4 bg-gray-200 rounded-full w-3/4" />
@@ -214,7 +214,7 @@ export default function ProductsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: index * 0.06 }}
                 whileHover={{ y: -5 }}
-                className="group bg-white border border-gray-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-green-100 transition-all duration-300"
+                className="group bg-card border border-gray-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-green-100 transition-all duration-300"
               >
                 {/* Image */}
                 <div className="relative h-52 overflow-hidden">
@@ -226,7 +226,7 @@ export default function ProductsPage() {
                   <span className={`absolute top-3 left-3 text-xs font-bold px-2 py-1 rounded-lg ${conditionColors[product.condition] || "bg-gray-100 text-gray-700"}`}>
                     {product.condition}
                   </span>
-                  <span className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-xs font-semibold text-gray-600 px-2 py-1 rounded-lg flex items-center gap-1">
+                  <span className="absolute top-3 right-3 bg-card/90 backdrop-blur-sm text-xs font-semibold text-gray-600 px-2 py-1 rounded-lg flex items-center gap-1">
                     <FaTag size={10} className="text-green-500" />
                     {product.category}
                   </span>
@@ -234,7 +234,7 @@ export default function ProductsPage() {
 
                 {/* Content */}
                 <div className="p-5 space-y-3">
-                  <h3 className="font-bold text-gray-800 text-sm line-clamp-2 group-hover:text-green-600 transition-colors">
+                  <h3 className="font-bold text-foreground text-sm line-clamp-2 group-hover:text-green-600 transition-colors">
                     {product.title}
                   </h3>
                   <p className="text-2xl font-black text-green-600">
@@ -270,7 +270,7 @@ export default function ProductsPage() {
             <button
               onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
               disabled={page === 1}
-              className="w-10 h-10 rounded-xl bg-white border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-green-50 hover:border-green-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+              className="w-10 h-10 rounded-xl bg-card border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-green-50 hover:border-green-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
             >
               <FaChevronLeft size={12} />
             </button>
@@ -282,7 +282,7 @@ export default function ProductsPage() {
                 className={`w-10 h-10 rounded-xl text-sm font-bold transition-all ${
                   page === i + 1
                     ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-md"
-                    : "bg-white border border-gray-200 text-gray-600 hover:bg-green-50 hover:border-green-300"
+                    : "bg-card border border-gray-200 text-gray-600 hover:bg-green-50 hover:border-green-300"
                 }`}
               >
                 {i + 1}
@@ -292,7 +292,7 @@ export default function ProductsPage() {
             <button
               onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
               disabled={page === totalPages}
-              className="w-10 h-10 rounded-xl bg-white border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-green-50 hover:border-green-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+              className="w-10 h-10 rounded-xl bg-card border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-green-50 hover:border-green-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
             >
               <FaChevronRight size={12} />
             </button>

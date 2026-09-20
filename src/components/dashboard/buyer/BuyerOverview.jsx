@@ -81,7 +81,7 @@ export default function BuyerOverview() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-black text-gray-800">
+        <h1 className="text-2xl font-black text-foreground">
           Welcome back, {session?.user?.name?.split(" ")[0]}! 👋
         </h1>
         <p className="text-gray-400 text-sm mt-1">Here's your buying activity summary</p>
@@ -94,12 +94,12 @@ export default function BuyerOverview() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-green-200 transition-all cursor-pointer"
+              className="bg-card border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-green-200 transition-all cursor-pointer"
             >
               <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${card.color} flex items-center justify-center text-white mb-4 shadow-md`}>
                 {card.icon}
               </div>
-              <p className="text-2xl font-black text-gray-800">{card.value}</p>
+              <p className="text-2xl font-black text-foreground">{card.value}</p>
               <p className="text-sm text-gray-400 mt-1">{card.label}</p>
             </motion.div>
           </Link>
@@ -107,9 +107,9 @@ export default function BuyerOverview() {
       </div>
 
       {/* Recent Orders */}
-      <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+      <div className="bg-card border border-gray-100 rounded-2xl p-6 shadow-sm">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-black text-gray-800">
+          <h3 className="font-black text-foreground">
             Recent Orders{" "}
             <span className="text-xs font-semibold text-gray-400">(Last 30 days)</span>
           </h3>
@@ -142,11 +142,11 @@ export default function BuyerOverview() {
                 className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl hover:bg-green-50 transition-all"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-white border border-gray-100 flex items-center justify-center shadow-sm">
+                  <div className="w-10 h-10 rounded-xl bg-card border border-gray-100 flex items-center justify-center shadow-sm">
                     <FaShoppingBag size={16} className="text-green-500" />
                   </div>
                   <div>
-                    <p className="font-bold text-gray-800 text-sm">
+                    <p className="font-bold text-foreground text-sm">
                       Order #{order._id?.toString().slice(-6).toUpperCase()}
                     </p>
                     <div className="flex items-center gap-1 mt-0.5">

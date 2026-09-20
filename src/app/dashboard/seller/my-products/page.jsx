@@ -92,7 +92,7 @@ export default function MyProductsPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-2xl font-black text-gray-800">My Products</h1>
+          <h1 className="text-2xl font-black text-foreground">My Products</h1>
           <p className="text-gray-400 text-sm mt-1">{products.length} products listed</p>
         </div>
         <Link href="/dashboard/seller/add-product">
@@ -115,7 +115,7 @@ export default function MyProductsPage() {
             placeholder="Search your products..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 transition-all shadow-sm"
+            className="w-full pl-11 pr-4 py-3 bg-card border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 transition-all shadow-sm"
           />
         </div>
 
@@ -123,7 +123,7 @@ export default function MyProductsPage() {
         <select
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e.target.value)}
-          className="px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 transition-all shadow-sm"
+          className="px-4 py-3 bg-card border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 transition-all shadow-sm"
         >
           <option value="">All Categories</option>
           <option value="Electronics">Electronics</option>
@@ -138,7 +138,7 @@ export default function MyProductsPage() {
         <select
           value={conditionFilter}
           onChange={(e) => setConditionFilter(e.target.value)}
-          className="px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 transition-all shadow-sm"
+          className="px-4 py-3 bg-card border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 transition-all shadow-sm"
         >
           <option value="">All Conditions</option>
           <option value="Like New">Like New</option>
@@ -150,7 +150,7 @@ export default function MyProductsPage() {
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 transition-all shadow-sm"
+          className="px-4 py-3 bg-card border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 transition-all shadow-sm"
         >
           <option value="">All Status</option>
           <option value="available">Available</option>
@@ -178,7 +178,7 @@ export default function MyProductsPage() {
       {loading ? (
         <div className="space-y-3">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="bg-white rounded-2xl p-4 animate-pulse flex gap-4">
+            <div key={i} className="bg-card rounded-2xl p-4 animate-pulse flex gap-4">
               <div className="w-16 h-16 bg-gray-200 rounded-xl shrink-0" />
               <div className="flex-1 space-y-2">
                 <div className="h-4 bg-gray-200 rounded w-3/4" />
@@ -188,7 +188,7 @@ export default function MyProductsPage() {
           ))}
         </div>
       ) : filteredProducts.length === 0 ? (
-        <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+        <div className="bg-card border border-gray-100 rounded-2xl p-6 shadow-sm">
           <div className="flex flex-col items-center justify-center py-12 gap-4">
             <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center shadow-inner">
               <FaBoxOpen size={40} className="text-green-400" />
@@ -211,7 +211,7 @@ export default function MyProductsPage() {
           </div>
         </div>
       ) : (
-        <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
+        <div className="bg-card border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
           <div className="grid grid-cols-12 gap-4 px-4 py-3 bg-gray-50 border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
             <div className="col-span-5">Product</div>
             <div className="col-span-2">Category</div>
@@ -239,7 +239,7 @@ export default function MyProductsPage() {
                   />
                 </div>
                 <div className="min-w-0">
-                  <p className="font-bold text-gray-800 text-sm line-clamp-1">{product.title}</p>
+                  <p className="font-bold text-foreground text-sm line-clamp-1">{product.title}</p>
                   <span className={`text-xs font-bold px-2 py-0.5 rounded-lg ${conditionColors[product.condition] || "bg-gray-100 text-gray-700"}`}>
                     {product.condition}
                   </span>

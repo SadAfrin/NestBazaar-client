@@ -118,11 +118,11 @@ export default function AddProductPage() {
     <div className="space-y-6 max-w-2xl">
 
       <div>
-        <h1 className="text-2xl font-black text-gray-800">Add Product</h1>
+        <h1 className="text-2xl font-black text-foreground">Add Product</h1>
         <p className="text-gray-400 text-sm mt-1">List a new product for sale</p>
       </div>
 
-      <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+      <div className="bg-card border border-gray-100 rounded-2xl p-6 shadow-sm">
         <form onSubmit={handleSubmit} className="space-y-5">
 
           <div className="space-y-1.5">
@@ -136,7 +136,7 @@ export default function AddProductPage() {
                 onChange={handleChange}
                 placeholder="e.g. Dell Inspiron 15 Laptop"
                 required
-                className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-white transition-all"
+                className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-card transition-all"
               />
             </div>
           </div>
@@ -151,7 +151,7 @@ export default function AddProductPage() {
                   value={formData.category}
                   onChange={handleChange}
                   required
-                  className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-white transition-all appearance-none"
+                  className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-card transition-all appearance-none"
                 >
                   <option value="">Select Category</option>
                   {categories.map((cat) => (
@@ -170,7 +170,7 @@ export default function AddProductPage() {
                   value={formData.condition}
                   onChange={handleChange}
                   required
-                  className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-white transition-all appearance-none"
+                  className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-card transition-all appearance-none"
                 >
                   <option value="">Select Condition</option>
                   {conditions.map((con) => (
@@ -194,7 +194,7 @@ export default function AddProductPage() {
                   placeholder="e.g. 35000"
                   required
                   min="0"
-                  className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-white transition-all"
+                  className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-card transition-all"
                 />
               </div>
             </div>
@@ -209,7 +209,7 @@ export default function AddProductPage() {
                 placeholder="e.g. 1"
                 required
                 min="1"
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-white transition-all"
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-card transition-all"
               />
             </div>
           </div>
@@ -223,7 +223,7 @@ export default function AddProductPage() {
               placeholder="Describe your product in detail..."
               required
               rows={4}
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-white transition-all resize-none"
+              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-card transition-all resize-none"
             />
           </div>
 
@@ -241,7 +241,7 @@ export default function AddProductPage() {
                       value={img}
                       onChange={(e) => handleImageChange(index, e.target.value)}
                       placeholder={`Image URL ${index + 1}`}
-                      className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-white transition-all"
+                      className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-card transition-all"
                     />
                   </div>
                   {formData.images.length > 1 && (

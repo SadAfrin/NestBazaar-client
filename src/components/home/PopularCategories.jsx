@@ -77,7 +77,7 @@ export default function PopularCategories() {
           <p className="text-sm font-semibold text-green-600 uppercase tracking-widest mb-2">
             Browse By
           </p>
-          <h2 className="text-4xl font-black text-gray-900">
+          <h2 className="text-4xl font-black text-foreground">
             Popular{" "}
             <span className="bg-gradient-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent">
               Categories
@@ -106,7 +106,7 @@ export default function PopularCategories() {
                     {cat.icon}
                   </div>
                   {/* Name */}
-                  <h3 className="font-black text-gray-800 text-sm mb-1">
+                  <h3 className="font-black text-foreground text-sm mb-1">
                     {cat.name}
                   </h3>
                   {/* Count */}

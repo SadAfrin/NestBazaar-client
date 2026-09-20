@@ -67,11 +67,11 @@ export default function SettingsPage() {
     <div className="space-y-6 max-w-2xl">
 
       <div>
-        <h1 className="text-2xl font-black text-gray-800">Change Password</h1>
+        <h1 className="text-2xl font-black text-foreground">Change Password</h1>
         <p className="text-gray-400 text-sm mt-1">Update your account password securely</p>
       </div>
 
-      <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+      <div className="bg-card border border-gray-100 rounded-2xl p-6 shadow-sm">
         <form onSubmit={handleChangePassword} className="space-y-4">
 
           {/* Current Password */}
@@ -86,7 +86,7 @@ export default function SettingsPage() {
                 onChange={handlePasswordChange}
                 placeholder="Enter current password"
                 required
-                className="w-full pl-11 pr-11 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-white transition-all"
+                className="w-full pl-11 pr-11 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-card transition-all"
               />
               <button
                 type="button"
@@ -110,7 +110,7 @@ export default function SettingsPage() {
                 onChange={handlePasswordChange}
                 placeholder="Enter new password"
                 required
-                className="w-full pl-11 pr-11 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-white transition-all"
+                className="w-full pl-11 pr-11 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-card transition-all"
               />
               <button
                 type="button"
@@ -134,7 +134,7 @@ export default function SettingsPage() {
                 onChange={handlePasswordChange}
                 placeholder="Confirm new password"
                 required
-                className="w-full pl-11 pr-11 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-white transition-all"
+                className="w-full pl-11 pr-11 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-card transition-all"
               />
               <button
                 type="button"

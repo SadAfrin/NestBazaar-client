@@ -132,7 +132,7 @@ export default function PaymentSuccessClient({ session, productId, sellerEmail, 
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md text-center"
+        className="bg-card rounded-3xl shadow-2xl p-8 w-full max-w-md text-center"
       >
         {/* Success Icon */}
         <motion.div
@@ -144,7 +144,7 @@ export default function PaymentSuccessClient({ session, productId, sellerEmail, 
           <FaCheckCircle size={40} className="text-white" />
         </motion.div>
 
-        <h1 className="text-2xl font-black text-gray-800 mb-2">Payment Successful!</h1>
+        <h1 className="text-2xl font-black text-foreground mb-2">Payment Successful!</h1>
         <p className="text-gray-400 text-sm mb-6">Your order has been placed successfully</p>
 
         {/* Order Summary */}

@@ -123,11 +123,11 @@ export default function EditProductPage() {
     <div className="space-y-6 max-w-2xl">
 
       <div>
-        <h1 className="text-2xl font-black text-gray-800">Edit Product</h1>
+        <h1 className="text-2xl font-black text-foreground">Edit Product</h1>
         <p className="text-gray-400 text-sm mt-1">Update your product information</p>
       </div>
 
-      <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+      <div className="bg-card border border-gray-100 rounded-2xl p-6 shadow-sm">
         <form onSubmit={handleSubmit} className="space-y-5">
 
           <div className="space-y-1.5">
@@ -140,7 +140,7 @@ export default function EditProductPage() {
                 value={formData.title}
                 onChange={handleChange}
                 required
-                className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-white transition-all"
+                className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-card transition-all"
               />
             </div>
           </div>
@@ -155,7 +155,7 @@ export default function EditProductPage() {
                   value={formData.category}
                   onChange={handleChange}
                   required
-                  className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-white transition-all appearance-none"
+                  className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-card transition-all appearance-none"
                 >
                   <option value="">Select Category</option>
                   {categories.map((cat) => (
@@ -174,7 +174,7 @@ export default function EditProductPage() {
                   value={formData.condition}
                   onChange={handleChange}
                   required
-                  className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-white transition-all appearance-none"
+                  className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-card transition-all appearance-none"
                 >
                   <option value="">Select Condition</option>
                   {conditions.map((con) => (
@@ -197,7 +197,7 @@ export default function EditProductPage() {
                   onChange={handleChange}
                   required
                   min="0"
-                  className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-white transition-all"
+                  className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-card transition-all"
                 />
               </div>
             </div>
@@ -211,7 +211,7 @@ export default function EditProductPage() {
                 onChange={handleChange}
                 required
                 min="1"
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-white transition-all"
+                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-card transition-all"
               />
             </div>
           </div>
@@ -222,7 +222,7 @@ export default function EditProductPage() {
               name="status"
               value={formData.status}
               onChange={handleChange}
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-white transition-all appearance-none"
+              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-card transition-all appearance-none"
             >
               <option value="available">Available</option>
               <option value="sold">Sold</option>
@@ -237,7 +237,7 @@ export default function EditProductPage() {
               onChange={handleChange}
               required
               rows={4}
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-white transition-all resize-none"
+              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-card transition-all resize-none"
             />
           </div>
 
@@ -255,7 +255,7 @@ export default function EditProductPage() {
                       value={img}
                       onChange={(e) => handleImageChange(index, e.target.value)}
                       placeholder={`Image URL ${index + 1}`}
-                      className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-white transition-all"
+                      className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:border-green-400 focus:bg-card transition-all"
                     />
                   </div>
                   {formData.images.length > 1 && (

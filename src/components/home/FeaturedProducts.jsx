@@ -35,7 +35,7 @@ export default function FeaturedProducts() {
   }, []);
 
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-card">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Section Header */}
@@ -50,7 +50,7 @@ export default function FeaturedProducts() {
             <p className="text-sm font-semibold text-green-600 uppercase tracking-widest mb-2">
               Fresh Listings
             </p>
-            <h2 className="text-4xl font-black text-gray-900">
+            <h2 className="text-4xl font-black text-foreground">
               Featured{" "}
               <span className="bg-gradient-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent">
                 Products
@@ -97,7 +97,7 @@ export default function FeaturedProducts() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.08 }}
                 whileHover={{ y: -5 }}
-                className="group bg-white border border-gray-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-green-100 transition-all duration-300"
+                className="group bg-card border border-gray-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-green-100 transition-all duration-300"
               >
                 {/* Image */}
                 <div className="relative h-48 overflow-hidden">
@@ -109,7 +109,7 @@ export default function FeaturedProducts() {
                   <span className={`absolute top-3 left-3 text-xs font-bold px-2 py-1 rounded-lg ${conditionColors[product.condition] || "bg-gray-100 text-gray-700"}`}>
                     {product.condition}
                   </span>
-                  <span className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-xs font-semibold text-gray-600 px-2 py-1 rounded-lg flex items-center gap-1">
+                  <span className="absolute top-3 right-3 bg-card/90 backdrop-blur-sm text-xs font-semibold text-gray-600 px-2 py-1 rounded-lg flex items-center gap-1">
                     <FaTag size={10} className="text-green-500" />
                     {product.category}
                   </span>
@@ -117,7 +117,7 @@ export default function FeaturedProducts() {
 
                 {/* Content */}
                 <div className="p-4 space-y-3">
-                  <h3 className="font-bold text-gray-800 text-sm line-clamp-2 group-hover:text-green-600 transition-colors">
+                  <h3 className="font-bold text-foreground text-sm line-clamp-2 group-hover:text-green-600 transition-colors">
                     {product.title}
                   </h3>
                   <p className="text-xl font-black text-green-600">

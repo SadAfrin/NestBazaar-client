@@ -62,13 +62,13 @@ export default function RoleSelectionModal({ session, onComplete }) {
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-white rounded-3xl shadow-2xl p-8 w-full max-w-md"
+        className="bg-card rounded-3xl shadow-2xl p-8 w-full max-w-md"
       >
         <div className="text-center mb-8">
           <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center mx-auto mb-4 shadow-lg">
             <span className="text-white font-black text-sm">NB</span>
           </div>
-          <h2 className="text-2xl font-black text-gray-800">One Last Step!</h2>
+          <h2 className="text-2xl font-black text-foreground">One Last Step!</h2>
           <p className="text-gray-400 text-sm mt-2">
             How would you like to use NestBazaar?
           </p>

@@ -78,7 +78,7 @@ export default function AdminOverview() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-black text-gray-800">
+        <h1 className="text-2xl font-black text-foreground">
           Welcome, {session?.user?.name?.split(" ")[0]}! 👋
         </h1>
         <p className="text-gray-400 text-sm mt-1">Platform overview and statistics</p>
@@ -92,12 +92,12 @@ export default function AdminOverview() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-green-200 transition-all cursor-pointer"
+              className="bg-card border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-green-200 transition-all cursor-pointer"
             >
               <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${card.color} flex items-center justify-center text-white mb-4 shadow-md`}>
                 {card.icon}
               </div>
-              <p className="text-2xl font-black text-gray-800">{card.value}</p>
+              <p className="text-2xl font-black text-foreground">{card.value}</p>
               <p className="text-sm text-gray-400 mt-1">{card.label}</p>
             </motion.div>
           </Link>
@@ -107,9 +107,9 @@ export default function AdminOverview() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
         {/* Recent Orders */}
-        <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+        <div className="bg-card border border-gray-100 rounded-2xl p-6 shadow-sm">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-black text-gray-800">
+            <h3 className="font-black text-foreground">
               Recent Orders
               <span className="text-xs font-semibold text-gray-400 ml-2">(Last 30 days)</span>
             </h3>
@@ -134,11 +134,11 @@ export default function AdminOverview() {
                   className="flex items-center justify-between p-3 bg-gray-50 rounded-xl hover:bg-green-50 transition-all"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-white border border-gray-100 flex items-center justify-center shadow-sm">
+                    <div className="w-9 h-9 rounded-xl bg-card border border-gray-100 flex items-center justify-center shadow-sm">
                       <FaTruck size={14} className="text-green-500" />
                     </div>
                     <div>
-                      <p className="font-bold text-gray-800 text-xs">
+                      <p className="font-bold text-foreground text-xs">
                         #{order._id?.toString().slice(-6).toUpperCase()}
                       </p>
                       <p className="text-xs text-gray-400">{order.buyerInfo?.name}</p>
@@ -159,9 +159,9 @@ export default function AdminOverview() {
         </div>
 
         {/* Recent Users */}
-        <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+        <div className="bg-card border border-gray-100 rounded-2xl p-6 shadow-sm">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-black text-gray-800">Recent Users</h3>
+            <h3 className="font-black text-foreground">Recent Users</h3>
             <Link href="/dashboard/admin/manage-users">
               <span className="text-xs font-bold text-green-600 hover:underline">View All</span>
             </Link>
@@ -196,7 +196,7 @@ export default function AdminOverview() {
                     )}
                     <div>
                       <div className="flex items-center gap-1">
-                        <p className="font-bold text-gray-800 text-xs">{user.name}</p>
+                        <p className="font-bold text-foreground text-xs">{user.name}</p>
                         <MdVerified className="text-green-500" size={11} />
                       </div>
                       <p className="text-xs text-gray-400">{user.email}</p>

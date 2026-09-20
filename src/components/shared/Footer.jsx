@@ -33,7 +33,7 @@ export default function Footer() {
 
       {/* Top Wave */}
       <div className="w-full overflow-hidden leading-none">
-        <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" className="fill-emerald-50">
+        <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" className="fill-background">
           <path d="M0,30 C360,60 1080,0 1440,30 L1440,0 L0,0 Z" />
         </svg>
       </div>
