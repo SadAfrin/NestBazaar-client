@@ -1,49 +1,15 @@
-# NestBazaar — Second-Hand Marketplace
+# 🛍️ NestBazaar — Second-Hand Marketplace
 
 A full-stack second-hand marketplace where buyers can purchase pre-owned products, sellers can list items, and admins can manage the entire platform.
 
-🌐 **Live Site:** [https://nest-bazaar-client.vercel.app](https://nest-bazaar-client.vercel.app)
-🔧 **Server:** [https://nest-bazaar-server.vercel.app](https://nest-bazaar-server.vercel.app)
+🌐 **Live Site:** [nest-bazaar-client.vercel.app](https://nest-bazaar-client.vercel.app)
+🔧 **Server API:** [nest-bazaar-server.vercel.app](https://nest-bazaar-server.vercel.app)
 
 ---
 
-## 🔑 Test Credentials
+## 📖 Overview
 
-| Role | Email | Password |
-|------|-------|----------|
-| Super Admin | admin@admin.com | $Admin123 |
-| Seller | mad@gmail.com | 12345678 |
-| Buyer | sad@gmail.com | 12345678 |
-
-> **Stripe Test Card:** `4242 4242 4242 4242` — Expiry: `mm/yy` — CVC: `123`
-
----
-
-## ✨ Features
-
-### Buyer
-- Browse, search, filter and sort products
-- Add products to wishlist
-- Secure Stripe checkout with order summary
-- Track order status with timeline progress bar
-- Cancel orders before shipment
-- View payment history and transaction records
-- Write product reviews with star ratings
-- Update profile and change password
-
-### Seller
-- Add, edit and delete product listings
-- Manage incoming orders with step-by-step status updates
-- View sales analytics with charts
-- Track revenue and pending orders
-
-### Admin
-- Platform overview with real-time statistics
-- Manage users — block/unblock, delete, change roles
-- Super admin can manage other admins
-- Approve, reject and delete product listings
-- Monitor all orders and payment transactions
-- Platform analytics with charts
+NestBazaar is a role-based e-commerce platform tailored for the second-hand goods market. It supports three distinct user roles — **Buyer**, **Seller**, and **Admin** — each with a dedicated dashboard and permission set. The platform handles the full commerce lifecycle: listing, discovery, secure checkout via Stripe, order tracking, and platform-wide analytics.
 
 ---
 
@@ -51,49 +17,79 @@ A full-stack second-hand marketplace where buyers can purchase pre-owned product
 
 | Technology | Purpose |
 |------------|---------|
-| Next.js | React framework |
-| HeroUI | UI components |
-| Tailwind | Styling |
-| BetterAuth | Authentication |
-| Framer Motion | Animations |
-| Recharts | Charts |
-| Stripe | Payment gateway |
+| Next.js | React framework (frontend) |
+| Express.js | Backend server / REST API |
 | MongoDB Atlas | Database |
-| Express.js | Backend server |
+| HeroUI | UI component library |
+| Tailwind CSS | Styling |
+| BetterAuth | Authentication (email/password + Google OAuth) |
+| Framer Motion | Animations |
+| Recharts | Analytics charts |
+| Stripe | Payment gateway |
+
+---
+
+## ✨ Core Features
+
+### 👤 Buyer
+- Browse, search, filter, and sort products
+- Add products to wishlist
+- Secure Stripe checkout with order summary
+- Track order status with a timeline progress bar
+- Cancel orders before shipment
+- View payment history and transaction records
+- Write product reviews with star ratings
+- Update profile and change password
+
+### 🏪 Seller
+- Add, edit, and delete product listings
+- Manage incoming orders with step-by-step status updates
+- View sales analytics with charts
+- Track revenue and pending orders
+
+### 🛡️ Admin
+- Platform overview with real-time statistics
+- Manage users — block/unblock, delete, change roles
+- Super admin can manage other admins
+- Approve, reject, and delete product listings
+- Monitor all orders and payment transactions
+- Platform-wide analytics with charts
 
 ---
 
 ## 🔐 Authentication & Security
 
-- Email/password and Google OAuth via BetterAuth
+- Email/password and Google OAuth via **BetterAuth**
 - JWT token verification on all protected API routes
-- Role-based authorization on both client and server
+- Role-based authorization enforced on both client and server
 - Super admin (`admin@admin.com`) has full platform control
 
 ---
 
 ## 💳 Payment Flow
 
-1. Buyer clicks **Place Order** on product page
-2. Redirected to **Checkout page** with full order summary
-3. Clicks **Proceed to Payment** → Stripe hosted checkout
-4. After successful payment → **Payment Success page**
-5. Order and payment saved to database automatically
-6. Product removed from wishlist automatically
+1. Buyer clicks **Place Order** on the product page
+2. Redirected to the **Checkout** page with a full order summary
+3. Clicks **Proceed to Payment** → Stripe-hosted checkout
+4. On successful payment → redirected to **Payment Success** page
+5. Order and payment details are saved to the database automatically
+6. Product is automatically removed from the wishlist
 
 ---
 
-## 🚀 Challenges Implemented
+## 🚀 Notable Implementation Challenges
 
 | Challenge | Details |
 |-----------|---------|
-| Advanced Search & Sort | Search by name/category, sort by price low/high |
-| Pagination | 9 products per page on All Products page |
-| JWT + Role Authorization | Token verification and role-based API protection |
+| Advanced Search & Sort | Search by name/category, sort by price (low → high / high → low) |
+| Pagination | 9 products per page on the All Products page |
+| JWT + Role Authorization | Token verification and role-based protection across API routes |
 
 ---
 
 ## ⚙️ Environment Variables
+
+Create a `.env` file in the root directory with the following:
 
 ```env
 BETTER_AUTH_SECRET=
@@ -110,17 +106,65 @@ NEXT_PUBLIC_SUPER_ADMIN_EMAIL=admin@admin.com
 
 ---
 
-## Run Locally
+## 📦 Dependencies (Key Packages)
 
-```bash
-git clone https://github.com/SadAfrin/NestBazaar-client.git
-cd NestBazaar-client
-npm install
-npm run dev
-```
+- `next` — React framework
+- `express` — backend server
+- `mongodb` / `mongoose` — database connection & modeling
+- `better-auth` — authentication
+- `stripe` — payment processing
+- `framer-motion` — animations
+- `recharts` — charts and analytics
+- `tailwindcss` — utility-first styling
+- HeroUI component packages
+
+> Full list available in `package.json` for both client and server.
 
 ---
 
-## Developer
+## 🏃 Run Locally
 
-**Sadia Afrin** — PH-L1 | Assignment 10
+**Clone the repository:**
+```bash
+git clone https://github.com/SadAfrin/NestBazaar-client.git
+cd NestBazaar-client
+```
+
+**Install dependencies:**
+```bash
+npm install
+```
+
+**Set up environment variables:**
+Create a `.env` file in the root directory and add the variables listed in the [Environment Variables](#️-environment-variables) section above.
+
+**Run the development server:**
+```bash
+npm run dev
+```
+
+The app will be available at `http://localhost:3000`.
+
+> ⚠️ Note: This is the client repo. For full functionality, also clone and run the [server repo](https://nest-bazaar-server.vercel.app) with its own `.env` configuration.
+
+---
+
+## 🔑 Test Credentials
+
+| Role | Email | Password |
+|------|-------|----------|
+| Super Admin | `admin@admin.com` | `$Admin123` |
+| Seller | `mad@gmail.com` | `12345678` |
+| Buyer | `sad@gmail.com` | `12345678` |
+
+**Stripe Test Card:**
+`4242 4242 4242 4242` — Expiry: any future `mm/yy` — CVC: any 3 digits (e.g. `123`)
+
+---
+
+## 🔗 Links
+
+- 🌐 Live Site: [nest-bazaar-client.vercel.app](https://nest-bazaar-client.vercel.app)
+- 🔧 Live Server: [nest-bazaar-server.vercel.app](https://nest-bazaar-server.vercel.app)
+- 💻 Client Repo: [github.com/SadAfrin/NestBazaar-client](https://github.com/SadAfrin/NestBazaar-client)
+- 🗄️ Server Repo: [github.com/SadAfrin/NestBazaar-server](https://github.com/SadAfrin/NestBazaar-server)
