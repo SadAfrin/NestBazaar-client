@@ -45,9 +45,14 @@ export default function ProductCard({ product, index = 0 }) {
           ৳{product.price?.toLocaleString()}
         </p>
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1 text-xs text-gray-400">
-            <MdVerified className="text-green-500" size={12} />
-            <span>{product.sellerInfo?.name}</span>
+          <div className="flex items-center gap-1 text-xs text-gray-400 min-w-0">
+            <span className="truncate">{product.sellerInfo?.name}</span>
+            {product.sellerInfo?.isVerified && (
+              <span className="inline-flex items-center gap-0.5 shrink-0 text-[10px] font-bold text-green-700 bg-green-100 px-1.5 py-0.5 rounded-md">
+                <MdVerified size={10} />
+                Verified
+              </span>
+            )}
           </div>
           <div className="flex items-center gap-1 text-xs text-gray-400">
             <FaMapMarkerAlt className="text-green-500" size={10} />

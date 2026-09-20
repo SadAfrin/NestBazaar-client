@@ -187,7 +187,12 @@ export default function ProductDetailsPage() {
                     <p className="font-black text-foreground">
                       {sellerProfile?.name || product.sellerInfo?.name}
                     </p>
-                    <MdVerified className="text-green-500" size={16} />
+                    {(sellerProfile?.isVerified || product.sellerInfo?.isVerified) && (
+                      <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-green-700 bg-green-100 px-1.5 py-0.5 rounded-md">
+                        <MdVerified size={12} />
+                        Verified
+                      </span>
+                    )}
                   </div>
                   <div className="flex items-center gap-1 mt-0.5">
                     {[...Array(5)].map((_, i) => (

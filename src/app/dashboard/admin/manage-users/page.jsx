@@ -123,6 +123,27 @@ export default function ManageUsersPage() {
     }
   };
 
+  const handleToggleVerified = async (email, isVerified) => {
+    try {
+      const res = await fetchWithAuth(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/users/verified`,
+        {
+          method: "PATCH",
+          body: JSON.stringify({ email, isVerified }),
+        }
+      );
+      const data = await res.json();
+      if (data.success) {
+        toast.success(isVerified ? "Seller verified!" : "Seller unverified!");
+        fetchUsers();
+      } else {
+        toast.error(data.message || "Failed to update verification!");
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+    }
+  };
+
   const filteredUsers = users.filter(
     (u) =>
       u.name?.toLowerCase().includes(search.toLowerCase()) ||
@@ -201,7 +222,18 @@ export default function ManageUsersPage() {
                 <div className="min-w-0">
                   <div className="flex items-center gap-1 flex-wrap">
                     <p className="font-bold text-foreground text-sm truncate">{user.name}</p>
-                    <MdVerified className="text-green-500 shrink-0" size={12} />
+                    {user.role === "seller" && (
+                      user.isVerified ? (
+                        <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-green-700 bg-green-100 px-1.5 py-0.5 rounded-md">
+                          <MdVerified size={10} />
+                          Verified
+                        </span>
+                      ) : (
+                        <span className="text-[10px] font-bold text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded-md">
+                          Unverified
+                        </span>
+                      )
+                    )}
                     {isCurrentUser(user) && (
                       <span className="text-xs font-bold text-purple-600 bg-purple-50 px-1.5 py-0.5 rounded-md">
                         You
@@ -254,6 +286,21 @@ export default function ManageUsersPage() {
                       <option value="seller">Seller</option>
                       <option value="admin">Admin</option>
                     </select>
+
+                    {/* Verify / Unverify (sellers only) */}
+                    {user.role === "seller" && (
+                      <button
+                        onClick={() => handleToggleVerified(user.email, !user.isVerified)}
+                        className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${
+                          user.isVerified
+                            ? "bg-green-100 hover:bg-green-200 text-green-600"
+                            : "bg-gray-100 hover:bg-green-50 text-gray-400 hover:text-green-600"
+                        }`}
+                        title={user.isVerified ? "Unverify seller" : "Verify seller"}
+                      >
+                        <MdVerified size={14} />
+                      </button>
+                    )}
 
                     {/* Block/Unblock */}
                     {user.status === "blocked" ? (
